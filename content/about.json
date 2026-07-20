@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "title": "Hakkımızda | Galata KGK",
+    "description": "Galata KGK’nın amacı, vizyonu, misyonu ve gelişim yolculuğu hakkında bilgi edinin."
+  },
+  "hero": {
+    "eyebrow": "Hakkımızda",
+    "title": "Merakı harekete, bağlantıları fırsata dönüştürüyoruz.",
+    "description": "Galata KGK; kariyerini bilinçli biçimde tasarlamak ve girişimci düşünceyi deneyimlemek isteyen öğrencilerin buluşma noktasıdır."
+  },
+  "introduction": {
+    "eyebrow": "Biz Kimiz?",
+    "title": "Öğrenciler tarafından, öğrencilerin geleceği için.",
+    "paragraphs": [
+      "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü olarak öğrencileri iş dünyasıyla erken dönemde tanıştıran, farklı kariyer yollarını görünür kılan ve üretme cesaretini destekleyen çalışmalar yürütüyoruz.",
+      "Etkinliklerimizi yalnızca bilgi aktaran buluşmalar olarak değil; soru sormaya, bağlantı kurmaya ve yeni fikirleri denemeye alan açan deneyimler olarak tasarlıyoruz."
+    ],
+    "principle": {
+      "label": "Temel yaklaşımımız",
+      "text": "Her öğrencinin keşfedecek bir yönü, paylaşacak bir fikri ve topluluğa katacağı özgün bir değeri olduğuna inanıyoruz."
+    }
+  },
+  "visionMission": {
+    "vision": {
+      "eyebrow": "Vizyonumuz",
+      "title": "Kampüsten doğan fikirlerin geleceğe yön verdiği bir ekosistem.",
+      "description": "Öğrencilerin potansiyellerini erken keşfettiği, girişimci düşünceyi benimsediği ve profesyonel dünyada güvenle yer aldığı örnek bir üniversite topluluğu olmak."
+    },
+    "mission": {
+      "eyebrow": "Misyonumuz",
+      "title": "Deneyim, bağlantı ve üretim için erişilebilir alanlar açmak.",
+      "description": "Sektör buluşmaları, atölyeler, proje ekipleri ve mezun paylaşımlarıyla öğrencilerin yetkinliklerini geliştirmesine ve nitelikli ilişkiler kurmasına destek olmak."
+    }
+  },
+  "timelineSection": {
+    "eyebrow": "Yolculuğumuz",
+    "title": "Her yıl büyüyen ortak bir hikâye.",
+    "description": "Kulübün gelişimini şekillendiren önemli adımlar ve topluluğumuzun birlikte ürettiği kilometre taşları.",
+    "milestones": [
+      {
+        "year": "2021",
+        "title": "Kulübün kuruluşu",
+        "description": "Kariyer ve girişimcilik odağında öğrenci dayanışmasını güçlendirmek amacıyla ilk ekip bir araya geldi."
+      },
+      {
+        "year": "2022",
+        "title": "İlk büyük kariyer buluşması",
+        "description": "Farklı sektörlerden konukların katıldığı geniş kapsamlı etkinlikle kampüs ve iş dünyası arasında yeni bir köprü kuruldu."
+      },
+      {
+        "year": "2023",
+        "title": "Atölye programlarının başlaması",
+        "description": "Öğrencilerin yalnızca dinlemediği, uygulayarak öğrendiği düzenli beceri ve girişimcilik atölyeleri hayata geçirildi."
+      },
+      {
+        "year": "2024",
+        "title": "Topluluk ağının genişlemesi",
+        "description": "Mezunlar, sektör profesyonelleri ve öğrenci ekipleri arasındaki iş birlikleriyle kulüp daha güçlü bir ekosisteme dönüştü."
+      }
+    ]
+  }
+}
