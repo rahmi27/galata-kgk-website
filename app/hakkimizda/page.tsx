@@ -4,10 +4,8 @@ import { Flag, Target } from "lucide-react";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { TeamMemberCard } from "@/components/shared/team-member-card";
 import { Timeline } from "@/components/shared/timeline";
 import aboutContent from "@/content/about.json";
-import teamContent from "@/content/team.json";
 
 export const metadata: Metadata = {
   title: aboutContent.meta.title,
@@ -63,25 +61,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section
-          id="ekibimiz"
-          className="scroll-mt-24 border-y border-primary/10 bg-primary-50/45 py-20 dark:border-white/10 dark:bg-white/[0.025] sm:py-28"
-        >
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <SectionHeading
-              eyebrow={teamContent.section.eyebrow}
-              title={teamContent.section.title}
-              description={teamContent.section.description}
-            />
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {teamContent.members.map((member) => (
-                <TeamMemberCard key={member.name} {...member} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20 sm:py-28">
+        <section className="border-y border-primary/10 bg-primary-50/45 py-20 dark:border-white/10 dark:bg-white/[0.025] sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 lg:grid-cols-2 lg:px-10">
             <article className="relative overflow-hidden rounded-[2rem] bg-primary-900 p-8 text-white sm:p-10">
               <Flag
