@@ -4,10 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 
-import {
-  membershipStatuses,
-  updateMembershipStatusAction,
-} from "@/app/admin/(panel)/katilim-basvurulari/actions";
+import { updateMembershipStatusAction } from "@/app/admin/(panel)/katilim-basvurulari/actions";
+import { membershipStatuses } from "@/lib/membership-status";
 
 export function MembershipStatusSelect({
   applicationId,

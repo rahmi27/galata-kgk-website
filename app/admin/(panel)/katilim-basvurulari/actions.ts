@@ -4,15 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
+import {
+  membershipStatuses,
+  type MembershipStatus,
+} from "@/lib/membership-status";
 import { prisma } from "@/lib/prisma";
-
-export const membershipStatuses = [
-  "beklemede",
-  "onaylandı",
-  "reddedildi",
-] as const;
-
-export type MembershipStatus = (typeof membershipStatuses)[number];
 
 export async function updateMembershipStatusAction(
   applicationId: number,
