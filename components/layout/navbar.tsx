@@ -2,23 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import siteContent from "@/content/site.json";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  { label: "Anasayfa", href: "/" },
-  { label: "Hakkımızda", href: "/#hakkimizda" },
-  { label: "Etkinliklerimiz", href: "/#etkinlikler" },
-  { label: "Ekibimiz", href: "/#ekibimiz" },
-  { label: "İletişim", href: "/#iletisim" },
-];
-
 export function Navbar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { brand, navigation } = siteContent;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 16);
@@ -40,25 +36,36 @@ export function Navbar() {
         <Link
           href="/"
           className="group inline-flex items-center gap-3 font-heading text-lg font-bold tracking-[-0.03em] text-primary dark:text-primary-100"
-          aria-label="Galata KGK ana sayfa"
+          aria-label={brand.homeAriaLabel}
         >
           <span
             className="h-7 w-1.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-y-75"
             aria-hidden="true"
           />
-          <span>Galata KGK</span>
+          <span>{brand.name}</span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Ana menü">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative py-2 text-sm font-medium text-primary-700 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-accent after:transition-transform hover:text-primary hover:after:scale-x-100 dark:text-primary-200 dark:hover:text-white"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav
+          className="hidden items-center gap-7 lg:flex"
+          aria-label={navigation.desktopAriaLabel}
+        >
+          {navigation.items.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative py-2 text-sm font-medium text-primary-700 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-accent after:transition-transform hover:text-primary hover:after:scale-x-100 dark:text-primary-200 dark:hover:text-white",
+                  isActive ? "text-primary after:scale-x-100 dark:text-white" : "after:scale-x-0",
+                )}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2.5">
@@ -68,8 +75,8 @@ export function Navbar() {
             variant="secondary"
             className="hidden md:inline-flex"
           >
-            <Link href="/#katil">
-              Kulübe Katıl
+            <Link href={navigation.joinCta.href}>
+              {navigation.joinCta.label}
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </Link>
           </Button>
@@ -81,7 +88,11 @@ export function Navbar() {
             onClick={() => setIsMenuOpen((current) => !current)}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
-            aria-label={isMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-label={
+              isMenuOpen
+                ? navigation.closeMenuLabel
+                : navigation.openMenuLabel
+            }
           >
             {isMenuOpen ? (
               <X className="size-5" aria-hidden="true" />
@@ -99,14 +110,18 @@ export function Navbar() {
         >
           <nav
             className="mx-auto flex max-w-7xl flex-col gap-1"
-            aria-label="Mobil menü"
+            aria-label={navigation.mobileAriaLabel}
           >
-            {navItems.map((item) => (
+            {navigation.items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10"
+                className={cn(
+                  "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
+                  pathname === item.href && "bg-primary-50 dark:bg-white/10",
+                )}
                 onClick={() => setIsMenuOpen(false)}
+                aria-current={pathname === item.href ? "page" : undefined}
               >
                 {item.label}
               </Link>
@@ -116,8 +131,11 @@ export function Navbar() {
               variant="secondary"
               className="mt-3"
             >
-              <Link href="/#katil" onClick={() => setIsMenuOpen(false)}>
-                Kulübe Katıl
+              <Link
+                href={navigation.joinCta.href}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {navigation.joinCta.label}
                 <ArrowUpRight className="size-4" aria-hidden="true" />
               </Link>
             </Button>

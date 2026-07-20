@@ -8,6 +8,9 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
 import { Button } from "@/components/ui/button";
+import eventsContent from "@/content/events.json";
+import homeContent from "@/content/home.json";
+import teamContent from "@/content/team.json";
 
 export const metadata: Metadata = {
   title: "Tasarım Sistemi | Galata KGK",
@@ -17,40 +20,6 @@ export const metadata: Metadata = {
     follow: false,
   },
 };
-
-const stats = [
-  { value: "500+", label: "Topluluk üyesi" },
-  { value: "24", label: "Yıllık etkinlik" },
-  { value: "18", label: "Sektör iş birliği" },
-];
-
-const events = [
-  {
-    date: "12 Ekim",
-    title: "Kariyer Buluşması",
-    description:
-      "Sektör profesyonelleriyle deneyim paylaşımı ve bağlantı kurma oturumu.",
-  },
-  {
-    date: "24 Ekim",
-    title: "Girişimcilik Atölyesi",
-    description:
-      "Fikirden ürüne uzanan süreci uygulamalı çalışmalarla keşfetme programı.",
-  },
-  {
-    date: "08 Kasım",
-    title: "Sektör Sohbetleri",
-    description:
-      "Farklı disiplinlerden konuklarla güncel iş dünyasına yakından bakış.",
-  },
-];
-
-const teamMembers = [
-  { name: "Ada Yılmaz", role: "Yönetim Kurulu Başkanı" },
-  { name: "Mert Kaya", role: "Başkan Yardımcısı" },
-  { name: "İpek Demir", role: "Etkinlik Koordinatörü" },
-  { name: "Ege Arslan", role: "İletişim Koordinatörü" },
-];
 
 export default function DesignSystemPage() {
   return (
@@ -98,7 +67,7 @@ export default function DesignSystemPage() {
               description="Büyük rakamlar ve kısa etiketlerle topluluğun ölçeğini hızlıca anlatan kartlar."
             />
             <div className="mt-12 grid gap-5 sm:grid-cols-3">
-              {stats.map((stat) => (
+              {homeContent.statsSection.items.slice(0, 3).map((stat) => (
                 <StatCard
                   key={stat.label}
                   value={stat.value}
@@ -117,7 +86,7 @@ export default function DesignSystemPage() {
               description="Görsel, tarih ve kısa özetin dengeli biçimde bir araya geldiği etkinlik kartları."
             />
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {events.map((event) => (
+              {eventsContent.events.slice(0, 3).map((event) => (
                 <EventCard
                   key={event.title}
                   {...event}
@@ -136,7 +105,7 @@ export default function DesignSystemPage() {
               description="Gerçek fotoğraflar eklenene kadar tutarlı bir placeholder sistemi kullanılır."
             />
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {teamMembers.map((member) => (
+              {teamContent.members.map((member) => (
                 <TeamMemberCard key={member.name} {...member} />
               ))}
             </div>

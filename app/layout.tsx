@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import siteContent from "@/content/site.json";
 
 import "./globals.css";
 
@@ -18,8 +19,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
-  description: "Kariyer ve Girişimcilik Kulübü web sitesi.",
+  title: siteContent.meta.title,
+  description: siteContent.meta.description,
 };
 
 export default function RootLayout({

@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "title": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
+    "description": "Kariyerini keşfetmek, girişimci düşünceyi deneyimlemek ve güçlü bağlantılar kurmak isteyen öğrencilerin buluşma noktası."
+  },
+  "brand": {
+    "name": "Galata KGK",
+    "homeAriaLabel": "Galata KGK ana sayfa"
+  },
+  "navigation": {
+    "desktopAriaLabel": "Ana menü",
+    "mobileAriaLabel": "Mobil menü",
+    "openMenuLabel": "Menüyü aç",
+    "closeMenuLabel": "Menüyü kapat",
+    "items": [
+      {
+        "label": "Anasayfa",
+        "href": "/"
+      },
+      {
+        "label": "Hakkımızda",
+        "href": "/hakkimizda"
+      },
+      {
+        "label": "Etkinliklerimiz",
+        "href": "/#etkinlikler"
+      },
+      {
+        "label": "Ekibimiz",
+        "href": "/hakkimizda#ekibimiz"
+      },
+      {
+        "label": "İletişim",
+        "href": "/iletisim"
+      }
+    ],
+    "joinCta": {
+      "label": "Kulübe Katıl",
+      "href": "/iletisim#iletisim-formu"
+    }
+  },
+  "footer": {
+    "description": "Öğrencileri kariyer fırsatları, girişimcilik kültürü ve güçlü bir profesyonel ağ etrafında buluşturan öğrenci topluluğu.",
+    "quickLinksLabel": "Hızlı Linkler",
+    "socials": [
+      {
+        "platform": "Instagram",
+        "href": "#"
+      },
+      {
+        "platform": "LinkedIn",
+        "href": "#"
+      },
+      {
+        "platform": "X",
+        "href": "#"
+      }
+    ],
+    "copyright": "© {year} Galata KGK. Tüm hakları saklıdır.",
+    "institution": "İstanbul Galata Üniversitesi"
+  }
+}
