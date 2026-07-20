@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { UserRound } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,6 +17,14 @@ export function TeamMemberCard({
   imageAlt,
   className,
 }: TeamMemberCardProps) {
+  const nameParts = name.trim().split(/\s+/).filter(Boolean);
+  const initials = [nameParts[0], nameParts.at(-1)]
+    .filter(Boolean)
+    .map((part) => part?.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toLocaleUpperCase("tr-TR");
+
   return (
     <article
       className={cn(
@@ -40,11 +47,12 @@ export function TeamMemberCard({
             role="img"
             aria-label={`${name} için fotoğraf alanı`}
           >
-            <UserRound
-              className="size-20 text-primary/45 dark:text-primary-200/55"
-              strokeWidth={1}
+            <span
+              className="inline-flex size-24 items-center justify-center rounded-full border border-primary/15 bg-white/60 font-heading text-2xl font-bold tracking-[0.08em] text-primary shadow-[0_18px_45px_-24px_rgba(27,42,94,0.7)] backdrop-blur dark:border-white/15 dark:bg-white/10 dark:text-primary-100"
               aria-hidden="true"
-            />
+            >
+              {initials}
+            </span>
           </div>
         )}
       </div>
