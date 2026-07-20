@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { hash } from "bcryptjs";
 import { PrismaClient } from "../lib/generated/prisma/client";
 import eventsContent from "../content/events.json";
 import homeContent from "../content/home.json";
@@ -12,6 +13,36 @@ const adapter = new PrismaBetterSqlite3({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  const adminEmail = "admin@galata.edu.tr";
+  const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+
+  if (!adminPassword) {
+    throw new Error(
+      "ADMIN_SEED_PASSWORD tanımlı değil. Seed işleminden önce .env dosyasına güvenli bir parola ekleyin.",
+    );
+  }
+
+  if (adminPassword.length < 12) {
+    throw new Error("ADMIN_SEED_PASSWORD en az 12 karakter olmalıdır.");
+  }
+
+  const passwordHash = await hash(adminPassword, 12);
+
+  await prisma.adminUser.upsert({
+    where: {
+      email: adminEmail,
+    },
+    update: {
+      name: "Galata KGK Yöneticisi",
+      passwordHash,
+    },
+    create: {
+      email: adminEmail,
+      name: "Galata KGK Yöneticisi",
+      passwordHash,
+    },
+  });
+
   await prisma.$transaction([
     prisma.event.deleteMany(),
     prisma.teamMember.deleteMany(),
@@ -58,6 +89,9 @@ async function main() {
   console.log(
     `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${siteStatCount} istatistik.`,
   );
+  console.log(`Admin e-posta: ${adminEmail}`);
+  console.log(`Admin geçici şifre: ${adminPassword}`);
+  console.log("İlk girişten sonra bu şifreyi değiştirin.");
 }
 
 main()
