@@ -8,9 +8,8 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
 import { Button } from "@/components/ui/button";
-import eventsContent from "@/content/events.json";
-import homeContent from "@/content/home.json";
-import teamContent from "@/content/team.json";
+import { formatEventDate } from "@/lib/date";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Tasarım Sistemi | Galata KGK",
@@ -21,7 +20,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DesignSystemPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DesignSystemPage() {
+  const [stats, events, teamMembers] = await Promise.all([
+    prisma.siteStat.findMany({
+      orderBy: {
+        order: "asc",
+      },
+      take: 3,
+    }),
+    prisma.event.findMany({
+      orderBy: {
+        date: "asc",
+      },
+      take: 3,
+    }),
+    prisma.teamMember.findMany({
+      orderBy: {
+        order: "asc",
+      },
+      take: 4,
+    }),
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -67,7 +89,7 @@ export default function DesignSystemPage() {
               description="Büyük rakamlar ve kısa etiketlerle topluluğun ölçeğini hızlıca anlatan kartlar."
             />
             <div className="mt-12 grid gap-5 sm:grid-cols-3">
-              {homeContent.statsSection.items.slice(0, 3).map((stat) => (
+              {stats.map((stat) => (
                 <StatCard
                   key={stat.label}
                   value={stat.value}
@@ -86,11 +108,14 @@ export default function DesignSystemPage() {
               description="Görsel, tarih ve kısa özetin dengeli biçimde bir araya geldiği etkinlik kartları."
             />
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {eventsContent.events.slice(0, 3).map((event) => (
+              {events.map((event) => (
                 <EventCard
-                  key={event.title}
-                  {...event}
-                  href="#"
+                  key={event.id}
+                  date={formatEventDate(event.date)}
+                  title={event.title}
+                  description={event.description}
+                  imageSrc={event.imageUrl ?? undefined}
+                  href={`/etkinliklerimiz/${event.slug}`}
                 />
               ))}
             </div>
@@ -105,8 +130,13 @@ export default function DesignSystemPage() {
               description="Gerçek fotoğraflar eklenene kadar tutarlı bir placeholder sistemi kullanılır."
             />
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {teamContent.members.map((member) => (
-                <TeamMemberCard key={member.name} {...member} />
+              {teamMembers.map((member) => (
+                <TeamMemberCard
+                  key={member.id}
+                  name={member.name}
+                  role={member.role}
+                  imageSrc={member.photoUrl ?? undefined}
+                />
               ))}
             </div>
           </div>

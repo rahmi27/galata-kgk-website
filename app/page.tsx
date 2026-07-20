@@ -15,13 +15,16 @@ import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
-import eventsContent from "@/content/events.json";
 import homeContent from "@/content/home.json";
+import { formatEventDate } from "@/lib/date";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: homeContent.meta.title,
   description: homeContent.meta.description,
 };
+
+export const dynamic = "force-dynamic";
 
 const whyUsIcons = {
   compass: Compass,
@@ -29,12 +32,25 @@ const whyUsIcons = {
   network: Network,
 } as const;
 
-export default function HomePage() {
-  const featuredEvents = homeContent.eventsSection.featuredEventIds
-    .map((eventId) =>
-      eventsContent.events.find((event) => event.id === eventId),
-    )
-    .filter((event) => event !== undefined);
+export default async function HomePage() {
+  const [stats, featuredEvents] = await Promise.all([
+    prisma.siteStat.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    }),
+    prisma.event.findMany({
+      where: {
+        date: {
+          gte: new Date(),
+        },
+      },
+      orderBy: {
+        date: "asc",
+      },
+      take: 3,
+    }),
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -130,7 +146,7 @@ export default function HomePage() {
               description={homeContent.statsSection.description}
             />
             <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {homeContent.statsSection.items.map((stat) => (
+              {stats.map((stat) => (
                 <StatCard key={stat.label} {...stat} />
               ))}
             </div>
@@ -157,7 +173,14 @@ export default function HomePage() {
             </div>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
               {featuredEvents.map((event) => (
-                <EventCard key={event.id} {...event} />
+                <EventCard
+                  key={event.id}
+                  date={formatEventDate(event.date)}
+                  title={event.title}
+                  description={event.description}
+                  imageSrc={event.imageUrl ?? undefined}
+                  href={`/etkinliklerimiz/${event.slug}`}
+                />
               ))}
             </div>
           </div>

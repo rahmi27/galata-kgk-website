@@ -7,19 +7,45 @@
   "members": [
     {
       "name": "Ada Yılmaz",
-      "role": "Yönetim Kurulu Başkanı"
+      "role": "Yönetim Kurulu Başkanı",
+      "department": "Yönetim Kurulu",
+      "photoUrl": null,
+      "order": 1
     },
     {
       "name": "Mert Kaya",
-      "role": "Başkan Yardımcısı"
+      "role": "Başkan Yardımcısı",
+      "department": "Yönetim Kurulu",
+      "photoUrl": null,
+      "order": 2
     },
     {
       "name": "İpek Demir",
-      "role": "Etkinlik Koordinatörü"
+      "role": "Etkinlik Koordinatörü",
+      "department": "Etkinlik Ekibi",
+      "photoUrl": null,
+      "order": 3
     },
     {
       "name": "Ege Arslan",
-      "role": "İletişim Koordinatörü"
+      "role": "İletişim Koordinatörü",
+      "department": "İletişim Ekibi",
+      "photoUrl": null,
+      "order": 4
+    },
+    {
+      "name": "Selin Aksoy",
+      "role": "Etkinlik Ekip Üyesi",
+      "department": "Etkinlik Ekibi",
+      "photoUrl": null,
+      "order": 5
+    },
+    {
+      "name": "Can Öztürk",
+      "role": "Sosyal Medya Sorumlusu",
+      "department": "İletişim Ekibi",
+      "photoUrl": null,
+      "order": 6
     }
   ]
 }

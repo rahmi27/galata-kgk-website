@@ -1,32 +1,64 @@
 {
   "events": [
     {
-      "id": "kariyer-pusulasi",
-      "date": "12 Ekim",
+      "slug": "kariyer-pusulasi",
       "title": "Kariyer Pusulası: Sektörleri Tanı",
       "description": "Farklı alanlardan profesyonellerle kariyer seçeneklerini ve iş dünyasının güncel beklentilerini konuşuyoruz.",
-      "href": "/#etkinlikler"
+      "longDescription": "Kariyer Pusulası, farklı sektörleri yakından tanımak ve hangi çalışma alanının sana daha uygun olduğunu keşfetmek için tasarlanan bir buluşma serisidir.\n\nKonuk profesyonellerin deneyimlerini dinlerken günlük çalışma düzenlerini, sektörlerin aradığı yetkinlikleri ve öğrencilik döneminde atılabilecek somut adımları konuşacağız. Etkinliğin sonunda soru-cevap ve tanışma bölümü de yer alacak.",
+      "date": "2026-10-12T14:00:00+03:00",
+      "location": "İstanbul Galata Üniversitesi, Konferans Salonu",
+      "imageUrl": null,
+      "category": "Kariyer"
     },
     {
-      "id": "girisim-fikri-atolyesi",
-      "date": "24 Ekim",
+      "slug": "girisim-fikri-atolyesi",
       "title": "Girişim Fikri Atölyesi",
       "description": "Bir problemi doğru tanımlamaktan ilk çözüm taslağına uzanan süreci ekip çalışmasıyla deneyimliyoruz.",
-      "href": "/#etkinlikler"
+      "longDescription": "Girişim Fikri Atölyesi, günlük hayatta karşılaştığımız problemleri girişimci bir bakış açısıyla yeniden ele alacağımız uygulamalı bir çalışma sunuyor.\n\nKatılımcılar küçük ekipler halinde kullanıcı ihtiyacını tanımlayacak, çözüm alternatifleri geliştirecek ve fikirlerini kısa bir sunumla paylaşacak. Daha önce girişimcilik deneyimi gerekmiyor; merak ve katılım isteği yeterli.",
+      "date": "2026-10-24T13:30:00+03:00",
+      "location": "İstanbul Galata Üniversitesi, Atölye 2",
+      "imageUrl": null,
+      "category": "Girişimcilik"
     },
     {
-      "id": "mezunlarla-kahve",
-      "date": "08 Kasım",
+      "slug": "mezunlarla-kahve",
       "title": "Mezunlarla Kahve Buluşması",
       "description": "Galata mezunlarının ilk iş deneyimlerini, öğrendiklerini ve genç profesyonellere önerilerini dinliyoruz.",
-      "href": "/#etkinlikler"
+      "longDescription": "Mezunlarla Kahve Buluşması, öğrenciler ile profesyonel hayata adım atmış Galata mezunlarını samimi bir sohbet ortamında bir araya getiriyor.\n\nİlk iş görüşmesi, staj arayışı, çalışma hayatına uyum ve kariyer yönü değiştirme gibi konuları gerçek deneyimler üzerinden konuşacağız. Buluşmanın ikinci bölümünde katılımcılar mezunlarla küçük gruplar halinde tanışabilecek.",
+      "date": "2026-11-08T16:00:00+03:00",
+      "location": "Galata Kampüs Kafe",
+      "imageUrl": null,
+      "category": "Networking"
     },
     {
-      "id": "sunum-hikayelestirme",
-      "date": "21 Kasım",
+      "slug": "sunum-hikayelestirme",
       "title": "Etkili Sunum ve Hikâyeleştirme",
       "description": "Fikirleri anlaşılır, akılda kalıcı ve ikna edici biçimde aktarmanın temel yöntemlerini uyguluyoruz.",
-      "href": "/#etkinlikler"
+      "longDescription": "Bu atölyede iyi bir sunumun yalnızca slaytlardan ibaret olmadığını, güçlü bir anlatının fikirleri nasıl daha etkili hale getirdiğini keşfedeceğiz.\n\nKatılımcılar mesaj hiyerarşisi, hikâye akışı ve sahne anlatımı üzerine kısa egzersizler yapacak. Atölye sonunda herkes kendi seçtiği bir konu için kısa bir sunum taslağı hazırlamış olacak.",
+      "date": "2025-11-21T14:00:00+03:00",
+      "location": "İstanbul Galata Üniversitesi, Seminer Salonu",
+      "imageUrl": null,
+      "category": "Atölye"
+    },
+    {
+      "slug": "cv-portfolyo-klinigi",
+      "title": "CV ve Portfolyo Kliniği",
+      "description": "Başvuru belgelerini daha net, güçlü ve kişisel bir anlatıya dönüştürmek için uygulamalı geri bildirim oturumu.",
+      "longDescription": "CV ve Portfolyo Kliniği, öğrencilerin başvuru belgelerini sektör beklentileri doğrultusunda gözden geçirebileceği uygulamalı bir etkinliktir.\n\nKatılımcılar örnekler üzerinden sık yapılan hataları inceleyecek, kendi belgeleri için kısa geri bildirimler alacak ve sonraki başvurularında kullanabilecekleri bir kontrol listesiyle ayrılacak.",
+      "date": "2025-04-18T13:00:00+03:00",
+      "location": "İstanbul Galata Üniversitesi, Kariyer Merkezi",
+      "imageUrl": null,
+      "category": "Kariyer"
+    },
+    {
+      "slug": "sosyal-etki-girisimleri",
+      "title": "Sosyal Etki Girişimleri Buluşması",
+      "description": "Toplumsal sorunlara sürdürülebilir çözümler geliştiren girişimlerin deneyimlerini dinlediğimiz ilham buluşması.",
+      "longDescription": "Sosyal Etki Girişimleri Buluşması, toplumsal fayda ile sürdürülebilir iş modellerini bir araya getiren girişimcileri kampüste ağırladı.\n\nKonuklarımız fikirlerini nasıl doğruladıklarını, ilk ekiplerini nasıl kurduklarını ve etki ölçümünü iş süreçlerine nasıl dahil ettiklerini paylaştı. Program, öğrenci fikirlerinin konuşulduğu açık mikrofon bölümüyle tamamlandı.",
+      "date": "2024-12-06T15:00:00+03:00",
+      "location": "İstanbul Galata Üniversitesi, Konferans Salonu",
+      "imageUrl": null,
+      "category": "Girişimcilik"
     }
   ]
 }
