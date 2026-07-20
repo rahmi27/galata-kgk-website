@@ -43,6 +43,18 @@ model ContactSubmission {
   isRead    Boolean  @default(false)
 }
 
+model MembershipApplication {
+  id            Int      @id @default(autoincrement())
+  fullName      String
+  email         String
+  studentNumber String?
+  department    String
+  phone         String?
+  motivation    String
+  createdAt     DateTime @default(now())
+  status        String   @default("beklemede")
+}
+
 model SiteStat {
   id    Int    @id @default(autoincrement())
   label String
