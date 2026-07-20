@@ -55,7 +55,7 @@ const navigation = [
 type AdminShellProps = {
   children: React.ReactNode;
   userName: string;
-  userEmail: string;
+  username: string;
 };
 
 function AdminNavigation({
@@ -107,7 +107,7 @@ function AdminNavigation({
 export function AdminShell({
   children,
   userName,
-  userEmail,
+  username,
 }: AdminShellProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -140,7 +140,7 @@ export function AdminShell({
               {userName}
             </p>
             <p className="mt-1 truncate text-xs text-primary-300">
-              {userEmail}
+              @{username}
             </p>
           </div>
           <button

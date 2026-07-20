@@ -29,7 +29,7 @@ export default async function AdminPanelLayout({
   return (
     <AdminShell
       userName={session.user.name ?? "Yönetici"}
-      userEmail={session.user.email ?? ""}
+      username={session.user.username}
     >
       {children}
     </AdminShell>

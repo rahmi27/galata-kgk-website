@@ -4,7 +4,7 @@ import { compare } from "bcryptjs";
 
 import { prisma } from "@/lib/prisma";
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const usernamePattern = /^[a-z0-9._-]{3,32}$/;
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
@@ -17,9 +17,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Credentials({
       name: "Yönetici hesabı",
       credentials: {
-        email: {
-          label: "E-posta",
-          type: "email",
+        username: {
+          label: "Kullanıcı Adı",
+          type: "text",
         },
         password: {
           label: "Şifre",
@@ -27,20 +27,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         },
       },
       async authorize(credentials) {
-        const email =
-          typeof credentials.email === "string"
-            ? credentials.email.trim().toLocaleLowerCase("tr-TR")
+        const username =
+          typeof credentials.username === "string"
+            ? credentials.username.trim().toLocaleLowerCase("tr-TR")
             : "";
         const password =
           typeof credentials.password === "string" ? credentials.password : "";
 
-        if (!emailPattern.test(email) || password.length < 8) {
+        if (!usernamePattern.test(username) || password.length < 8) {
           return null;
         }
 
         const admin = await prisma.adminUser.findUnique({
           where: {
-            email,
+            username,
           },
         });
 
@@ -50,13 +50,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         return {
           id: String(admin.id),
-          email: admin.email,
           name: admin.name,
+          username: admin.username,
         };
       },
     }),
   ],
   callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.username = user.username;
+      }
+
+      return token;
+    },
+    session({ session, token }) {
+      session.user.username =
+        typeof token.username === "string" ? token.username : "";
+      return session;
+    },
     authorized({ auth: session, request }) {
       const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
       const isLoginRoute = request.nextUrl.pathname === "/admin/giris";

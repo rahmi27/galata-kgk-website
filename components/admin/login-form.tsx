@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, LoaderCircle, LockKeyhole, Mail } from "lucide-react";
+import { ArrowRight, LoaderCircle, LockKeyhole, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,24 +19,24 @@ export function AdminLoginForm() {
     setIsSubmitting(true);
 
     const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "").trim();
+    const username = String(formData.get("username") ?? "").trim();
     const password = String(formData.get("password") ?? "");
 
-    if (!email || !password) {
-      setError("E-posta ve şifre alanlarını doldurun.");
+    if (!username || !password) {
+      setError("Kullanıcı adı ve şifre alanlarını doldurun.");
       setIsSubmitting(false);
       return;
     }
 
     try {
       const result = await signIn("credentials", {
-        email,
+        username,
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError("E-posta veya şifre hatalı. Bilgilerinizi kontrol edin.");
+        setError("Kullanıcı adı veya şifre hatalı. Bilgilerinizi kontrol edin.");
         setIsSubmitting(false);
         return;
       }
@@ -53,22 +53,22 @@ export function AdminLoginForm() {
     <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
       <div className="space-y-2">
         <label
-          htmlFor="admin-email"
+          htmlFor="admin-username"
           className="font-heading text-sm font-semibold text-primary-900"
         >
-          E-posta
+          Kullanıcı Adı
         </label>
         <div className="relative">
-          <Mail
+          <UserRound
             className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-primary-400"
             aria-hidden="true"
           />
           <Input
-            id="admin-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="admin@galata.edu.tr"
+            id="admin-username"
+            name="username"
+            type="text"
+            autoComplete="username"
+            placeholder="admin"
             className="h-12 rounded-xl border-primary-100 bg-primary-50/45 pl-11 text-primary-950 placeholder:text-primary-300 focus-visible:ring-accent"
             disabled={isSubmitting}
             required

@@ -13,7 +13,7 @@ const adapter = new PrismaBetterSqlite3({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const adminEmail = "admin@galata.edu.tr";
+  const adminUsername = "admin";
   const adminPassword = process.env.ADMIN_SEED_PASSWORD;
 
   if (!adminPassword) {
@@ -30,14 +30,14 @@ async function main() {
 
   await prisma.adminUser.upsert({
     where: {
-      email: adminEmail,
+      username: adminUsername,
     },
     update: {
       name: "Galata KGK Yöneticisi",
       passwordHash,
     },
     create: {
-      email: adminEmail,
+      username: adminUsername,
       name: "Galata KGK Yöneticisi",
       passwordHash,
     },
@@ -89,7 +89,7 @@ async function main() {
   console.log(
     `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${siteStatCount} istatistik.`,
   );
-  console.log(`Admin e-posta: ${adminEmail}`);
+  console.log(`Admin kullanıcı adı: ${adminUsername}`);
   console.log(`Admin geçici şifre: ${adminPassword}`);
   console.log("İlk girişten sonra bu şifreyi değiştirin.");
 }
