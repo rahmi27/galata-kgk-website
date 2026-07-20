@@ -34,12 +34,23 @@ model TeamMember {
   id         Int      @id @default(autoincrement())
   name       String
   role       String
-  department String
   photoUrl   String?
   order      Int
   createdAt  DateTime @default(now())
+  categoryId Int
+  category   TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
-  @@index([department, order])
+  @@index([categoryId, order])
+}
+
+model TeamCategory {
+  id      Int          @id @default(autoincrement())
+  name    String       @unique
+  slug    String       @unique
+  order   Int
+  members TeamMember[]
+
+  @@index([order])
 }
 
 model ContactSubmission {

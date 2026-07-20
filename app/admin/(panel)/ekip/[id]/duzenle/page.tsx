@@ -22,11 +22,27 @@ export default async function EditTeamMemberPage({
     notFound();
   }
 
-  const member = await prisma.teamMember.findUnique({
-    where: {
-      id: memberId,
-    },
-  });
+  const [member, categories] = await Promise.all([
+    prisma.teamMember.findUnique({
+      where: {
+        id: memberId,
+      },
+    }),
+    prisma.teamCategory.findMany({
+      orderBy: [
+        {
+          order: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
+  ]);
 
   if (!member) {
     notFound();
@@ -53,11 +69,12 @@ export default async function EditTeamMemberPage({
       <section className="mt-9 max-w-4xl rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-[0_18px_50px_-38px_rgba(27,42,94,0.45)] sm:p-8">
         <TeamMemberAdminForm
           action={updateAction}
+          categories={categories}
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
             name: member.name,
             role: member.role,
-            department: member.department,
+            categoryId: member.categoryId,
             photoUrl: member.photoUrl ?? "",
             order: member.order,
           }}

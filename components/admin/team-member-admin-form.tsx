@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { LoaderCircle, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 type TeamMemberFormValues = {
   name: string;
   role: string;
-  department: string;
+  categoryId: number | "new" | "";
   photoUrl: string;
   order: number;
 };
@@ -23,6 +24,10 @@ type TeamMemberAdminFormProps = {
     formData: FormData,
   ) => Promise<AdminActionState>;
   defaultValues?: TeamMemberFormValues;
+  categories: Array<{
+    id: number;
+    name: string;
+  }>;
   submitLabel: string;
   resetOnSuccess?: boolean;
 };
@@ -30,7 +35,7 @@ type TeamMemberAdminFormProps = {
 const emptyValues: TeamMemberFormValues = {
   name: "",
   role: "",
-  department: "",
+  categoryId: "",
   photoUrl: "",
   order: 0,
 };
@@ -38,10 +43,14 @@ const emptyValues: TeamMemberFormValues = {
 export function TeamMemberAdminForm({
   action,
   defaultValues = emptyValues,
+  categories,
   submitLabel,
   resetOnSuccess = false,
 }: TeamMemberAdminFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [categorySelection, setCategorySelection] = useState(
+    String(defaultValues.categoryId),
+  );
   const [state, formAction, isPending] = useActionState(
     action,
     initialAdminActionState,
@@ -52,6 +61,15 @@ export function TeamMemberAdminForm({
       formRef.current?.reset();
     }
   }, [resetOnSuccess, state.success]);
+
+  useEffect(() => {
+    const form = formRef.current;
+    const handleReset = () =>
+      setCategorySelection(String(defaultValues.categoryId));
+
+    form?.addEventListener("reset", handleReset);
+    return () => form?.removeEventListener("reset", handleReset);
+  }, [defaultValues.categoryId]);
 
   return (
     <form ref={formRef} action={formAction} className="space-y-5">
@@ -79,18 +97,51 @@ export function TeamMemberAdminForm({
             required
           />
         </FormField>
-        <FormField label="Departman" htmlFor="member-department">
-          <Input
-            id="member-department"
-            name="department"
-            defaultValue={defaultValues.department}
-            placeholder="Örn. Yönetim Kurulu"
-            minLength={2}
-            maxLength={120}
+        <FormField label="Ekip Kategorisi" htmlFor="member-category">
+          <select
+            id="member-category"
+            name="categoryId"
+            value={categorySelection}
+            onChange={(event) => setCategorySelection(event.target.value)}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring"
             required
-          />
+          >
+            <option value="" disabled>
+              Kategori seçin
+            </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+            <option value="new">+ Yeni kategori ekle</option>
+          </select>
         </FormField>
       </div>
+
+      {categorySelection === "new" ? (
+        <FormField label="Yeni Kategori Adı" htmlFor="member-new-category">
+          <Input
+            id="member-new-category"
+            name="newCategoryName"
+            placeholder="Örn. Sponsorluk Ekibi"
+            minLength={2}
+            maxLength={80}
+            required
+          />
+          <p className="text-xs leading-5 text-primary-500 dark:text-primary-200">
+            Aynı ad farklı büyük/küçük harfle mevcutsa var olan kategori
+            kullanılır.
+          </p>
+        </FormField>
+      ) : null}
+
+      <Link
+        href="/admin/ekip/kategoriler"
+        className="inline-flex text-xs font-semibold text-primary-700 underline-offset-4 hover:text-accent-700 hover:underline dark:text-primary-100"
+      >
+        Kategorileri ayrı ekranda yönet
+      </Link>
 
       <ImageUploadField
         id="member-photo"

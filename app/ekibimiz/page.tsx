@@ -15,19 +15,28 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function TeamPage() {
-  const teamMembers = await prisma.teamMember.findMany({
-    orderBy: {
-      order: "asc",
+  const categories = await prisma.teamCategory.findMany({
+    orderBy: [
+      {
+        order: "asc",
+      },
+      {
+        name: "asc",
+      },
+    ],
+    include: {
+      members: {
+        orderBy: [
+          {
+            order: "asc",
+          },
+          {
+            name: "asc",
+          },
+        ],
+      },
     },
   });
-
-  const departments = new Map<string, typeof teamMembers>();
-
-  for (const member of teamMembers) {
-    const departmentMembers = departments.get(member.department) ?? [];
-    departmentMembers.push(member);
-    departments.set(member.department, departmentMembers);
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,18 +59,20 @@ export default async function TeamPage() {
 
         <section className="py-20 sm:py-28">
           <div className="mx-auto max-w-7xl space-y-20 px-5 sm:px-8 lg:px-10">
-            {[...departments.entries()].map(
-              ([department, members], departmentIndex) => (
-                <section key={department} aria-labelledby={`department-${departmentIndex}`}>
+            {categories.map((category, categoryIndex) => (
+                <section
+                  key={category.id}
+                  aria-labelledby={`category-${category.slug}`}
+                >
                   <div className="flex items-center gap-5">
                     <span className="font-heading text-xs font-bold tracking-[0.16em] text-accent-700 dark:text-accent-300">
-                      {String(departmentIndex + 1).padStart(2, "0")}
+                      {String(categoryIndex + 1).padStart(2, "0")}
                     </span>
                     <h2
-                      id={`department-${departmentIndex}`}
+                      id={`category-${category.slug}`}
                       className="font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white"
                     >
-                      {department}
+                      {category.name}
                     </h2>
                     <span
                       className="h-px flex-1 bg-primary/10 dark:bg-white/10"
@@ -70,7 +81,7 @@ export default async function TeamPage() {
                   </div>
 
                   <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                    {members.map((member) => (
+                    {category.members.map((member) => (
                       <TeamMemberCard
                         key={member.id}
                         name={member.name}
@@ -80,8 +91,7 @@ export default async function TeamPage() {
                     ))}
                   </div>
                 </section>
-              ),
-            )}
+              ))}
           </div>
         </section>
       </main>

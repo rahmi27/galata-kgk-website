@@ -6,6 +6,7 @@ import { PrismaClient } from "../lib/generated/prisma/client";
 import eventsContent from "../content/events.json";
 import homeContent from "../content/home.json";
 import teamContent from "../content/team.json";
+import { createNormalizedSlug } from "../lib/slug";
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL ?? "file:./dev.db",
@@ -46,6 +47,7 @@ async function main() {
   await prisma.$transaction([
     prisma.event.deleteMany(),
     prisma.teamMember.deleteMany(),
+    prisma.teamCategory.deleteMany(),
     prisma.siteStat.deleteMany(),
   ]);
 
@@ -62,11 +64,27 @@ async function main() {
     })),
   });
 
+  const categoryNames = Array.from(
+    new Set(teamContent.members.map((member) => member.department)),
+  );
+  const categoryIdByName = new Map<string, number>();
+
+  for (const [index, name] of categoryNames.entries()) {
+    const category = await prisma.teamCategory.create({
+      data: {
+        name,
+        slug: createNormalizedSlug(name),
+        order: index + 1,
+      },
+    });
+    categoryIdByName.set(name, category.id);
+  }
+
   await prisma.teamMember.createMany({
     data: teamContent.members.map((member) => ({
       name: member.name,
       role: member.role,
-      department: member.department,
+      categoryId: categoryIdByName.get(member.department)!,
       photoUrl: member.photoUrl,
       order: member.order,
     })),
@@ -80,14 +98,16 @@ async function main() {
     })),
   });
 
-  const [eventCount, teamMemberCount, siteStatCount] = await Promise.all([
+  const [eventCount, teamMemberCount, categoryCount, siteStatCount] =
+    await Promise.all([
     prisma.event.count(),
     prisma.teamMember.count(),
+    prisma.teamCategory.count(),
     prisma.siteStat.count(),
-  ]);
+    ]);
 
   console.log(
-    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${siteStatCount} istatistik.`,
+    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik.`,
   );
   console.log(`Admin kullanıcı adı: ${adminUsername}`);
   console.log(`Admin geçici şifre: ${adminPassword}`);

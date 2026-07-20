@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ListOrdered, Pencil, UserRound } from "lucide-react";
+import { FolderCog, ListOrdered, Pencil, UserRound } from "lucide-react";
 
 import { createTeamMemberAction } from "@/app/admin/(panel)/ekip/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
@@ -15,13 +15,10 @@ export default async function AdminTeamPage({
 }: {
   searchParams: Promise<{ durum?: string }>;
 }) {
-  const [{ durum }, members] = await Promise.all([
+  const [{ durum }, categories] = await Promise.all([
     searchParams,
-    prisma.teamMember.findMany({
+    prisma.teamCategory.findMany({
       orderBy: [
-        {
-          department: "asc",
-        },
         {
           order: "asc",
         },
@@ -29,16 +26,24 @@ export default async function AdminTeamPage({
           name: "asc",
         },
       ],
+      include: {
+        members: {
+          orderBy: [
+            {
+              order: "asc",
+            },
+            {
+              name: "asc",
+            },
+          ],
+        },
+      },
     }),
   ]);
 
-  const groupedMembers = members.reduce<Record<string, typeof members>>(
-    (groups, member) => {
-      groups[member.department] ??= [];
-      groups[member.department].push(member);
-      return groups;
-    },
-    {},
+  const memberCount = categories.reduce(
+    (total, category) => total + category.members.length,
+    0,
   );
 
   return (
@@ -46,7 +51,15 @@ export default async function AdminTeamPage({
       <AdminPageHeader
         eyebrow="İnsan ve Ekip"
         title="Ekip Yönetimi"
-        description="Ekip üyelerini departmanlarıyla birlikte yönetin ve halka açık listedeki sıralarını belirleyin."
+        description={`${memberCount} ekip üyesini kategorileriyle birlikte yönetin ve halka açık listedeki sıralarını belirleyin.`}
+        actions={
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href="/admin/ekip/kategoriler">
+              <FolderCog aria-hidden="true" />
+              Kategorileri yönet
+            </Link>
+          </Button>
+        }
       />
 
       {durum === "guncellendi" ? (
@@ -60,25 +73,26 @@ export default async function AdminTeamPage({
 
       <div className="mt-9 grid gap-7 xl:grid-cols-[minmax(0,1fr)_minmax(25rem,0.65fr)]">
         <section className="min-w-0 space-y-5">
-          {Object.keys(groupedMembers).length ? (
-            Object.entries(groupedMembers).map(([department, departmentMembers]) => (
+          {categories.length ? (
+            categories.map((category) => (
               <div
-                key={department}
+                key={category.id}
                 className="rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-[0_18px_50px_-38px_rgba(27,42,94,0.45)] sm:p-7"
               >
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <h2 className="font-heading text-xl font-bold text-primary-950">
-                      {department}
+                      {category.name}
                     </h2>
                     <p className="mt-1 text-sm text-primary-400">
-                      {departmentMembers.length} ekip üyesi
+                      {category.members.length} ekip üyesi · kategori sırası{" "}
+                      {category.order}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-5 divide-y divide-primary-50">
-                  {departmentMembers.map((member) => (
+                  {category.members.map((member) => (
                     <article
                       key={member.id}
                       className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
@@ -142,11 +156,16 @@ export default async function AdminTeamPage({
             Yeni ekip üyesi
           </h2>
           <p className="mt-2 text-sm leading-6 text-primary-400">
-            Departman adı aynı yazıldığında üyeler otomatik gruplanır.
+            Var olan bir kategori seçin veya formun içinden yeni kategori
+            oluşturun.
           </p>
           <div className="mt-6">
             <TeamMemberAdminForm
               action={createTeamMemberAction}
+              categories={categories.map((category) => ({
+                id: category.id,
+                name: category.name,
+              }))}
               submitLabel="Ekip üyesi ekle"
               resetOnSuccess
             />

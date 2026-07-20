@@ -25,8 +25,8 @@ export type EventAdminInput = {
 export type TeamMemberAdminInput = {
   name: string;
   role: string;
-  department: string;
-  photoUrl: string | null;
+  categoryId: number | null;
+  newCategoryName: string | null;
   order: number;
 };
 
@@ -134,8 +134,8 @@ export function validateTeamMemberForm(
 ): ValidationResult<TeamMemberAdminInput> {
   const name = getFormString(formData, "name");
   const role = getFormString(formData, "role");
-  const department = getFormString(formData, "department");
-  const photoUrl = getFormString(formData, "photoUrl");
+  const categoryValue = getFormString(formData, "categoryId");
+  const newCategoryName = getFormString(formData, "newCategoryName");
   const orderValue = getFormString(formData, "order");
   const order = Number(orderValue);
 
@@ -153,24 +153,31 @@ export function validateTeamMemberForm(
     };
   }
 
-  if (department.length < 2 || department.length > 120) {
-    return {
-      success: false,
-      error: "Departman 2–120 karakter arasında olmalıdır.",
-    };
-  }
-
-  if (photoUrl.length > 500 || !validateOptionalUrl(photoUrl)) {
-    return {
-      success: false,
-      error: "Fotoğraf adresi http veya https ile başlayan geçerli bir URL olmalıdır.",
-    };
-  }
-
   if (!Number.isInteger(order) || order < 0 || order > 9999) {
     return {
       success: false,
       error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  const categoryId =
+    categoryValue === "new" ? null : Number(categoryValue);
+
+  if (categoryValue === "new") {
+    if (newCategoryName.length < 2 || newCategoryName.length > 80) {
+      return {
+        success: false,
+        error: "Yeni kategori adı 2–80 karakter arasında olmalıdır.",
+      };
+    }
+  } else if (
+    categoryId === null ||
+    !Number.isInteger(categoryId) ||
+    categoryId <= 0
+  ) {
+    return {
+      success: false,
+      error: "Geçerli bir ekip kategorisi seçin.",
     };
   }
 
@@ -179,8 +186,9 @@ export function validateTeamMemberForm(
     data: {
       name,
       role,
-      department,
-      photoUrl: photoUrl || null,
+      categoryId,
+      newCategoryName:
+        categoryValue === "new" ? newCategoryName : null,
       order,
     },
   };

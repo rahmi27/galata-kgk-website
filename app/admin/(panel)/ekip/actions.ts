@@ -11,11 +11,55 @@ import {
   saveImageUpload,
 } from "@/lib/image-upload";
 import { prisma } from "@/lib/prisma";
+import { validateTeamCategoryName } from "@/lib/team-category";
 
 function revalidateTeamPages() {
   revalidatePath("/ekibimiz");
   revalidatePath("/admin");
   revalidatePath("/admin/ekip");
+  revalidatePath("/admin/ekip/kategoriler");
+}
+
+async function resolveCategory(
+  categoryId: number | null,
+  newCategoryName: string | null,
+) {
+  if (categoryId) {
+    return prisma.teamCategory.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+  }
+
+  const categoryValidation = validateTeamCategoryName(newCategoryName ?? "");
+
+  if (!categoryValidation.success) {
+    return null;
+  }
+
+  const existingCategory = await prisma.teamCategory.findUnique({
+    where: {
+      slug: categoryValidation.data.slug,
+    },
+  });
+
+  if (existingCategory) {
+    return existingCategory;
+  }
+
+  const highestOrder = await prisma.teamCategory.aggregate({
+    _max: {
+      order: true,
+    },
+  });
+
+  return prisma.teamCategory.create({
+    data: {
+      ...categoryValidation.data,
+      order: (highestOrder._max.order ?? 0) + 1,
+    },
+  });
 }
 
 export async function createTeamMemberAction(
@@ -44,11 +88,24 @@ export async function createTeamMemberAction(
     };
   }
 
+  const category = await resolveCategory(
+    validation.data.categoryId,
+    validation.data.newCategoryName,
+  );
+
+  if (!category) {
+    await deleteUploadedImage(imageUpload.path);
+    return {
+      success: false,
+      message: "Seçilen ekip kategorisi bulunamadı.",
+    };
+  }
+
   try {
     const memberData = {
       name: validation.data.name,
       role: validation.data.role,
-      department: validation.data.department,
+      categoryId: category.id,
       order: validation.data.order,
     };
 
@@ -119,11 +176,24 @@ export async function updateTeamMemberAction(
     };
   }
 
+  const category = await resolveCategory(
+    validation.data.categoryId,
+    validation.data.newCategoryName,
+  );
+
+  if (!category) {
+    await deleteUploadedImage(imageUpload.path);
+    return {
+      success: false,
+      message: "Seçilen ekip kategorisi bulunamadı.",
+    };
+  }
+
   try {
     const memberData = {
       name: validation.data.name,
       role: validation.data.role,
-      department: validation.data.department,
+      categoryId: category.id,
       order: validation.data.order,
     };
 
