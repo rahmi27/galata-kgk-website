@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -33,7 +35,7 @@ const whyUsIcons = {
 } as const;
 
 export default async function HomePage() {
-  const [stats, featuredEvents] = await Promise.all([
+  const [stats, featuredEvents, sponsors] = await Promise.all([
     prisma.siteStat.findMany({
       orderBy: {
         order: "asc",
@@ -49,6 +51,22 @@ export default async function HomePage() {
         date: "asc",
       },
       take: 3,
+    }),
+    prisma.sponsor.findMany({
+      orderBy: [
+        {
+          tier: {
+            order: "asc",
+          },
+        },
+        {
+          order: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+      take: 8,
     }),
   ]);
 
@@ -152,6 +170,60 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {sponsors.length ? (
+          <section className="border-y border-primary/10 bg-primary-50/45 py-12 dark:border-white/10 dark:bg-white/[0.025] sm:py-14">
+            <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
+                    Birlikte değer üretiyoruz
+                  </p>
+                  <h2 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white">
+                    Sponsorlarımız
+                  </h2>
+                </div>
+                <Button asChild variant="link" className="w-fit">
+                  <Link href="/sponsorlar">
+                    Tüm sponsorları gör
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
+                {sponsors.map((sponsor) => {
+                  const logo = (
+                    <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
+                      <img
+                        src={sponsor.logoUrl}
+                        alt={`${sponsor.name} logosu`}
+                        className="max-h-12 w-auto max-w-full object-contain"
+                      />
+                    </div>
+                  );
+
+                  return sponsor.websiteUrl ? (
+                    <Link
+                      key={sponsor.id}
+                      href={sponsor.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                      aria-label={`${sponsor.name} web sitesini yeni sekmede aç`}
+                    >
+                      {logo}
+                    </Link>
+                  ) : (
+                    <div key={sponsor.id} className="group">
+                      {logo}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section
           id="etkinlikler"
