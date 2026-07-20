@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "İletişim | Galata KGK",
+    "description": "Galata KGK ile iletişime geçin, sorularınızı paylaşın ve kulüp çalışmalarına katılın."
+  },
+  "hero": {
+    "eyebrow": "İletişim",
+    "title": "Tanışalım, birlikte yeni bir adım atalım.",
+    "description": "Etkinlikler, üyelik ve iş birlikleri hakkında merak ettiklerin için bize ulaşabilirsin."
+  },
+  "details": {
+    "eyebrow": "Bize Ulaş",
+    "title": "Mesajını bekliyoruz.",
+    "description": "Sorunu veya fikrini paylaş; kulüp ekibimiz en kısa sürede seninle iletişime geçsin.",
+    "address": {
+      "label": "Adres",
+      "value": "İstanbul Galata Üniversitesi, Beyoğlu / İstanbul",
+      "href": "https://maps.google.com"
+    },
+    "email": {
+      "label": "E-posta",
+      "value": "kariyer.girisimcilik@galata.edu.tr",
+      "href": "mailto:kariyer.girisimcilik@galata.edu.tr"
+    },
+    "socialLabel": "Sosyal medyada takip et",
+    "socials": [
+      {
+        "platform": "Instagram",
+        "label": "@galatakgk",
+        "href": "#"
+      },
+      {
+        "platform": "LinkedIn",
+        "label": "Galata KGK",
+        "href": "#"
+      },
+      {
+        "platform": "X",
+        "label": "@galatakgk",
+        "href": "#"
+      }
+    ]
+  },
+  "form": {
+    "eyebrow": "Mesaj Gönder",
+    "title": "Aklındaki konuyu bizimle paylaş.",
+    "description": "Aşağıdaki alanları doldur. Form gönderimi bir sonraki fazda aktif edilecek.",
+    "fields": {
+      "name": {
+        "label": "Ad Soyad",
+        "placeholder": "Adını ve soyadını yaz"
+      },
+      "email": {
+        "label": "E-posta",
+        "placeholder": "ornek@galata.edu.tr"
+      },
+      "message": {
+        "label": "Mesajın",
+        "placeholder": "Bizimle paylaşmak istediğin konuyu kısaca anlat"
+      }
+    },
+    "submitLabel": "Mesajı Gönder",
+    "notice": "Bu form şu anda yalnızca arayüz önizlemesidir; herhangi bir veri göndermez."
+  }
+}
