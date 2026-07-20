@@ -14,7 +14,7 @@
     },
     "secondaryCta": {
       "label": "Kulübe Katıl",
-      "href": "/iletisim#iletisim-formu"
+      "href": "/katilim"
     },
     "spotlight": {
       "eyebrow": "Bu dönem odağımız",
@@ -91,8 +91,8 @@
     "title": "Kariyer yolculuğuna güçlü bir toplulukla başla.",
     "description": "Yeni insanlarla tanışmak, becerilerini geliştirmek ve birlikte üretmek için Galata KGK’ya katıl.",
     "button": {
-      "label": "Katılım İçin İletişime Geç",
-      "href": "/iletisim#iletisim-formu"
+      "label": "Katılım Formunu Doldur",
+      "href": "/katilim"
     }
   }
 }

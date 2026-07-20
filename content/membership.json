@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "Kulübe Katıl | Galata KGK",
+    "description": "Galata KGK üyelik başvuru formunu doldurun ve kariyer ile girişimcilik topluluğuna katılın."
+  },
+  "hero": {
+    "eyebrow": "Kulübe Katıl",
+    "title": "Merakını, enerjini ve fikrini topluluğa kat.",
+    "description": "Kendini geliştirmek, yeni insanlarla tanışmak ve birlikte üretmek için kısa başvuru formunu doldur."
+  },
+  "process": {
+    "eyebrow": "Başvurudan Sonra",
+    "title": "Seni tanımak için üç kısa adım.",
+    "description": "Başvurun ekibimize ulaştıktan sonra süreç şeffaf ve hızlı biçimde ilerler.",
+    "steps": [
+      {
+        "title": "Başvurunu inceliyoruz",
+        "description": "Paylaştığın bilgileri ve motivasyonunu kulüp ekibi olarak değerlendiriyoruz."
+      },
+      {
+        "title": "Seninle iletişime geçiyoruz",
+        "description": "Uygun ekip ve çalışma alanlarını konuşmak için kısa bir tanışma planlıyoruz."
+      },
+      {
+        "title": "Birlikte üretmeye başlıyoruz",
+        "description": "İlgi alanına göre etkinlik, iletişim veya proje çalışmalarına dahil oluyorsun."
+      }
+    ]
+  },
+  "form": {
+    "eyebrow": "Üyelik Başvurusu",
+    "title": "Kendinden kısaca bahset.",
+    "description": "Zorunlu alanları doldur; başvurun doğrudan kulüp ekibimize ulaşsın.",
+    "fields": {
+      "fullName": {
+        "label": "Ad Soyad",
+        "placeholder": "Adını ve soyadını yaz"
+      },
+      "email": {
+        "label": "E-posta",
+        "placeholder": "ornek@galata.edu.tr"
+      },
+      "studentNumber": {
+        "label": "Öğrenci Numarası (opsiyonel)",
+        "placeholder": "Öğrenci numaran"
+      },
+      "department": {
+        "label": "Bölüm",
+        "placeholder": "Örn. İşletme"
+      },
+      "phone": {
+        "label": "Telefon (opsiyonel)",
+        "placeholder": "+90 5xx xxx xx xx"
+      },
+      "motivation": {
+        "label": "Neden katılmak istiyorsun?",
+        "placeholder": "Galata KGK’da ne öğrenmek veya üretmek istediğini kısaca anlat"
+      }
+    },
+    "submitLabel": "Başvuruyu Gönder",
+    "submittingLabel": "Gönderiliyor...",
+    "successMessage": "Başvurun başarıyla alındı. En kısa sürede seninle iletişime geçeceğiz.",
+    "errorMessage": "Başvurun gönderilemedi. Lütfen biraz sonra tekrar dene."
+  }
+}
