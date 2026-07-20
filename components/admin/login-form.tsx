@@ -69,7 +69,7 @@ export function AdminLoginForm() {
             type="text"
             autoComplete="username"
             placeholder="admin"
-            className="h-12 rounded-xl border-primary-100 bg-primary-50/45 pl-11 text-primary-950 placeholder:text-primary-300 focus-visible:ring-accent"
+            className="h-12 rounded-xl border-primary-100 bg-primary-50/45 pl-11 text-primary-950 placeholder:text-primary-500 focus-visible:ring-accent"
             disabled={isSubmitting}
             required
           />
@@ -94,7 +94,7 @@ export function AdminLoginForm() {
             type="password"
             autoComplete="current-password"
             placeholder="Şifrenizi girin"
-            className="h-12 rounded-xl border-primary-100 bg-primary-50/45 pl-11 text-primary-950 placeholder:text-primary-300 focus-visible:ring-accent"
+            className="h-12 rounded-xl border-primary-100 bg-primary-50/45 pl-11 text-primary-950 placeholder:text-primary-500 focus-visible:ring-accent"
             disabled={isSubmitting}
             required
           />

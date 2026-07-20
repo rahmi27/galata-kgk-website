@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -83,7 +84,7 @@ function AdminNavigation({
               "group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors",
               isActive
                 ? "bg-white text-primary-950 shadow-sm"
-                : "text-primary-200 hover:bg-white/10 hover:text-white",
+                : "text-primary-100 hover:bg-white/15 hover:text-white",
             )}
             aria-current={isActive ? "page" : undefined}
           >
@@ -92,7 +93,7 @@ function AdminNavigation({
                 "size-4.5",
                 isActive
                   ? "text-accent-600"
-                  : "text-primary-300 group-hover:text-accent-300",
+                  : "text-primary-200 group-hover:text-accent-200",
               )}
               aria-hidden="true"
             />
@@ -119,7 +120,7 @@ export function AdminShell({
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f7fb] text-primary-950">
+    <div className="admin-shell min-h-screen bg-[#f5f7fb] text-primary-950 transition-colors dark:bg-primary-900 dark:text-primary-50">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 flex-col bg-primary-950 px-5 py-6 lg:flex">
         <Link
           href="/admin"
@@ -128,25 +129,28 @@ export function AdminShell({
           <span className="h-8 w-1.5 rounded-full bg-accent" aria-hidden="true" />
           Galata KGK
         </Link>
-        <p className="mt-2 px-2 text-xs font-medium uppercase tracking-[0.16em] text-primary-400">
+        <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary-300">
           Yönetim Paneli
         </p>
 
         <AdminNavigation pathname={pathname} />
 
         <div className="mt-auto border-t border-white/10 pt-5">
-          <div className="px-3">
-            <p className="truncate text-sm font-semibold text-white">
-              {userName}
-            </p>
-            <p className="mt-1 truncate text-xs text-primary-300">
-              @{username}
-            </p>
+          <div className="flex items-start justify-between gap-3 px-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">
+                {userName}
+              </p>
+              <p className="mt-1 truncate text-xs font-medium text-primary-200">
+                @{username}
+              </p>
+            </div>
+            <ThemeToggle />
           </div>
           <button
             type="button"
             onClick={handleSignOut}
-            className="mt-4 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-primary-200 transition-colors hover:bg-white/10 hover:text-white"
+            className="mt-4 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-primary-100 transition-colors hover:bg-white/15 hover:text-white"
           >
             <LogOut className="size-4.5 text-accent-300" aria-hidden="true" />
             Çıkış Yap
@@ -154,7 +158,7 @@ export function AdminShell({
         </div>
       </aside>
 
-      <header className="sticky top-0 z-30 flex h-[4.5rem] items-center justify-between border-b border-primary-100 bg-white/90 px-5 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 flex h-[4.5rem] items-center justify-between border-b border-primary-100 bg-white/90 px-5 backdrop-blur dark:border-white/10 dark:bg-primary-950/90 lg:hidden">
         <Link
           href="/admin"
           className="flex items-center gap-2.5 font-heading font-bold text-primary-950"
@@ -162,16 +166,19 @@ export function AdminShell({
           <span className="h-6 w-1 rounded-full bg-accent" aria-hidden="true" />
           Galata KGK Admin
         </Link>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="rounded-xl"
-          onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Yönetim menüsünü aç"
-        >
-          <Menu aria-hidden="true" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="rounded-xl"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Yönetim menüsünü aç"
+          >
+            <Menu aria-hidden="true" />
+          </Button>
+        </div>
       </header>
 
       {isMobileMenuOpen ? (

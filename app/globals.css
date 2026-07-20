@@ -56,3 +56,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .dark .admin-shell :where(.bg-white) {
+    background-color: #0a1026;
+  }
+
+  .dark .admin-shell :where(.bg-primary-50) {
+    background-color: rgb(255 255 255 / 0.07);
+  }
+
+  .dark .admin-shell
+    :where(
+      .text-primary-950,
+      .text-primary-900,
+      .text-primary-800,
+      .text-primary-700
+    ) {
+    color: #f6f7fb;
+  }
+
+  .dark .admin-shell
+    :where(.text-primary-600, .text-primary-500, .text-primary-400) {
+    color: #c4cbe1;
+  }
+
+  .dark .admin-shell
+    :where(.border-primary-50, .border-primary-100, .border-primary-200) {
+    border-color: rgb(255 255 255 / 0.14);
+  }
+}
