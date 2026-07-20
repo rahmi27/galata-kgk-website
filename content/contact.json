@@ -44,7 +44,7 @@
   "form": {
     "eyebrow": "Mesaj Gönder",
     "title": "Aklındaki konuyu bizimle paylaş.",
-    "description": "Aşağıdaki alanları doldur. Form gönderimi bir sonraki fazda aktif edilecek.",
+    "description": "Aşağıdaki alanları doldur; mesajın doğrudan kulüp ekibimize ulaşsın.",
     "fields": {
       "name": {
         "label": "Ad Soyad",
@@ -60,6 +60,8 @@
       }
     },
     "submitLabel": "Mesajı Gönder",
-    "notice": "Bu form şu anda yalnızca arayüz önizlemesidir; herhangi bir veri göndermez."
+    "submittingLabel": "Gönderiliyor...",
+    "successMessage": "Teşekkürler! Mesajın başarıyla alındı.",
+    "errorMessage": "Mesajın gönderilemedi. Lütfen biraz sonra tekrar dene."
   }
 }
