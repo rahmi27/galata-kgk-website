@@ -15,6 +15,7 @@ type ImageUploadFieldProps = {
   name: string;
   label: string;
   defaultImageUrl?: string;
+  required?: boolean;
 };
 
 export function ImageUploadField({
@@ -22,6 +23,7 @@ export function ImageUploadField({
   name,
   label,
   defaultImageUrl,
+  required = false,
 }: ImageUploadFieldProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -114,6 +116,7 @@ export function ImageUploadField({
             type="file"
             accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
             onChange={handleChange}
+            required={required}
             className="block w-full cursor-pointer rounded-xl border border-primary-100 bg-white text-sm text-primary-700 file:mr-4 file:border-0 file:bg-primary-950 file:px-4 file:py-3 file:font-semibold file:text-white hover:file:bg-primary-800 dark:border-white/15 dark:bg-primary-950 dark:text-primary-100"
           />
           <p className="mt-2 text-xs leading-5 text-primary-500 dark:text-primary-200">

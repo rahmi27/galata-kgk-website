@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   CalendarDays,
+  Handshake,
   Inbox,
   LayoutDashboard,
   LogOut,
@@ -36,6 +37,11 @@ const navigation = [
     label: "Ekip",
     href: "/admin/ekip",
     icon: UsersRound,
+  },
+  {
+    label: "Sponsorlar",
+    href: "/admin/sponsorlar",
+    icon: Handshake,
   },
   {
     label: "Mesajlar",

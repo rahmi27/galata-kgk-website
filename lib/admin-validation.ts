@@ -36,6 +36,15 @@ export type SiteStatAdminInput = {
   order: number;
 };
 
+export type SponsorAdminInput = {
+  name: string;
+  websiteUrl: string | null;
+  description: string | null;
+  tierId: number | null;
+  newTierName: string | null;
+  order: number;
+};
+
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
@@ -189,6 +198,73 @@ export function validateTeamMemberForm(
       categoryId,
       newCategoryName:
         categoryValue === "new" ? newCategoryName : null,
+      order,
+    },
+  };
+}
+
+export function validateSponsorForm(
+  formData: FormData,
+): ValidationResult<SponsorAdminInput> {
+  const name = getFormString(formData, "name");
+  const websiteUrl = getFormString(formData, "websiteUrl");
+  const description = getFormString(formData, "description");
+  const tierValue = getFormString(formData, "tierId");
+  const newTierName = getFormString(formData, "newTierName");
+  const order = Number(getFormString(formData, "order"));
+
+  if (name.length < 2 || name.length > 120) {
+    return {
+      success: false,
+      error: "Sponsor adı 2–120 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (websiteUrl.length > 500 || !validateOptionalUrl(websiteUrl)) {
+    return {
+      success: false,
+      error: "Web sitesi http veya https ile başlayan geçerli bir adres olmalıdır.",
+    };
+  }
+
+  if (description.length > 320) {
+    return {
+      success: false,
+      error: "Kısa açıklama en fazla 320 karakter olabilir.",
+    };
+  }
+
+  if (!Number.isInteger(order) || order < 0 || order > 9999) {
+    return {
+      success: false,
+      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  const tierId = tierValue === "new" ? null : Number(tierValue);
+
+  if (tierValue === "new") {
+    if (newTierName.length < 2 || newTierName.length > 80) {
+      return {
+        success: false,
+        error: "Yeni tier adı 2–80 karakter arasında olmalıdır.",
+      };
+    }
+  } else if (tierId === null || !Number.isInteger(tierId) || tierId <= 0) {
+    return {
+      success: false,
+      error: "Geçerli bir sponsor tier'ı seçin.",
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      name,
+      websiteUrl: websiteUrl || null,
+      description: description || null,
+      tierId,
+      newTierName: tierValue === "new" ? newTierName : null,
       order,
     },
   };
