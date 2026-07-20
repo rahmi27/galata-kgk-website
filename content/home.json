@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "title": "Galata KGK | Kariyerini Birlikte Şekillendir",
+    "description": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü; öğrencileri deneyim, bağlantı ve üretim odağında bir araya getirir."
+  },
+  "hero": {
+    "eyebrow": "Kariyer • Girişimcilik • Topluluk",
+    "title": "Fikrini büyüt,",
+    "emphasis": "geleceğini birlikte kur.",
+    "description": "Kariyer yolculuğunu yalnız yürümek zorunda değilsin. Sektörle tanış, üretken insanlarla buluş ve potansiyelini harekete geçir.",
+    "primaryCta": {
+      "label": "Etkinlikleri Gör",
+      "href": "/#etkinlikler"
+    },
+    "secondaryCta": {
+      "label": "Kulübe Katıl",
+      "href": "/iletisim#iletisim-formu"
+    },
+    "spotlight": {
+      "eyebrow": "Bu dönem odağımız",
+      "title": "Merak eden, deneyen ve paylaşan bir topluluk.",
+      "description": "İş dünyasına yakından bakarken kendi yolunu çizmen için alan açıyoruz.",
+      "topics": [
+        "Kariyer buluşmaları",
+        "Girişimcilik atölyeleri",
+        "Güçlü bağlantılar"
+      ]
+    }
+  },
+  "statsSection": {
+    "eyebrow": "Birlikte Büyüyoruz",
+    "title": "Enerjisini üyelerinden alan bir öğrenci topluluğu.",
+    "description": "Her buluşmada yeni bir fikir, yeni bir bağlantı ve yeni bir deneyim üretiyoruz.",
+    "items": [
+      {
+        "value": "500+",
+        "label": "Topluluk üyesi"
+      },
+      {
+        "value": "24",
+        "label": "Yıllık etkinlik"
+      },
+      {
+        "value": "18",
+        "label": "Sektör iş birliği"
+      },
+      {
+        "value": "40+",
+        "label": "Konuk profesyonel"
+      }
+    ]
+  },
+  "eventsSection": {
+    "eyebrow": "Yaklaşan Etkinlikler",
+    "title": "Takviminde yeni fikirlere yer aç.",
+    "description": "İlham veren konuşmalar, uygulamalı atölyeler ve gerçek bağlantılar için yaklaşan buluşmalarımıza göz at.",
+    "featuredEventIds": [
+      "kariyer-pusulasi",
+      "girisim-fikri-atolyesi",
+      "mezunlarla-kahve"
+    ],
+    "allEventsCta": {
+      "label": "Tüm Etkinlikler",
+      "href": "/#etkinlikler"
+    }
+  },
+  "whyUsSection": {
+    "eyebrow": "Neden Galata KGK?",
+    "title": "Kampüsten iş dünyasına uzanan gerçek bir öğrenme alanı.",
+    "description": "Sadece dinlediğin değil; soru sorduğun, denediğin ve çevreni genişlettiğin deneyimler tasarlıyoruz.",
+    "items": [
+      {
+        "icon": "compass",
+        "title": "Yönünü keşfet",
+        "description": "Farklı sektörleri ve kariyer yollarını yakından tanı, sana uygun seçenekleri daha bilinçli değerlendir."
+      },
+      {
+        "icon": "lightbulb",
+        "title": "Fikrini dene",
+        "description": "Atölyeler ve proje ekipleriyle düşüncelerini somutlaştır, üretirken öğrenmenin gücünü deneyimle."
+      },
+      {
+        "icon": "network",
+        "title": "Çevreni genişlet",
+        "description": "Öğrenciler, mezunlar ve sektör profesyonelleriyle kalıcı, nitelikli bağlantılar kur."
+      }
+    ]
+  },
+  "closingCta": {
+    "eyebrow": "Sıradaki Adım Senin",
+    "title": "Kariyer yolculuğuna güçlü bir toplulukla başla.",
+    "description": "Yeni insanlarla tanışmak, becerilerini geliştirmek ve birlikte üretmek için Galata KGK’ya katıl.",
+    "button": {
+      "label": "Katılım İçin İletişime Geç",
+      "href": "/iletisim#iletisim-formu"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "events": [
+    {
+      "id": "kariyer-pusulasi",
+      "date": "12 Ekim",
+      "title": "Kariyer Pusulası: Sektörleri Tanı",
+      "description": "Farklı alanlardan profesyonellerle kariyer seçeneklerini ve iş dünyasının güncel beklentilerini konuşuyoruz.",
+      "href": "/#etkinlikler"
+    },
+    {
+      "id": "girisim-fikri-atolyesi",
+      "date": "24 Ekim",
+      "title": "Girişim Fikri Atölyesi",
+      "description": "Bir problemi doğru tanımlamaktan ilk çözüm taslağına uzanan süreci ekip çalışmasıyla deneyimliyoruz.",
+      "href": "/#etkinlikler"
+    },
+    {
+      "id": "mezunlarla-kahve",
+      "date": "08 Kasım",
+      "title": "Mezunlarla Kahve Buluşması",
+      "description": "Galata mezunlarının ilk iş deneyimlerini, öğrendiklerini ve genç profesyonellere önerilerini dinliyoruz.",
+      "href": "/#etkinlikler"
+    },
+    {
+      "id": "sunum-hikayelestirme",
+      "date": "21 Kasım",
+      "title": "Etkili Sunum ve Hikâyeleştirme",
+      "description": "Fikirleri anlaşılır, akılda kalıcı ve ikna edici biçimde aktarmanın temel yöntemlerini uyguluyoruz.",
+      "href": "/#etkinlikler"
+    }
+  ]
+}
