@@ -41,6 +41,8 @@ model ContactSubmission {
   message   String
   createdAt DateTime @default(now())
   isRead    Boolean  @default(false)
+
+  @@index([email, createdAt])
 }
 
 model MembershipApplication {
@@ -53,6 +55,8 @@ model MembershipApplication {
   motivation    String
   createdAt     DateTime @default(now())
   status        String   @default("beklemede")
+
+  @@index([email, createdAt])
 }
 
 model SiteStat {
