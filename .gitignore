@@ -45,3 +45,7 @@ next-env.d.ts
 /dev.db-journal
 /dev.db-shm
 /dev.db-wal
+
+# locally uploaded media
+/public/uploads/*
+!/public/uploads/.gitkeep

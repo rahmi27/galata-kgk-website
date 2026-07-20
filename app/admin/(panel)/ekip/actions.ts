@@ -6,6 +6,10 @@ import { redirect } from "next/navigation";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { validateTeamMemberForm } from "@/lib/admin-validation";
+import {
+  deleteUploadedImage,
+  saveImageUpload,
+} from "@/lib/image-upload";
 import { prisma } from "@/lib/prisma";
 
 function revalidateTeamPages() {
@@ -28,9 +32,31 @@ export async function createTeamMemberAction(
     };
   }
 
+  const imageUpload = await saveImageUpload(
+    formData.get("memberPhoto"),
+    "team",
+  );
+
+  if (!imageUpload.success) {
+    return {
+      success: false,
+      message: imageUpload.error,
+    };
+  }
+
   try {
+    const memberData = {
+      name: validation.data.name,
+      role: validation.data.role,
+      department: validation.data.department,
+      order: validation.data.order,
+    };
+
     await prisma.teamMember.create({
-      data: validation.data,
+      data: {
+        ...memberData,
+        photoUrl: imageUpload.path,
+      },
     });
     revalidateTeamPages();
 
@@ -39,6 +65,7 @@ export async function createTeamMemberAction(
       message: "Ekip üyesi başarıyla eklendi.",
     };
   } catch (error) {
+    await deleteUploadedImage(imageUpload.path);
     console.error("Ekip üyesi eklenemedi.", error);
 
     return {
@@ -69,6 +96,7 @@ export async function updateTeamMemberAction(
     },
     select: {
       id: true,
+      photoUrl: true,
     },
   });
 
@@ -79,15 +107,43 @@ export async function updateTeamMemberAction(
     };
   }
 
+  const imageUpload = await saveImageUpload(
+    formData.get("memberPhoto"),
+    "team",
+  );
+
+  if (!imageUpload.success) {
+    return {
+      success: false,
+      message: imageUpload.error,
+    };
+  }
+
   try {
+    const memberData = {
+      name: validation.data.name,
+      role: validation.data.role,
+      department: validation.data.department,
+      order: validation.data.order,
+    };
+
     await prisma.teamMember.update({
       where: {
         id: memberId,
       },
-      data: validation.data,
+      data: {
+        ...memberData,
+        photoUrl: imageUpload.path ?? member.photoUrl,
+      },
     });
+
+    if (imageUpload.path && imageUpload.path !== member.photoUrl) {
+      await deleteUploadedImage(member.photoUrl);
+    }
+
     revalidateTeamPages();
   } catch (error) {
+    await deleteUploadedImage(imageUpload.path);
     console.error("Ekip üyesi güncellenemedi.", error);
 
     return {
@@ -105,11 +161,12 @@ export async function deleteTeamMemberAction(
   await requireAdmin();
 
   try {
-    await prisma.teamMember.delete({
+    const member = await prisma.teamMember.delete({
       where: {
         id: memberId,
       },
     });
+    await deleteUploadedImage(member.photoUrl);
     revalidateTeamPages();
 
     return {

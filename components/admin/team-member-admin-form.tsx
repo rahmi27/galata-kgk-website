@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { LoaderCircle, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Input } from "@/components/ui/input";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { initialAdminActionState } from "@/lib/admin-action-state";
@@ -91,21 +92,14 @@ export function TeamMemberAdminForm({
         </FormField>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-[1fr_9rem]">
-        <FormField
-          label="Fotoğraf URL'i"
-          htmlFor="member-photo"
-          hint="Opsiyonel"
-        >
-          <Input
-            id="member-photo"
-            name="photoUrl"
-            type="url"
-            defaultValue={defaultValues.photoUrl}
-            placeholder="https://..."
-            maxLength={500}
-          />
-        </FormField>
+      <ImageUploadField
+        id="member-photo"
+        name="memberPhoto"
+        label="Üye fotoğrafı"
+        defaultImageUrl={defaultValues.photoUrl || undefined}
+      />
+
+      <div className="max-w-40">
         <FormField
           label="Sıralama"
           htmlFor="member-order"

@@ -6,6 +6,10 @@ import { redirect } from "next/navigation";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { validateEventForm } from "@/lib/admin-validation";
+import {
+  deleteUploadedImage,
+  saveImageUpload,
+} from "@/lib/image-upload";
 import { prisma } from "@/lib/prisma";
 
 function createSlug(value: string) {
@@ -73,12 +77,33 @@ export async function createEventAction(
     };
   }
 
+  const imageUpload = await saveImageUpload(
+    formData.get("eventImage"),
+    "events",
+  );
+
+  if (!imageUpload.success) {
+    return {
+      success: false,
+      message: imageUpload.error,
+    };
+  }
+
   try {
     const slug = await findAvailableSlug(validation.data.title);
+    const eventData = {
+      title: validation.data.title,
+      description: validation.data.description,
+      longDescription: validation.data.longDescription,
+      date: validation.data.date,
+      location: validation.data.location,
+      category: validation.data.category,
+    };
 
     await prisma.event.create({
       data: {
-        ...validation.data,
+        ...eventData,
+        imageUrl: imageUpload.path,
         slug,
       },
     });
@@ -90,6 +115,7 @@ export async function createEventAction(
       message: "Etkinlik başarıyla oluşturuldu.",
     };
   } catch (error) {
+    await deleteUploadedImage(imageUpload.path);
     console.error("Etkinlik oluşturulamadı.", error);
 
     return {
@@ -127,22 +153,48 @@ export async function updateEventAction(
     };
   }
 
+  const imageUpload = await saveImageUpload(
+    formData.get("eventImage"),
+    "events",
+  );
+
+  if (!imageUpload.success) {
+    return {
+      success: false,
+      message: imageUpload.error,
+    };
+  }
+
   try {
     const slug = await findAvailableSlug(validation.data.title, eventId);
+    const eventData = {
+      title: validation.data.title,
+      description: validation.data.description,
+      longDescription: validation.data.longDescription,
+      date: validation.data.date,
+      location: validation.data.location,
+      category: validation.data.category,
+    };
 
     await prisma.event.update({
       where: {
         id: eventId,
       },
       data: {
-        ...validation.data,
+        ...eventData,
+        imageUrl: imageUpload.path ?? existingEvent.imageUrl,
         slug,
       },
     });
 
     revalidateEventPages(existingEvent.slug);
     revalidateEventPages(slug);
+
+    if (imageUpload.path && imageUpload.path !== existingEvent.imageUrl) {
+      await deleteUploadedImage(existingEvent.imageUrl);
+    }
   } catch (error) {
+    await deleteUploadedImage(imageUpload.path);
     console.error("Etkinlik güncellenemedi.", error);
 
     return {
@@ -165,6 +217,7 @@ export async function deleteEventAction(
     },
     select: {
       slug: true,
+      imageUrl: true,
     },
   });
 
@@ -182,6 +235,7 @@ export async function deleteEventAction(
       },
     });
 
+    await deleteUploadedImage(event.imageUrl);
     revalidateEventPages(event.slug);
 
     return {

@@ -6,6 +6,7 @@ import { LoaderCircle, Save } from "lucide-react";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { initialAdminActionState } from "@/lib/admin-action-state";
 import { Button } from "@/components/ui/button";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -141,20 +142,12 @@ export function EventAdminForm({
         </FormField>
       </div>
 
-      <FormField
-        label="Görsel URL'i"
-        htmlFor="event-image"
-        hint="Opsiyonel; http veya https adresi kullanın."
-      >
-        <Input
-          id="event-image"
-          name="imageUrl"
-          type="url"
-          defaultValue={defaultValues.imageUrl}
-          placeholder="https://..."
-          maxLength={500}
-        />
-      </FormField>
+      <ImageUploadField
+        id="event-image"
+        name="eventImage"
+        label="Etkinlik görseli"
+        defaultImageUrl={defaultValues.imageUrl || undefined}
+      />
 
       {state.message ? (
         <p
