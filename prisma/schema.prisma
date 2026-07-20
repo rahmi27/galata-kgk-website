@@ -31,12 +31,12 @@ model Event {
 }
 
 model TeamMember {
-  id         Int      @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   name       String
   role       String
   photoUrl   String?
   order      Int
-  createdAt  DateTime @default(now())
+  createdAt  DateTime     @default(now())
   categoryId Int
   category   TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
@@ -49,6 +49,30 @@ model TeamCategory {
   slug    String       @unique
   order   Int
   members TeamMember[]
+
+  @@index([order])
+}
+
+model Sponsor {
+  id          Int         @id @default(autoincrement())
+  name        String
+  logoUrl     String
+  websiteUrl  String?
+  description String?
+  order       Int
+  createdAt   DateTime    @default(now())
+  tierId      Int
+  tier        SponsorTier @relation(fields: [tierId], references: [id], onDelete: Restrict)
+
+  @@index([tierId, order])
+}
+
+model SponsorTier {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  slug     String    @unique
+  order    Int
+  sponsors Sponsor[]
 
   @@index([order])
 }
