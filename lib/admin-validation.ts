@@ -22,6 +22,14 @@ export type EventAdminInput = {
   category: string;
 };
 
+export type TeamMemberAdminInput = {
+  name: string;
+  role: string;
+  department: string;
+  photoUrl: string | null;
+  order: number;
+};
+
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
@@ -111,6 +119,63 @@ export function validateEventForm(
       location,
       category,
       imageUrl: imageUrl || null,
+    },
+  };
+}
+
+export function validateTeamMemberForm(
+  formData: FormData,
+): ValidationResult<TeamMemberAdminInput> {
+  const name = getFormString(formData, "name");
+  const role = getFormString(formData, "role");
+  const department = getFormString(formData, "department");
+  const photoUrl = getFormString(formData, "photoUrl");
+  const orderValue = getFormString(formData, "order");
+  const order = Number(orderValue);
+
+  if (name.length < 2 || name.length > 100) {
+    return {
+      success: false,
+      error: "Ad soyad 2–100 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (role.length < 2 || role.length > 100) {
+    return {
+      success: false,
+      error: "Görev 2–100 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (department.length < 2 || department.length > 120) {
+    return {
+      success: false,
+      error: "Departman 2–120 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (photoUrl.length > 500 || !validateOptionalUrl(photoUrl)) {
+    return {
+      success: false,
+      error: "Fotoğraf adresi http veya https ile başlayan geçerli bir URL olmalıdır.",
+    };
+  }
+
+  if (!Number.isInteger(order) || order < 0 || order > 9999) {
+    return {
+      success: false,
+      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      name,
+      role,
+      department,
+      photoUrl: photoUrl || null,
+      order,
     },
   };
 }
