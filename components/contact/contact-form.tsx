@@ -14,6 +14,8 @@ type FormFeedback = {
   message: string;
 } | null;
 
+class FormSubmissionError extends Error {}
+
 export function ContactForm() {
   const { form } = contactContent;
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,13 +46,15 @@ export function ContactForm() {
           message: formData.get("message"),
         }),
       });
-      const result = (await response.json()) as {
+      const result = (await response.json().catch(() => ({}))) as {
         message?: string;
         error?: string;
       };
 
       if (!response.ok) {
-        throw new Error(result.error ?? form.errorMessage);
+        throw new FormSubmissionError(
+          result.error ?? form.errorMessage,
+        );
       }
 
       formElement.reset();
@@ -62,7 +66,9 @@ export function ContactForm() {
       setFeedback({
         type: "error",
         message:
-          error instanceof Error ? error.message : form.errorMessage,
+          error instanceof FormSubmissionError
+            ? error.message
+            : form.errorMessage,
       });
     } finally {
       setIsSubmitting(false);

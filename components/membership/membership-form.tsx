@@ -14,6 +14,8 @@ type FormFeedback = {
   message: string;
 } | null;
 
+class FormSubmissionError extends Error {}
+
 const inputClassName =
   "h-12 rounded-xl border-primary/15 bg-background px-4 shadow-none focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-accent-300 dark:border-white/15";
 
@@ -50,13 +52,15 @@ export function MembershipForm() {
           motivation: formData.get("motivation"),
         }),
       });
-      const result = (await response.json()) as {
+      const result = (await response.json().catch(() => ({}))) as {
         message?: string;
         error?: string;
       };
 
       if (!response.ok) {
-        throw new Error(result.error ?? form.errorMessage);
+        throw new FormSubmissionError(
+          result.error ?? form.errorMessage,
+        );
       }
 
       formElement.reset();
@@ -68,7 +72,9 @@ export function MembershipForm() {
       setFeedback({
         type: "error",
         message:
-          error instanceof Error ? error.message : form.errorMessage,
+          error instanceof FormSubmissionError
+            ? error.message
+            : form.errorMessage,
       });
     } finally {
       setIsSubmitting(false);
