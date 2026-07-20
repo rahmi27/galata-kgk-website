@@ -10,7 +10,7 @@
     "description": "Kariyer yolculuğunu yalnız yürümek zorunda değilsin. Sektörle tanış, üretken insanlarla buluş ve potansiyelini harekete geçir.",
     "primaryCta": {
       "label": "Etkinlikleri Gör",
-      "href": "/#etkinlikler"
+      "href": "/etkinliklerimiz"
     },
     "secondaryCta": {
       "label": "Kulübe Katıl",
@@ -61,7 +61,7 @@
     ],
     "allEventsCta": {
       "label": "Tüm Etkinlikler",
-      "href": "/#etkinlikler"
+      "href": "/etkinliklerimiz"
     }
   },
   "whyUsSection": {

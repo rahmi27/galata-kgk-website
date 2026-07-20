@@ -115,6 +115,7 @@ export default async function DesignSystemPage() {
                   title={event.title}
                   description={event.description}
                   imageSrc={event.imageUrl ?? undefined}
+                  category={event.category}
                   href={`/etkinliklerimiz/${event.slug}`}
                 />
               ))}

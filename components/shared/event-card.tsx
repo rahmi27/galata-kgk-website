@@ -11,6 +11,7 @@ type EventCardProps = {
   imageSrc?: string;
   imageAlt?: string;
   href?: string;
+  category?: string;
   className?: string;
 };
 
@@ -21,6 +22,7 @@ export function EventCard({
   imageSrc,
   imageAlt,
   href,
+  category,
   className,
 }: EventCardProps) {
   return (
@@ -55,6 +57,11 @@ export function EventCard({
         <p className="absolute left-5 top-5 rounded-full bg-background/90 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.12em] text-primary shadow-sm backdrop-blur dark:bg-primary-900/90 dark:text-primary-100">
           {date}
         </p>
+        {category ? (
+          <p className="absolute right-5 top-5 rounded-full border border-white/20 bg-primary-900/75 px-3.5 py-2 text-xs font-semibold text-white shadow-sm backdrop-blur">
+            {category}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col p-6">

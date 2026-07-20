@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "title": "Etkinliklerimiz | Galata KGK",
+    "description": "Galata KGK’nın yaklaşan ve geçmiş kariyer, girişimcilik ve networking etkinliklerini keşfedin."
+  },
+  "hero": {
+    "eyebrow": "Etkinliklerimiz",
+    "title": "Yeni deneyimlere takviminde yer aç.",
+    "description": "Sektör buluşmalarından uygulamalı atölyelere, kariyerini ve fikirlerini geliştirecek tüm etkinlikleri bir arada keşfet."
+  },
+  "filters": [
+    {
+      "label": "Yaklaşan",
+      "value": "upcoming"
+    },
+    {
+      "label": "Geçmiş",
+      "value": "past"
+    },
+    {
+      "label": "Tümü",
+      "value": "all"
+    }
+  ],
+  "resultLabel": "{count} etkinlik gösteriliyor",
+  "emptyState": {
+    "title": "Bu filtrede etkinlik bulunamadı.",
+    "description": "Diğer etkinlikleri görmek için farklı bir filtre seçebilirsin."
+  }
+}

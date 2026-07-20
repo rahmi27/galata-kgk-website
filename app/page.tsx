@@ -179,6 +179,7 @@ export default async function HomePage() {
                   title={event.title}
                   description={event.description}
                   imageSrc={event.imageUrl ?? undefined}
+                  category={event.category}
                   href={`/etkinliklerimiz/${event.slug}`}
                 />
               ))}
