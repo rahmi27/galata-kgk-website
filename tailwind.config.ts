@@ -10,6 +10,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        heading: ["var(--font-heading)", "ui-sans-serif", "sans-serif"],
+        body: ["var(--font-body)", "ui-sans-serif", "sans-serif"],
+        sans: ["var(--font-body)", "ui-sans-serif", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
