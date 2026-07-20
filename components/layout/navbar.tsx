@@ -65,7 +65,8 @@ export function Navbar() {
           <ThemeToggle />
           <Button
             asChild
-            className="hidden rounded-full bg-accent px-5 font-semibold text-accent-foreground shadow-[0_10px_28px_-14px_rgba(232,93,44,0.9)] transition-all hover:-translate-y-0.5 hover:bg-accent-600 md:inline-flex"
+            variant="secondary"
+            className="hidden md:inline-flex"
           >
             <Link href="/#katil">
               Kulübe Katıl
@@ -112,7 +113,8 @@ export function Navbar() {
             ))}
             <Button
               asChild
-              className="mt-3 rounded-full bg-accent font-semibold text-accent-foreground hover:bg-accent-600"
+              variant="secondary"
+              className="mt-3"
             >
               <Link href="/#katil" onClick={() => setIsMenuOpen(false)}>
                 Kulübe Katıl

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ArrowRight } from "lucide-react";
 
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
@@ -6,6 +7,7 @@ import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Tasarım Sistemi | Galata KGK",
@@ -63,6 +65,28 @@ export default function DesignSystemPage() {
               title="Kurumsal güven, genç ve enerjik bir ritim."
               description="Bu sayfa, Galata KGK arayüz bileşenlerini gerçek sayfa içeriğinden bağımsız olarak kontrol etmek için hazırlanmıştır."
             />
+          </div>
+        </section>
+
+        <section className="border-b border-primary/10 py-16 dark:border-white/10 sm:py-20">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+            <SectionHeading
+              eyebrow="Aksiyonlar"
+              title="Net hiyerarşi, ölçülü vurgu."
+              description="Lacivert ana aksiyonu taşır; turuncu yalnızca seçili vurgu noktalarında devreye girer."
+            />
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Button variant="primary">
+                Ana Aksiyon
+                <ArrowRight aria-hidden="true" />
+              </Button>
+              <Button variant="secondary">
+                Vurgu Aksiyonu
+                <ArrowRight aria-hidden="true" />
+              </Button>
+              <Button variant="outline">Çerçeveli</Button>
+              <Button variant="ghost">Sessiz Aksiyon</Button>
+            </div>
           </div>
         </section>
 
