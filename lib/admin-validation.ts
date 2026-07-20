@@ -30,6 +30,12 @@ export type TeamMemberAdminInput = {
   order: number;
 };
 
+export type SiteStatAdminInput = {
+  label: string;
+  value: string;
+  order: number;
+};
+
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
@@ -175,6 +181,45 @@ export function validateTeamMemberForm(
       role,
       department,
       photoUrl: photoUrl || null,
+      order,
+    },
+  };
+}
+
+export function validateSiteStatForm(
+  formData: FormData,
+): ValidationResult<SiteStatAdminInput> {
+  const label = getFormString(formData, "label");
+  const value = getFormString(formData, "value");
+  const orderValue = getFormString(formData, "order");
+  const order = Number(orderValue);
+
+  if (label.length < 2 || label.length > 80) {
+    return {
+      success: false,
+      error: "İstatistik etiketi 2–80 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (value.length < 1 || value.length > 30) {
+    return {
+      success: false,
+      error: "İstatistik değeri 1–30 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (!Number.isInteger(order) || order < 0 || order > 9999) {
+    return {
+      success: false,
+      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      label,
+      value,
       order,
     },
   };
