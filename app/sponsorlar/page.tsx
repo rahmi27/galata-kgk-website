@@ -1,0 +1,180 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRight, Handshake, Sparkles } from "lucide-react";
+
+import { Footer } from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { SponsorCard } from "@/components/sponsors/sponsor-card";
+import { Button } from "@/components/ui/button";
+import sponsorContent from "@/content/sponsors.json";
+import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: sponsorContent.meta.title,
+  description: sponsorContent.meta.description,
+};
+
+export const dynamic = "force-dynamic";
+
+export default async function SponsorsPage() {
+  const [tiers, stats] = await Promise.all([
+    prisma.sponsorTier.findMany({
+      where: {
+        sponsors: {
+          some: {},
+        },
+      },
+      orderBy: [{ order: "asc" }, { name: "asc" }],
+      include: {
+        sponsors: {
+          orderBy: [{ order: "asc" }, { name: "asc" }],
+        },
+      },
+    }),
+    prisma.siteStat.findMany({
+      orderBy: { order: "asc" },
+      take: 3,
+    }),
+  ]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+
+      <main>
+        <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
+          <div
+            className="absolute -right-32 -top-48 size-[32rem] rounded-full border-[72px] border-accent/10"
+            aria-hidden="true"
+          />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+            <SectionHeading
+              eyebrow={sponsorContent.hero.eyebrow}
+              title={sponsorContent.hero.title}
+              description={sponsorContent.hero.description}
+            />
+          </div>
+        </section>
+
+        <section className="py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+            {tiers.length ? (
+              <div className="space-y-20">
+                {tiers.map((tier, tierIndex) => {
+                  const featured = tierIndex === 0;
+
+                  return (
+                    <section
+                      key={tier.id}
+                      aria-labelledby={`sponsor-tier-${tier.slug}`}
+                    >
+                      <div className="flex items-center gap-5">
+                        <span className="font-heading text-xs font-bold tracking-[0.16em] text-accent-700 dark:text-accent-300">
+                          {String(tierIndex + 1).padStart(2, "0")}
+                        </span>
+                        <h2
+                          id={`sponsor-tier-${tier.slug}`}
+                          className="font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white"
+                        >
+                          {tier.name}
+                        </h2>
+                        <span
+                          className="h-px flex-1 bg-primary/10 dark:bg-white/10"
+                          aria-hidden="true"
+                        />
+                      </div>
+
+                      <div
+                        className={
+                          featured
+                            ? "mt-9 grid gap-7 sm:grid-cols-2 lg:grid-cols-3"
+                            : "mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                        }
+                      >
+                        {tier.sponsors.map((sponsor) => (
+                          <SponsorCard
+                            key={sponsor.id}
+                            name={sponsor.name}
+                            logoUrl={sponsor.logoUrl}
+                            websiteUrl={sponsor.websiteUrl}
+                            description={sponsor.description}
+                            featured={featured}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="mx-auto max-w-3xl rounded-[2rem] border border-dashed border-primary/20 bg-primary-50/45 px-6 py-16 text-center dark:border-white/15 dark:bg-white/[0.035] sm:px-12 sm:py-20">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-white text-accent shadow-sm dark:bg-white/10 dark:text-accent-300">
+                  <Handshake className="size-6" aria-hidden="true" />
+                </div>
+                <h2 className="mt-6 font-heading text-3xl font-bold tracking-[-0.04em] text-primary dark:text-white">
+                  {sponsorContent.emptyState.title}
+                </h2>
+                <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground">
+                  {sponsorContent.emptyState.description}
+                </p>
+                <Button asChild variant="secondary" className="mt-8">
+                  <Link href="/iletisim">
+                    {sponsorContent.emptyState.cta}
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="border-t border-primary/10 bg-primary-900 py-20 text-white dark:border-white/10 dark:bg-[#080d20] sm:py-24">
+          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 lg:px-10">
+            <div>
+              <p className="flex items-center gap-3 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
+                <Sparkles className="size-4" aria-hidden="true" />
+                {sponsorContent.whyPartner.eyebrow}
+              </p>
+              <h2 className="mt-5 max-w-2xl font-heading text-4xl font-bold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
+                {sponsorContent.whyPartner.title}
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-primary-200">
+                {sponsorContent.whyPartner.description}
+              </p>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-primary-300">
+                {sponsorContent.whyPartner.closing}
+              </p>
+              <Button asChild variant="secondary" className="mt-8">
+                <Link href="/iletisim">
+                  {sponsorContent.whyPartner.cta}
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+
+            {stats.length ? (
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                {stats.map((stat) => (
+                  <div
+                    key={stat.id}
+                    className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-5 sm:px-6"
+                  >
+                    <p className="font-heading text-3xl font-bold tracking-[-0.04em] text-white">
+                      {stat.value}
+                    </p>
+                    <p className="mt-1 text-sm text-primary-200">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

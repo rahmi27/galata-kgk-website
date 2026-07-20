@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "title": "Sponsorlar ve İş Ortakları | Galata KGK",
+    "description": "Galata KGK'nın öğrenci gelişimine katkı sunan sponsorlarını ve iş ortaklarını keşfedin."
+  },
+  "hero": {
+    "eyebrow": "Birlikte Değer Üretiyoruz",
+    "title": "Fikirlerimizi büyüten iş ortaklarımız.",
+    "description": "Öğrencilerle sektör arasında kalıcı bağlar kurmamıza destek olan kurumlarla aynı hedefe yürüyoruz."
+  },
+  "emptyState": {
+    "title": "Yeni iş birliklerine açığız.",
+    "description": "Öğrencilerin kariyer ve girişimcilik yolculuğuna katkı sunmak için bizimle iletişime geçin.",
+    "cta": "Sponsorluk için iletişime geçin"
+  },
+  "whyPartner": {
+    "eyebrow": "Neden Bizimle Çalışın?",
+    "title": "Kampüsün enerjisini anlamlı bir etkiye dönüştürün.",
+    "description": "Galata KGK ile iş birliği; markanızı meraklı, üretken ve geleceğini şekillendiren öğrencilerle buluşturur.",
+    "closing": "Etkinliklerden içerik ortaklıklarına uzanan esnek iş birliği modellerini birlikte tasarlayabiliriz.",
+    "cta": "İş birliğini konuşalım"
+  }
+}
