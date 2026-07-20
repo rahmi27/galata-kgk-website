@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  ShieldCheck,
   UserRoundCheck,
   UsersRound,
   X,
@@ -50,6 +51,11 @@ const navigation = [
     label: "İstatistikler",
     href: "/admin/istatistikler",
     icon: BarChart3,
+  },
+  {
+    label: "Kullanıcılar",
+    href: "/admin/kullanicilar",
+    icon: ShieldCheck,
   },
 ] as const;
 

@@ -2,9 +2,11 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
+import {
+  normalizeUsername,
+  usernamePattern,
+} from "@/lib/admin-credentials";
 import { prisma } from "@/lib/prisma";
-
-const usernamePattern = /^[a-z0-9._-]{3,32}$/;
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
@@ -29,7 +31,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const username =
           typeof credentials.username === "string"
-            ? credentials.username.trim().toLocaleLowerCase("tr-TR")
+            ? normalizeUsername(credentials.username)
             : "";
         const password =
           typeof credentials.password === "string" ? credentials.password : "";
