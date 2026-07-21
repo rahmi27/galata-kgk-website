@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 
-import { auth } from "@/auth";
 import { AdminLoginForm } from "@/components/admin/login-form";
+import { getCurrentAdmin } from "@/lib/admin-auth";
 
 export const metadata: Metadata = {
   title: "Yönetici Girişi | Galata KGK",
@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLoginPage() {
-  const session = await auth();
+  const admin = await getCurrentAdmin();
 
-  if (session?.user) {
+  if (admin) {
     redirect("/admin");
   }
 

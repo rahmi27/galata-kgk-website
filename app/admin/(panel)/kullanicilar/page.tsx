@@ -1,9 +1,9 @@
 import { ShieldCheck, UserRound } from "lucide-react";
 
-import { auth } from "@/auth";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminUserForm } from "@/components/admin/admin-user-form";
 import { DeleteAdminUserButton } from "@/components/admin/delete-admin-user-button";
+import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -13,8 +13,8 @@ const dateFormatter = new Intl.DateTimeFormat("tr-TR", {
 });
 
 export default async function AdminUsersPage() {
-  const [session, users] = await Promise.all([
-    auth(),
+  const [currentAdmin, users] = await Promise.all([
+    requireAdmin(),
     prisma.adminUser.findMany({
       orderBy: {
         createdAt: "asc",
@@ -28,7 +28,7 @@ export default async function AdminUsersPage() {
     }),
   ]);
 
-  const currentUsername = session?.user.username ?? "";
+  const currentUsername = currentAdmin.username;
 
   return (
     <>

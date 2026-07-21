@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
-import { auth } from "@/auth";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export const metadata: Metadata = {
   title: {
@@ -20,16 +19,12 @@ export default async function AdminPanelLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/admin/giris");
-  }
+  const admin = await requireAdmin();
 
   return (
     <AdminShell
-      userName={session.user.name ?? "Yönetici"}
-      username={session.user.username}
+      userName={admin.name}
+      username={admin.username}
     >
       {children}
     </AdminShell>

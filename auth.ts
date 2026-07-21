@@ -11,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 8 * 60 * 60,
   },
   pages: {
     signIn: "/admin/giris",
