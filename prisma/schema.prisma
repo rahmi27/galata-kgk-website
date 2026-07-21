@@ -33,6 +33,7 @@ model Event {
   date            DateTime?
   location        String
   imageUrl        String?
+  imageAlt        String?
   category        String
   createdAt       DateTime @default(now())
 
@@ -44,6 +45,7 @@ model TeamMember {
   name       String
   role       String
   photoUrl   String?
+  photoAlt   String?
   order      Int
   createdAt  DateTime     @default(now())
   categoryId Int
@@ -66,6 +68,7 @@ model Sponsor {
   id          Int         @id @default(autoincrement())
   name        String
   logoUrl     String
+  logoAlt     String?
   websiteUrl  String?
   description String?
   order       Int

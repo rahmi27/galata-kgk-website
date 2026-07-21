@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
-
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
 import teamContent from "@/content/team.json";
 import { prisma } from "@/lib/prisma";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: teamContent.meta.title,
   description: teamContent.meta.description,
-};
+  path: "/ekibimiz",
+  keywords: ["Galata KGK ekibi", "öğrenci kulübü yönetimi"],
+});
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,7 @@ export default async function TeamPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={teamContent.section.eyebrow}
               title={teamContent.section.title}
               description={teamContent.section.description}
@@ -87,6 +89,7 @@ export default async function TeamPage() {
                         name={member.name}
                         role={member.role}
                         imageSrc={member.photoUrl ?? undefined}
+                        imageAlt={member.photoAlt ?? undefined}
                       />
                     ))}
                   </div>

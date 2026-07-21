@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
-
 import { EventList } from "@/components/events/event-list";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import eventsPageContent from "@/content/events-page.json";
 import { prisma } from "@/lib/prisma";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: eventsPageContent.meta.title,
   description: eventsPageContent.meta.description,
-};
+  path: "/etkinliklerimiz",
+  keywords: ["kariyer etkinlikleri", "girişimcilik etkinlikleri", "networking"],
+});
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,7 @@ export default async function EventsPage() {
       description: true,
       date: true,
       imageUrl: true,
+      imageAlt: true,
       category: true,
     },
   });
@@ -47,6 +49,7 @@ export default async function EventsPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={eventsPageContent.hero.eyebrow}
               title={eventsPageContent.hero.title}
               description={eventsPageContent.hero.description}

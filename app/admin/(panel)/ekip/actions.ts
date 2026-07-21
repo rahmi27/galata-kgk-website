@@ -106,6 +106,7 @@ export async function createTeamMemberAction(
       name: validation.data.name,
       role: validation.data.role,
       categoryId: category.id,
+      photoAlt: validation.data.photoAlt,
       order: validation.data.order,
     };
 
@@ -194,6 +195,7 @@ export async function updateTeamMemberAction(
       name: validation.data.name,
       role: validation.data.role,
       categoryId: category.id,
+      photoAlt: validation.data.photoAlt,
       order: validation.data.order,
     };
 

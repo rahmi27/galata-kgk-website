@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 type SponsorCardProps = {
   name: string;
   logoUrl: string;
+  logoAlt?: string | null;
   websiteUrl?: string | null;
   description?: string | null;
   featured?: boolean;
@@ -16,6 +17,7 @@ type SponsorCardProps = {
 export function SponsorCard({
   name,
   logoUrl,
+  logoAlt,
   websiteUrl,
   description,
   featured = false,
@@ -33,7 +35,7 @@ export function SponsorCard({
     >
       <img
         src={logoUrl}
-        alt={`${name} logosu`}
+        alt={logoAlt ?? `${name} logosu`}
         className={cn(
           "max-h-20 w-auto max-w-[80%] object-contain",
           featured && "max-h-28 sm:max-h-32",

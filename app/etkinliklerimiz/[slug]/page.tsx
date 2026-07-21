@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import eventDetailContent from "@/content/event-detail.json";
 import { formatEventDateLong } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { createPageMetadata } from "@/lib/site-metadata";
 
 type EventDetailPageProps = {
   params: Promise<{
@@ -40,15 +41,19 @@ export async function generateMetadata({
   const event = await getEventBySlug(slug);
 
   if (!event) {
-    return {
+    return createPageMetadata({
       title: "Etkinlik Bulunamadı | Galata KGK",
-    };
+      description: "Aradığınız Galata KGK etkinliği bulunamadı.",
+      path: "/etkinliklerimiz",
+    });
   }
 
-  return {
+  return createPageMetadata({
     title: `${event.title} | Galata KGK`,
     description: event.description,
-  };
+    path: `/etkinliklerimiz/${event.slug}`,
+    keywords: [event.title, event.category, "Galata KGK etkinliği"],
+  });
 }
 
 export default async function EventDetailPage({
@@ -97,7 +102,7 @@ export default async function EventDetailPage({
                 {event.imageUrl ? (
                   <Image
                     src={event.imageUrl}
-                    alt={event.title}
+                    alt={event.imageAlt ?? `${event.title} etkinliği görseli`}
                     fill
                     priority
                     className="object-cover"

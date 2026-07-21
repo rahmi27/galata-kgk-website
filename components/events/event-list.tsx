@@ -17,6 +17,7 @@ type EventListItem = {
   description: string;
   date: string | null;
   imageUrl: string | null;
+  imageAlt: string | null;
   category: string;
 };
 
@@ -121,6 +122,7 @@ export function EventList({ events, currentDate }: EventListProps) {
               title={event.title}
               description={event.description}
               imageSrc={event.imageUrl ?? undefined}
+              imageAlt={event.imageAlt ?? undefined}
               category={event.category}
               href={`/etkinliklerimiz/${event.slug}`}
             />

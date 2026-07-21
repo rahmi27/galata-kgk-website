@@ -19,6 +19,7 @@ export type EventAdminInput = {
   date: Date | null;
   location: string;
   imageUrl: string | null;
+  imageAlt: string | null;
   category: string;
 };
 
@@ -27,6 +28,7 @@ export type TeamMemberAdminInput = {
   role: string;
   categoryId: number | null;
   newCategoryName: string | null;
+  photoAlt: string | null;
   order: number;
 };
 
@@ -42,6 +44,7 @@ export type SponsorAdminInput = {
   description: string | null;
   tierId: number | null;
   newTierName: string | null;
+  logoAlt: string;
   order: number;
 };
 
@@ -73,6 +76,7 @@ export function validateEventForm(
   const location = getFormString(formData, "location");
   const category = getFormString(formData, "category");
   const imageUrl = getFormString(formData, "imageUrl");
+  const imageAlt = getFormString(formData, "imageAlt");
   const date = dateValue ? new Date(dateValue) : null;
 
   if (title.length < 3 || title.length > 140) {
@@ -124,6 +128,13 @@ export function validateEventForm(
     };
   }
 
+  if (imageAlt.length > 180) {
+    return {
+      success: false,
+      error: "Görsel alt metni en fazla 180 karakter olabilir.",
+    };
+  }
+
   return {
     success: true,
     data: {
@@ -134,6 +145,7 @@ export function validateEventForm(
       location,
       category,
       imageUrl: imageUrl || null,
+      imageAlt: imageAlt || null,
     },
   };
 }
@@ -146,6 +158,7 @@ export function validateTeamMemberForm(
   const categoryValue = getFormString(formData, "categoryId");
   const newCategoryName = getFormString(formData, "newCategoryName");
   const orderValue = getFormString(formData, "order");
+  const photoAlt = getFormString(formData, "photoAlt");
   const order = Number(orderValue);
 
   if (name.length < 2 || name.length > 100) {
@@ -159,6 +172,13 @@ export function validateTeamMemberForm(
     return {
       success: false,
       error: "Görev 2–100 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (photoAlt.length > 180) {
+    return {
+      success: false,
+      error: "Fotoğraf alt metni en fazla 180 karakter olabilir.",
     };
   }
 
@@ -198,6 +218,7 @@ export function validateTeamMemberForm(
       categoryId,
       newCategoryName:
         categoryValue === "new" ? newCategoryName : null,
+      photoAlt: photoAlt || null,
       order,
     },
   };
@@ -211,6 +232,7 @@ export function validateSponsorForm(
   const description = getFormString(formData, "description");
   const tierValue = getFormString(formData, "tierId");
   const newTierName = getFormString(formData, "newTierName");
+  const logoAlt = getFormString(formData, "logoAlt");
   const order = Number(getFormString(formData, "order"));
 
   if (name.length < 2 || name.length > 120) {
@@ -231,6 +253,13 @@ export function validateSponsorForm(
     return {
       success: false,
       error: "Kısa açıklama en fazla 320 karakter olabilir.",
+    };
+  }
+
+  if (logoAlt.length < 3 || logoAlt.length > 180) {
+    return {
+      success: false,
+      error: "Logo alt metni 3–180 karakter arasında olmalıdır.",
     };
   }
 
@@ -265,6 +294,7 @@ export function validateSponsorForm(
       description: description || null,
       tierId,
       newTierName: tierValue === "new" ? newTierName : null,
+      logoAlt,
       order,
     },
   };

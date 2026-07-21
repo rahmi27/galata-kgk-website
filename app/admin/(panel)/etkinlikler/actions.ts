@@ -98,6 +98,7 @@ export async function createEventAction(
       date: validation.data.date,
       location: validation.data.location,
       category: validation.data.category,
+      imageAlt: validation.data.imageAlt,
     };
 
     await prisma.event.create({
@@ -174,6 +175,7 @@ export async function updateEventAction(
       date: validation.data.date,
       location: validation.data.location,
       category: validation.data.category,
+      imageAlt: validation.data.imageAlt,
     };
 
     await prisma.event.update({

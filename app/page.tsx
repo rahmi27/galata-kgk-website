@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -13,6 +12,7 @@ import {
 
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
@@ -20,11 +20,14 @@ import { Button } from "@/components/ui/button";
 import homeContent from "@/content/home.json";
 import { formatEventDate } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: homeContent.meta.title,
   description: homeContent.meta.description,
-};
+  path: "/",
+  keywords: ["öğrenci etkinlikleri", "networking", "kariyer gelişimi"],
+});
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +87,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <OrganizationJsonLd />
       <Navbar />
 
       <main>
@@ -209,7 +213,7 @@ export default async function HomePage() {
                     <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
                       <img
                         src={sponsor.logoUrl}
-                        alt={`${sponsor.name} logosu`}
+                        alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
                         className="max-h-12 w-auto max-w-full object-contain"
                       />
                     </div>
@@ -263,6 +267,7 @@ export default async function HomePage() {
                   title={event.title}
                   description={event.description}
                   imageSrc={event.imageUrl ?? undefined}
+                  imageAlt={event.imageAlt ?? undefined}
                   category={event.category}
                   href={`/etkinliklerimiz/${event.slug}`}
                 />

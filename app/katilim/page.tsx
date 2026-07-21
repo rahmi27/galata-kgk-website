@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 
 import { Footer } from "@/components/layout/footer";
@@ -6,11 +5,14 @@ import { Navbar } from "@/components/layout/navbar";
 import { MembershipForm } from "@/components/membership/membership-form";
 import { SectionHeading } from "@/components/shared/section-heading";
 import membershipContent from "@/content/membership.json";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: membershipContent.meta.title,
   description: membershipContent.meta.description,
-};
+  path: "/katilim",
+  keywords: ["Galata KGK üyelik", "öğrenci kulübüne katıl"],
+});
 
 export default function MembershipPage() {
   const { hero, process } = membershipContent;
@@ -27,6 +29,7 @@ export default function MembershipPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={hero.eyebrow}
               title={hero.title}
               description={hero.description}

@@ -17,6 +17,7 @@ type SponsorFormValues = {
   description: string;
   tierId: number | "new" | "";
   logoUrl: string;
+  logoAlt: string;
   order: number;
 };
 
@@ -37,6 +38,7 @@ const emptyValues: SponsorFormValues = {
   description: "",
   tierId: "",
   logoUrl: "",
+  logoAlt: "",
   order: 0,
 };
 
@@ -162,6 +164,22 @@ export function SponsorAdminForm({
         defaultImageUrl={defaultValues.logoUrl || undefined}
         required={!defaultValues.logoUrl}
       />
+
+      <FormField
+        label="Logo alt metni"
+        htmlFor="sponsor-logo-alt"
+        hint="Markayı ve logoyu ekran okuyucular için tanımlayın."
+      >
+        <Input
+          id="sponsor-logo-alt"
+          name="logoAlt"
+          defaultValue={defaultValues.logoAlt}
+          placeholder="Örn. Marka adı logosu"
+          minLength={3}
+          maxLength={180}
+          required
+        />
+      </FormField>
 
       <div className="max-w-40">
         <FormField

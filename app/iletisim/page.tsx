@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, MapPin } from "lucide-react";
 import { FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
@@ -8,11 +7,14 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import contactContent from "@/content/contact.json";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: contactContent.meta.title,
   description: contactContent.meta.description,
-};
+  path: "/iletisim",
+  keywords: ["Galata KGK iletişim", "İstanbul Galata Üniversitesi kulüp iletişim"],
+});
 
 const socialIcons = {
   Instagram: FaInstagram,
@@ -35,6 +37,7 @@ export default function ContactPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={hero.eyebrow}
               title={hero.title}
               description={hero.description}

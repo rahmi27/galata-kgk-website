@@ -17,6 +17,7 @@ type EventFormValues = {
   date: string;
   location: string;
   imageUrl: string;
+  imageAlt: string;
   category: string;
 };
 
@@ -37,6 +38,7 @@ const emptyValues: EventFormValues = {
   date: "",
   location: "",
   imageUrl: "",
+  imageAlt: "",
   category: "",
 };
 
@@ -151,6 +153,20 @@ export function EventAdminForm({
         label="Etkinlik görseli"
         defaultImageUrl={defaultValues.imageUrl || undefined}
       />
+
+      <FormField
+        label="Görsel alt metni"
+        htmlFor="event-image-alt"
+        hint="Ekran okuyucular için görseli kısa ve açıklayıcı biçimde anlatın."
+      >
+        <Input
+          id="event-image-alt"
+          name="imageAlt"
+          defaultValue={defaultValues.imageAlt}
+          placeholder="Örn. Kariyer Günü sahnesinde konuşmacı ve öğrenciler"
+          maxLength={180}
+        />
+      </FormField>
 
       {state.message ? (
         <p

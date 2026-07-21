@@ -60,6 +60,7 @@ async function main() {
       date: event.date ? new Date(event.date) : null,
       location: event.location,
       imageUrl: event.imageUrl,
+      imageAlt: event.imageUrl ? `${event.title} etkinliği görseli` : null,
       category: event.category,
     })),
   });
@@ -86,6 +87,7 @@ async function main() {
       role: member.role,
       categoryId: categoryIdByName.get(member.department)!,
       photoUrl: member.photoUrl,
+      photoAlt: member.photoUrl ? `${member.name} portresi` : null,
       order: member.order,
     })),
   });

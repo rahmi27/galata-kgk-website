@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Flag, Target } from "lucide-react";
 
 import { Footer } from "@/components/layout/footer";
@@ -6,11 +5,14 @@ import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Timeline } from "@/components/shared/timeline";
 import aboutContent from "@/content/about.json";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: aboutContent.meta.title,
   description: aboutContent.meta.description,
-};
+  path: "/hakkimizda",
+  keywords: ["Galata KGK vizyon", "Galata KGK misyon"],
+});
 
 export default function AboutPage() {
   return (
@@ -25,6 +27,7 @@ export default function AboutPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={aboutContent.hero.eyebrow}
               title={aboutContent.hero.title}
               description={aboutContent.hero.description}

@@ -88,7 +88,7 @@ export default async function AdminSponsorsPage({
                           <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary-100 bg-white p-2 dark:border-white/10">
                             <img
                               src={sponsor.logoUrl}
-                              alt={`${sponsor.name} logosu`}
+                              alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
                               className="max-h-full max-w-full object-contain"
                             />
                           </div>

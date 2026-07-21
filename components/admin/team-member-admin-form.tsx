@@ -15,6 +15,7 @@ type TeamMemberFormValues = {
   role: string;
   categoryId: number | "new" | "";
   photoUrl: string;
+  photoAlt: string;
   order: number;
 };
 
@@ -37,6 +38,7 @@ const emptyValues: TeamMemberFormValues = {
   role: "",
   categoryId: "",
   photoUrl: "",
+  photoAlt: "",
   order: 0,
 };
 
@@ -149,6 +151,20 @@ export function TeamMemberAdminForm({
         label="Üye fotoğrafı"
         defaultImageUrl={defaultValues.photoUrl || undefined}
       />
+
+      <FormField
+        label="Fotoğraf alt metni"
+        htmlFor="member-photo-alt"
+        hint="Fotoğraf varsa ekran okuyucular için kısa bir açıklama yazın."
+      >
+        <Input
+          id="member-photo-alt"
+          name="photoAlt"
+          defaultValue={defaultValues.photoAlt}
+          placeholder={`Örn. ${defaultValues.name || "Ekip üyesi"} portresi`}
+          maxLength={180}
+        />
+      </FormField>
 
       <div className="max-w-40">
         <FormField

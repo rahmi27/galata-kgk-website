@@ -3,6 +3,12 @@ import { Inter, Space_Grotesk } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import siteContent from "@/content/site.json";
+import {
+  createPageMetadata,
+  SITE_NAME,
+  SITE_SHORT_NAME,
+  siteUrl,
+} from "@/lib/site-metadata";
 
 import "./globals.css";
 
@@ -19,8 +25,17 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: siteContent.meta.title,
-  description: siteContent.meta.description,
+  ...createPageMetadata({
+    title: siteContent.meta.title,
+    description: siteContent.meta.description,
+    path: "/",
+  }),
+  metadataBase: siteUrl,
+  applicationName: SITE_SHORT_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "education",
 };
 
 export default function RootLayout({

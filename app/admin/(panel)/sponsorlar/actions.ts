@@ -94,6 +94,7 @@ export async function createSponsorAction(
         order: validation.data.order,
         tierId: tier.id,
         logoUrl: imageUpload.path,
+        logoAlt: validation.data.logoAlt,
       },
     });
     revalidateSponsorPages();
@@ -158,6 +159,7 @@ export async function updateSponsorAction(
         order: validation.data.order,
         tierId: tier.id,
         logoUrl: imageUpload.path ?? sponsor.logoUrl,
+        logoAlt: validation.data.logoAlt,
       },
     });
 

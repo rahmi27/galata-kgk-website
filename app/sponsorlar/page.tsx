@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Handshake, Sparkles } from "lucide-react";
 
@@ -9,11 +8,14 @@ import { SponsorCard } from "@/components/sponsors/sponsor-card";
 import { Button } from "@/components/ui/button";
 import sponsorContent from "@/content/sponsors.json";
 import { prisma } from "@/lib/prisma";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: sponsorContent.meta.title,
   description: sponsorContent.meta.description,
-};
+  path: "/sponsorlar",
+  keywords: ["üniversite sponsorluk", "öğrenci kulübü iş ortaklığı"],
+});
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +52,7 @@ export default async function SponsorsPage() {
           />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              as="h1"
               eyebrow={sponsorContent.hero.eyebrow}
               title={sponsorContent.hero.title}
               description={sponsorContent.hero.description}
@@ -97,6 +100,7 @@ export default async function SponsorsPage() {
                             key={sponsor.id}
                             name={sponsor.name}
                             logoUrl={sponsor.logoUrl}
+                            logoAlt={sponsor.logoAlt}
                             websiteUrl={sponsor.websiteUrl}
                             description={sponsor.description}
                             featured={featured}

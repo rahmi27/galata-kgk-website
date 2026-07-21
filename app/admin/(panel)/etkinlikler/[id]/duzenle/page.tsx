@@ -70,6 +70,7 @@ export default async function EditEventPage({
             date: toDateTimeLocal(event.date),
             location: event.location,
             imageUrl: event.imageUrl ?? "",
+            imageAlt: event.imageAlt ?? "",
             category: event.category,
           }}
         />

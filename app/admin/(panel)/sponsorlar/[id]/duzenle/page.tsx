@@ -63,6 +63,7 @@ export default async function EditSponsorPage({
             description: sponsor.description ?? "",
             tierId: sponsor.tierId,
             logoUrl: sponsor.logoUrl,
+            logoAlt: sponsor.logoAlt ?? `${sponsor.name} logosu`,
             order: sponsor.order,
           }}
         />

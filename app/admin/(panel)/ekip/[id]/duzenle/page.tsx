@@ -76,6 +76,7 @@ export default async function EditTeamMemberPage({
             role: member.role,
             categoryId: member.categoryId,
             photoUrl: member.photoUrl ?? "",
+            photoAlt: member.photoAlt ?? "",
             order: member.order,
           }}
         />
