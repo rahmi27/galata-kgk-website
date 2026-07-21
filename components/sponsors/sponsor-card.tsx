@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -33,11 +32,14 @@ export function SponsorCard({
           "group-hover:-translate-y-1 group-hover:border-accent/35 group-hover:shadow-[0_24px_60px_-36px_rgba(27,42,94,0.55)]",
       )}
     >
-      <img
+      <Image
         src={logoUrl}
         alt={logoAlt ?? `${name} logosu`}
+        width={featured ? 360 : 240}
+        height={featured ? 160 : 96}
+        sizes={featured ? "(min-width: 1024px) 30vw, 50vw" : "(min-width: 1024px) 20vw, 50vw"}
         className={cn(
-          "max-h-20 w-auto max-w-[80%] object-contain",
+          "h-auto max-h-20 w-auto max-w-[80%] object-contain",
           featured && "max-h-28 sm:max-h-32",
         )}
       />

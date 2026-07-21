@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -211,10 +210,13 @@ export default async function HomePage() {
                 {sponsors.map((sponsor) => {
                   const logo = (
                     <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
-                      <img
+                      <Image
                         src={sponsor.logoUrl}
                         alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
-                        className="max-h-12 w-auto max-w-full object-contain"
+                        width={180}
+                        height={64}
+                        sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
+                        className="h-auto max-h-12 w-auto max-w-full object-contain"
                       />
                     </div>
                   );

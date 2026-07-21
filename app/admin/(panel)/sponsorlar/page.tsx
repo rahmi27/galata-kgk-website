@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import Link from "next/link";
 import { FolderCog, Handshake, ListOrdered, Pencil } from "lucide-react";
 
@@ -86,10 +85,13 @@ export default async function AdminSponsorsPage({
                       >
                         <div className="flex min-w-0 items-center gap-4">
                           <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary-100 bg-white p-2 dark:border-white/10">
-                            <img
+                            <Image
                               src={sponsor.logoUrl}
                               alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
-                              className="max-h-full max-w-full object-contain"
+                              width={64}
+                              height={64}
+                              sizes="64px"
+                              className="h-auto max-h-full w-auto max-w-full object-contain"
                             />
                           </div>
                           <div className="min-w-0">

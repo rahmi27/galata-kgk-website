@@ -1,8 +1,7 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
-
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ImagePlus, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -95,10 +94,13 @@ export function ImageUploadField({
       <div className="grid gap-4 sm:grid-cols-[9rem_1fr] sm:items-center">
         <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-primary-200 bg-primary-50 dark:border-white/15 dark:bg-white/[0.06]">
           {previewUrl ? (
-            <img
+            <Image
               src={previewUrl}
               alt="Seçilen görselin önizlemesi"
-              className="absolute inset-0 size-full object-cover"
+              fill
+              unoptimized
+              sizes="144px"
+              className="object-cover"
             />
           ) : (
             <ImagePlus
