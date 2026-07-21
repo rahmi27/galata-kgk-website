@@ -17,6 +17,16 @@
     "eyebrow": "Neden Bizimle Çalışın?",
     "title": "Kampüsün enerjisini anlamlı bir etkiye dönüştürün.",
     "description": "Galata KGK ile iş birliği; markanızı meraklı, üretken ve geleceğini şekillendiren öğrencilerle buluşturur.",
+    "models": [
+      {
+        "title": "Marka Sponsorlukları",
+        "description": "Sektörün önde gelen markalarıyla kurduğumuz iş birlikleri; zirvelerimize, mesleki buluşmalarımıza ve öğrenci deneyimine profesyonel değer katar. Markalar genç yeteneklerle doğrudan bağ kurarken öğrenciler de iş dünyasını yakından tanıma fırsatı bulur."
+      },
+      {
+        "title": "Halk Sponsorlukları",
+        "description": "Bireysel destekçiler ve ailelerin katkılarıyla büyüyen bu model, topluluğumuzun erişilebilir ve sürdürülebilir kalmasına yardımcı olur. Her katkı dayanışma kültürünü güçlendirir ve daha fazla öğrencinin kulüp faaliyetlerine katılmasına alan açar."
+      }
+    ],
     "closing": "Etkinliklerden içerik ortaklıklarına uzanan esnek iş birliği modellerini birlikte tasarlayabiliriz.",
     "cta": "İş birliğini konuşalım"
   }

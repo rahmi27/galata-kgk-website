@@ -130,7 +130,7 @@ export default async function SponsorsPage() {
         </section>
 
         <section className="border-t border-primary/10 bg-primary-900 py-20 text-white dark:border-white/10 dark:bg-[#080d20] sm:py-24">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 lg:px-10">
+          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:px-10">
             <div>
               <p className="flex items-center gap-3 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
                 <Sparkles className="size-4" aria-hidden="true" />
@@ -142,6 +142,26 @@ export default async function SponsorsPage() {
               <p className="mt-5 max-w-2xl text-lg leading-8 text-primary-200">
                 {sponsorContent.whyPartner.description}
               </p>
+
+              <div className="mt-9 grid gap-4 sm:grid-cols-2">
+                {sponsorContent.whyPartner.models.map((model, index) => (
+                  <article
+                    key={model.title}
+                    className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 sm:p-6"
+                  >
+                    <p className="font-heading text-xs font-bold tracking-[0.16em] text-accent-300">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <h3 className="mt-3 font-heading text-xl font-bold tracking-[-0.025em] text-white">
+                      {model.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-primary-200">
+                      {model.description}
+                    </p>
+                  </article>
+                ))}
+              </div>
+
               <p className="mt-4 max-w-2xl text-sm leading-7 text-primary-300">
                 {sponsorContent.whyPartner.closing}
               </p>
@@ -154,7 +174,7 @@ export default async function SponsorsPage() {
             </div>
 
             {stats.length ? (
-              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 lg:self-center">
                 {stats.map((stat) => (
                   <div
                     key={stat.id}
