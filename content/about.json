@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Hakkımızda | Galata KGK",
-    "description": "Galata KGK’nın amacı, vizyonu, misyonu ve gelişim yolculuğu hakkında bilgi edinin."
+    "description": "Galata KGK’nın öğrencileri iş dünyasına hazırlayan disiplinler arası yaklaşımını, vizyonunu ve büyüme hedeflerini keşfedin."
   },
   "hero": {
     "eyebrow": "Hakkımızda",
@@ -12,50 +12,50 @@
     "eyebrow": "Biz Kimiz?",
     "title": "Öğrenciler tarafından, öğrencilerin geleceği için.",
     "paragraphs": [
-      "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü olarak öğrencileri iş dünyasıyla erken dönemde tanıştıran, farklı kariyer yollarını görünür kılan ve üretme cesaretini destekleyen çalışmalar yürütüyoruz.",
-      "Etkinliklerimizi yalnızca bilgi aktaran buluşmalar olarak değil; soru sormaya, bağlantı kurmaya ve yeni fikirleri denemeye alan açan deneyimler olarak tasarlıyoruz."
+      "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü olarak öğrencilerin iş dünyasını henüz üniversite yıllarında tanımasını, kariyer seçeneklerini bilinçli biçimde değerlendirmesini ve profesyonel hayata güvenle hazırlanmasını destekliyoruz.",
+      "Diş hekimliği, gastronomi, hemşirelik, işletme, iletişim, tasarım, bilgisayar mühendisliği ve halkla ilişkiler gibi farklı disiplinlerden öğrencileri aynı toplulukta buluşturuyoruz. Her alanın deneyimini ortak üretime taşıyarak daha kapsayıcı ve güçlü bir öğrenme ortamı kuruyoruz."
     ],
     "principle": {
       "label": "Temel yaklaşımımız",
-      "text": "Her öğrencinin keşfedecek bir yönü, paylaşacak bir fikri ve topluluğa katacağı özgün bir değeri olduğuna inanıyoruz."
+      "text": "Farklı disiplinlerin bilgisi ve bakış açısı bir araya geldiğinde her öğrencinin kariyer yolculuğu zenginleşir."
     }
   },
   "visionMission": {
     "vision": {
       "eyebrow": "Vizyonumuz",
-      "title": "Kampüsten doğan fikirlerin geleceğe yön verdiği bir ekosistem.",
-      "description": "Öğrencilerin potansiyellerini erken keşfettiği, girişimci düşünceyi benimsediği ve profesyonel dünyada güvenle yer aldığı örnek bir üniversite topluluğu olmak."
+      "title": "Disiplinler arasında bağ kuran, sürdürülebilir bir kariyer topluluğu.",
+      "description": "Farklı bölümlerden öğrencilerin birbirinden öğrendiği, iş dünyasıyla nitelikli ilişkiler kurduğu ve her dönem düzenli biçimde büyüyen; kampüs genelinde güven duyulan öncü bir öğrenci topluluğu olmak."
     },
     "mission": {
       "eyebrow": "Misyonumuz",
-      "title": "Deneyim, bağlantı ve üretim için erişilebilir alanlar açmak.",
-      "description": "Sektör buluşmaları, atölyeler, proje ekipleri ve mezun paylaşımlarıyla öğrencilerin yetkinliklerini geliştirmesine ve nitelikli ilişkiler kurmasına destek olmak."
+      "title": "Kariyer bilincini deneyim, rehberlik ve güçlü bağlarla geliştirmek.",
+      "description": "Mesleki buluşmalar, zirveler, atölyeler ve iş birlikleri aracılığıyla öğrencilerin sektörleri yakından tanımasına, yetkinliklerini geliştirmesine ve kendi alanlarında doğru profesyonellerle buluşmasına imkân sağlamak."
     }
   },
   "timelineSection": {
     "eyebrow": "Yolculuğumuz",
-    "title": "Her yıl büyüyen ortak bir hikâye.",
-    "description": "Kulübün gelişimini şekillendiren önemli adımlar ve topluluğumuzun birlikte ürettiği kilometre taşları.",
+    "title": "Sağlam adımlarla büyüyen bir topluluk modeli.",
+    "description": "Kısa vadeli kalabalıklar yerine düzenli faaliyet, güçlü ekip yapısı ve kalıcı iş birlikleriyle ilerleyen gelişim planımız.",
     "milestones": [
       {
-        "year": "2021",
-        "title": "Kulübün kuruluşu",
-        "description": "Kariyer ve girişimcilik odağında öğrenci dayanışmasını güçlendirmek amacıyla ilk ekip bir araya geldi."
+        "year": "Başlangıç",
+        "title": "Çekirdek ekibin kurulması",
+        "description": "Koordinatörlüklerin görevlerini netleştiren, ortak hedefler etrafında çalışan disiplinler arası bir ekip yapısı oluşturuyoruz."
       },
       {
-        "year": "2022",
-        "title": "İlk büyük kariyer buluşması",
-        "description": "Farklı sektörlerden konukların katıldığı geniş kapsamlı etkinlikle kampüs ve iş dünyası arasında yeni bir köprü kuruldu."
+        "year": "Dönem başı",
+        "title": "Tanışma ve oryantasyon",
+        "description": "Yeni üyelerin kulübün vizyonunu tanıdığı, birbirleriyle bağ kurduğu ve çalışma alanlarını keşfettiği güçlü bir başlangıç tasarlıyoruz."
       },
       {
-        "year": "2023",
-        "title": "Atölye programlarının başlaması",
-        "description": "Öğrencilerin yalnızca dinlemediği, uygulayarak öğrendiği düzenli beceri ve girişimcilik atölyeleri hayata geçirildi."
+        "year": "Dönem ortası",
+        "title": "Düzenli etkinlik ve iş birlikleri",
+        "description": "Mesleki buluşmalar, atölyeler ve paydaş iş birlikleriyle kulübün kampüsteki bilinirliğini ve aktif katılımı istikrarlı biçimde artırmayı hedefliyoruz."
       },
       {
-        "year": "2024",
-        "title": "Topluluk ağının genişlemesi",
-        "description": "Mezunlar, sektör profesyonelleri ve öğrenci ekipleri arasındaki iş birlikleriyle kulüp daha güçlü bir ekosisteme dönüştü."
+        "year": "Yıl sonu",
+        "title": "Kampüs genelinde kalıcı etki",
+        "description": "Farklı bölümlerden öğrencilerin sorumluluk aldığı, düzenli büyüyen ve sonraki dönemlere güçlü bir yapı bırakan sürdürülebilir bir topluluğa ulaşmayı amaçlıyoruz."
       }
     ]
   }
