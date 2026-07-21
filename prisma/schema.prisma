@@ -21,7 +21,7 @@ model Event {
   slug            String   @unique
   description     String
   longDescription String
-  date            DateTime
+  date            DateTime?
   location        String
   imageUrl        String?
   category        String

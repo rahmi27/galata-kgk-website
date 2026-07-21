@@ -16,7 +16,7 @@ export type EventAdminInput = {
   title: string;
   description: string;
   longDescription: string;
-  date: Date;
+  date: Date | null;
   location: string;
   imageUrl: string | null;
   category: string;
@@ -73,7 +73,7 @@ export function validateEventForm(
   const location = getFormString(formData, "location");
   const category = getFormString(formData, "category");
   const imageUrl = getFormString(formData, "imageUrl");
-  const date = new Date(dateValue);
+  const date = dateValue ? new Date(dateValue) : null;
 
   if (title.length < 3 || title.length > 140) {
     return {
@@ -96,10 +96,10 @@ export function validateEventForm(
     };
   }
 
-  if (!dateValue || Number.isNaN(date.getTime())) {
+  if (date && Number.isNaN(date.getTime())) {
     return {
       success: false,
-      error: "Geçerli bir etkinlik tarihi seçin.",
+      error: "Etkinlik tarihini geçerli bir biçimde seçin veya tarih kesinleşmediyse alanı boş bırakın.",
     };
   }
 

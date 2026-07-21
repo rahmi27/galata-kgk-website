@@ -120,13 +120,16 @@ export function EventAdminForm({
       </FormField>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <FormField label="Tarih ve saat" htmlFor="event-date">
+        <FormField
+          label="Tarih ve saat"
+          htmlFor="event-date"
+          hint="Tarih kesinleşmediyse boş bırakabilirsiniz."
+        >
           <Input
             id="event-date"
             name="date"
             type="datetime-local"
             defaultValue={defaultValues.date}
-            required
           />
         </FormField>
         <FormField label="Konum" htmlFor="event-location">

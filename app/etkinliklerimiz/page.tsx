@@ -16,9 +16,14 @@ export const dynamic = "force-dynamic";
 
 export default async function EventsPage() {
   const events = await prisma.event.findMany({
-    orderBy: {
-      date: "asc",
-    },
+    orderBy: [
+      {
+        date: "asc",
+      },
+      {
+        title: "asc",
+      },
+    ],
     select: {
       id: true,
       title: true,
@@ -54,7 +59,7 @@ export default async function EventsPage() {
             <EventList
               events={events.map((event) => ({
                 ...event,
-                date: event.date.toISOString(),
+                date: event.date?.toISOString() ?? null,
               }))}
               currentDate={new Date().toISOString()}
             />

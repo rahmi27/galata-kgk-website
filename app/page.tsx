@@ -43,13 +43,25 @@ export default async function HomePage() {
     }),
     prisma.event.findMany({
       where: {
-        date: {
-          gte: new Date(),
+        OR: [
+          {
+            date: null,
+          },
+          {
+            date: {
+              gte: new Date(),
+            },
+          },
+        ],
+      },
+      orderBy: [
+        {
+          date: "asc",
         },
-      },
-      orderBy: {
-        date: "asc",
-      },
+        {
+          title: "asc",
+        },
+      ],
       take: 3,
     }),
     prisma.sponsor.findMany({

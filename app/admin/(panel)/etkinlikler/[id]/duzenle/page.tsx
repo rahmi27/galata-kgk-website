@@ -10,7 +10,11 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-function toDateTimeLocal(date: Date) {
+function toDateTimeLocal(date: Date | null) {
+  if (!date) {
+    return "";
+  }
+
   const timezoneOffset = date.getTimezoneOffset() * 60_000;
   return new Date(date.getTime() - timezoneOffset).toISOString().slice(0, 16);
 }

@@ -57,7 +57,7 @@ async function main() {
       slug: event.slug,
       description: event.description,
       longDescription: event.longDescription,
-      date: new Date(event.date),
+      date: event.date ? new Date(event.date) : null,
       location: event.location,
       imageUrl: event.imageUrl,
       category: event.category,

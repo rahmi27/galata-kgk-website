@@ -11,10 +11,18 @@ const longDateFormatter = new Intl.DateTimeFormat("tr-TR", {
   minute: "2-digit",
 });
 
-export function formatEventDate(date: Date | string) {
+export function formatEventDate(date: Date | string | null | undefined) {
+  if (!date) {
+    return "Tarih yakında duyurulacak";
+  }
+
   return shortDateFormatter.format(new Date(date));
 }
 
-export function formatEventDateLong(date: Date | string) {
+export function formatEventDateLong(date: Date | string | null | undefined) {
+  if (!date) {
+    return "Tarih yakında duyurulacak";
+  }
+
   return longDateFormatter.format(new Date(date));
 }

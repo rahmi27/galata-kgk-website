@@ -15,7 +15,7 @@ type EventListItem = {
   title: string;
   slug: string;
   description: string;
-  date: string;
+  date: string | null;
   imageUrl: string | null;
   category: string;
 };
@@ -34,6 +34,10 @@ export function EventList({ events, currentDate }: EventListProps) {
 
     return events
       .filter((event) => {
+        if (!event.date) {
+          return activeFilter !== "past";
+        }
+
         const eventTime = new Date(event.date).getTime();
 
         if (activeFilter === "upcoming") {
@@ -47,6 +51,18 @@ export function EventList({ events, currentDate }: EventListProps) {
         return true;
       })
       .sort((firstEvent, secondEvent) => {
+        if (!firstEvent.date && !secondEvent.date) {
+          return firstEvent.title.localeCompare(secondEvent.title, "tr");
+        }
+
+        if (!firstEvent.date) {
+          return -1;
+        }
+
+        if (!secondEvent.date) {
+          return 1;
+        }
+
         const firstTime = new Date(firstEvent.date).getTime();
         const secondTime = new Date(secondEvent.date).getTime();
 
