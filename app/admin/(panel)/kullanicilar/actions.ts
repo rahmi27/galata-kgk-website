@@ -84,51 +84,59 @@ export async function deleteAdminUserAction(
   userId: number,
 ): Promise<AdminActionState> {
   const currentUser = await requireAdmin();
-  const targetUser = await prisma.adminUser.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      id: true,
-      username: true,
-    },
-  });
-
-  if (!targetUser) {
-    return {
-      success: false,
-      message: "Silmek istediğiniz kullanıcı bulunamadı.",
-    };
-  }
-
-  if (targetUser.username === currentUser.username) {
-    return {
-      success: false,
-      message: "Giriş yaptığınız kendi hesabınızı silemezsiniz.",
-    };
-  }
-
-  const adminCount = await prisma.adminUser.count();
-
-  if (adminCount <= 1) {
-    return {
-      success: false,
-      message: "Sistemde en az bir admin kullanıcı kalmalıdır.",
-    };
-  }
 
   try {
-    await prisma.adminUser.delete({
-      where: {
-        id: targetUser.id,
-      },
-    });
-    revalidatePath("/admin/kullanicilar");
+    const result = await prisma.$transaction(async (transaction) => {
+      const targetUser = await transaction.adminUser.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+          username: true,
+        },
+      });
 
-    return {
-      success: true,
-      message: "Admin kullanıcı silindi.",
-    };
+      if (!targetUser) {
+        return {
+          success: false,
+          message: "Silmek istediğiniz kullanıcı bulunamadı.",
+        };
+      }
+
+      if (targetUser.username === currentUser.username) {
+        return {
+          success: false,
+          message: "Giriş yaptığınız kendi hesabınızı silemezsiniz.",
+        };
+      }
+
+      const adminCount = await transaction.adminUser.count();
+
+      if (adminCount <= 1) {
+        return {
+          success: false,
+          message: "Sistemde en az bir admin kullanıcı kalmalıdır.",
+        };
+      }
+
+      await transaction.adminUser.delete({
+        where: {
+          id: targetUser.id,
+        },
+      });
+
+      return {
+        success: true,
+        message: "Admin kullanıcı silindi.",
+      };
+    });
+
+    if (result.success) {
+      revalidatePath("/admin/kullanicilar");
+    }
+
+    return result;
   } catch (error) {
     console.error("Admin kullanıcı silinemedi.", error);
 
