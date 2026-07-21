@@ -49,8 +49,8 @@ export async function generateMetadata({
   }
 
   return createPageMetadata({
-    title: `${event.title} | Galata KGK`,
-    description: event.description,
+    title: `${event.title} | Galata KGK — İstanbul Galata Üniversitesi`,
+    description: `${event.description} İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü etkinliği.`,
     path: `/etkinliklerimiz/${event.slug}`,
     keywords: [event.title, event.category, "Galata KGK etkinliği"],
   });
