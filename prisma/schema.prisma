@@ -15,6 +15,15 @@ model AdminUser {
   createdAt    DateTime @default(now())
 }
 
+model AdminLoginAttempt {
+  id        Int      @id @default(autoincrement())
+  username  String
+  ipAddress String
+  createdAt DateTime @default(now())
+
+  @@index([username, ipAddress, createdAt])
+}
+
 model Event {
   id              Int      @id @default(autoincrement())
   title           String

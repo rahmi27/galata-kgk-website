@@ -3,6 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
 import {
+  clearAdminLoginAttempts,
+  getClientIp,
+  isAdminLoginRateLimited,
+  recordFailedAdminLogin,
+} from "@/lib/admin-login-rate-limit";
+import {
   normalizeUsername,
   usernamePattern,
 } from "@/lib/admin-credentials";
@@ -29,15 +35,26 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           type: "password",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const username =
           typeof credentials.username === "string"
             ? normalizeUsername(credentials.username)
             : "";
         const password =
           typeof credentials.password === "string" ? credentials.password : "";
+        const rateLimitUsername = usernamePattern.test(username)
+          ? username
+          : "__invalid__";
+        const ipAddress = getClientIp(request);
+
+        if (
+          await isAdminLoginRateLimited(rateLimitUsername, ipAddress)
+        ) {
+          return null;
+        }
 
         if (!usernamePattern.test(username) || password.length < 8) {
+          await recordFailedAdminLogin(rateLimitUsername, ipAddress);
           return null;
         }
 
@@ -48,8 +65,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         });
 
         if (!admin || !(await compare(password, admin.passwordHash))) {
+          await recordFailedAdminLogin(rateLimitUsername, ipAddress);
           return null;
         }
+
+        await clearAdminLoginAttempts(rateLimitUsername, ipAddress);
 
         return {
           id: String(admin.id),
