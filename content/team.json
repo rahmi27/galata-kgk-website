@@ -10,46 +10,123 @@
   },
   "members": [
     {
-      "name": "Ada Yılmaz",
+      "name": "Özden Topuz",
       "role": "Yönetim Kurulu Başkanı",
       "department": "Yönetim Kurulu",
       "photoUrl": null,
       "order": 1
     },
     {
-      "name": "Mert Kaya",
-      "role": "Başkan Yardımcısı",
+      "name": "Rabia Naz Polatcan",
+      "role": "Yönetim Kurulu Başkan Yardımcısı",
       "department": "Yönetim Kurulu",
       "photoUrl": null,
       "order": 2
     },
     {
-      "name": "İpek Demir",
-      "role": "Etkinlik Koordinatörü",
-      "department": "Etkinlik Ekibi",
+      "name": "Nisanur Külcü",
+      "role": "Sayman",
+      "department": "Yönetim Kurulu",
       "photoUrl": null,
       "order": 3
     },
     {
-      "name": "Ege Arslan",
-      "role": "İletişim Koordinatörü",
-      "department": "İletişim Ekibi",
+      "name": "Özden Topuz",
+      "role": "Etkinlik Koordinatörü",
+      "department": "Etkinlik Koordinatörlüğü",
       "photoUrl": null,
-      "order": 4
+      "order": 1
     },
     {
-      "name": "Selin Aksoy",
-      "role": "Etkinlik Ekip Üyesi",
-      "department": "Etkinlik Ekibi",
+      "name": "Ahmet Emiroğlu",
+      "role": "Etkinlik Koordinatörü Yardımcısı",
+      "department": "Etkinlik Koordinatörlüğü",
       "photoUrl": null,
-      "order": 5
+      "order": 2
     },
     {
-      "name": "Can Öztürk",
-      "role": "Sosyal Medya Sorumlusu",
-      "department": "İletişim Ekibi",
+      "name": "Ferman Uçar",
+      "role": "IT Koordinatörü",
+      "department": "IT Koordinatörlüğü",
       "photoUrl": null,
-      "order": 6
+      "order": 1
+    },
+    {
+      "name": "Rahmi Avcı",
+      "role": "IT Koordinatörü Yardımcısı",
+      "department": "IT Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 2
+    },
+    {
+      "name": "Özge Savaş",
+      "role": "Tasarım Koordinatörü",
+      "department": "Tasarım Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 1
+    },
+    {
+      "name": "İlyas",
+      "role": "Tasarım Koordinatörü Yardımcısı",
+      "department": "Tasarım Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 2
+    },
+    {
+      "name": "Batuhan Şahin",
+      "role": "Sosyal Medya Koordinatörü",
+      "department": "Sosyal Medya Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 1
+    },
+    {
+      "name": "Eda",
+      "role": "Sosyal Medya Koordinatörü Yardımcısı",
+      "department": "Sosyal Medya Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 2
+    },
+    {
+      "name": "Yaren Çakır",
+      "role": "Üye Koordinatörü",
+      "department": "Üye Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 1
+    },
+    {
+      "name": "Yeşim Cantekin",
+      "role": "Sponsor ve İş Birlikleri Koordinatörü",
+      "department": "Sponsor ve İş Birlikleri Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 1
+    },
+    {
+      "name": "Muhammet Taha Fidan",
+      "role": "Sponsor ve İş Birlikleri Koordinatörü",
+      "department": "Sponsor ve İş Birlikleri Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 2
+    },
+    {
+      "name": "Rabia Naz Polatcan",
+      "role": "Sponsor ve İş Birlikleri Koordinatörü",
+      "department": "Sponsor ve İş Birlikleri Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 3
+    },
+    {
+      "name": "Eylül",
+      "role": "Gastronomi Koordinatörü",
+      "department": "Gastronomi Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 1
+    },
+    {
+      "name": "Emre",
+      "role": "Gastronomi Koordinatörü",
+      "department": "Gastronomi Koordinatörlüğü",
+      "photoUrl": null,
+      "order": 2
     }
   ]
 }
