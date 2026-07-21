@@ -19,8 +19,14 @@ export default async function AdminStatsPage() {
       <AdminPageHeader
         eyebrow="Anasayfa İçeriği"
         title="İstatistik Kartları"
-        description="Anasayfada kulübün etkisini anlatan sayı ve etiketleri düzenleyin. Düşük sıra değeri önce gösterilir."
+        description="Anasayfada kulübün etkisini anlatan sayı, etiket ve sıralamayı buradan yönetin. Düşük sıra değeri önce gösterilir."
       />
+
+      <p className="mt-6 rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-sm leading-6 text-primary-800">
+        Editör notu: Kaydedilen değerler anasayfaya doğrudan yansır.
+        Yalnızca kulübün doğrulanmış güncel rakamlarını kullanın; kesinleşmeyen
+        sayılar için tahmin eklemeyin.
+      </p>
 
       <section className="mt-9 space-y-4">
         {stats.length ? (
