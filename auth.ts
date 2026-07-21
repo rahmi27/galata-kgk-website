@@ -14,7 +14,11 @@ import {
 } from "@/lib/admin-credentials";
 import { prisma } from "@/lib/prisma";
 
+const developmentHostTrust =
+  process.env.NODE_ENV === "development" ? { trustHost: true } : {};
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  ...developmentHostTrust,
   session: {
     strategy: "jwt",
     maxAge: 8 * 60 * 60,
