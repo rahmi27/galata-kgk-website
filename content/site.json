@@ -49,18 +49,11 @@
     "socials": [
       {
         "platform": "Instagram",
-        "href": "#"
-      },
-      {
-        "platform": "LinkedIn",
-        "href": "#"
-      },
-      {
-        "platform": "X",
-        "href": "#"
+        "href": "https://www.instagram.com/galatakariyergirisimcilik/"
       }
     ],
     "copyright": "© {year} Galata KGK. Tüm hakları saklıdır.",
-    "institution": "İstanbul Galata Üniversitesi"
+    "institution": "İstanbul Galata Üniversitesi",
+    "institutionHref": "https://aday.galata.edu.tr/tr"
   }
 }

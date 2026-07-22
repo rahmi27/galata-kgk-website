@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import { BriefcaseBusiness, GraduationCap } from "lucide-react";
+import { FaInstagram, FaTiktok } from "react-icons/fa6";
 
 import siteContent from "@/content/site.json";
 
 const socialIcons = {
   Instagram: FaInstagram,
-  LinkedIn: FaLinkedinIn,
-  X: FaXTwitter,
+  TikTok: FaTiktok,
+  Portfolyo: BriefcaseBusiness,
 } as const;
 
 export function Footer() {
@@ -39,12 +40,15 @@ export function Footer() {
                 const Icon =
                   socialIcons[
                     social.platform as keyof typeof socialIcons
-                  ] ?? FaInstagram;
+                  ] ?? BriefcaseBusiness;
+                const isExternal = social.href.startsWith("http");
 
                 return (
                   <Link
                     key={social.platform}
                     href={social.href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
                     className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-primary-200 transition-all hover:-translate-y-0.5 hover:border-accent/70 hover:bg-accent hover:text-accent-foreground"
                     aria-label={social.platform}
                   >
@@ -80,7 +84,15 @@ export function Footer() {
           <p>
             {copyright}
           </p>
-          <p>{footer.institution}</p>
+          <Link
+            href={footer.institutionHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-fit items-center gap-2 transition-colors hover:text-white"
+          >
+            <GraduationCap className="size-4" aria-hidden="true" />
+            {footer.institution}
+          </Link>
         </div>
       </div>
     </footer>
