@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin } from "lucide-react";
-import { FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa6";
 
 import { ContactForm } from "@/components/contact/contact-form";
 import { Footer } from "@/components/layout/footer";
@@ -18,8 +18,6 @@ export const metadata = createPageMetadata({
 
 const socialIcons = {
   Instagram: FaInstagram,
-  LinkedIn: FaLinkedinIn,
-  X: FaXTwitter,
 } as const;
 
 export default function ContactPage() {
@@ -112,13 +110,16 @@ export default function ContactPage() {
                           socialIcons[
                             social.platform as keyof typeof socialIcons
                           ] ?? FaInstagram;
+                        const isExternal = social.href.startsWith("http");
 
                         return (
                           <Link
                             key={social.platform}
                             href={social.href}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
                             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-xs font-semibold text-primary-100 transition-colors hover:border-accent/70 hover:bg-accent"
-                            aria-label={social.platform}
+                            aria-label={`${social.platform} hesabını${isExternal ? " yeni sekmede" : ""} aç`}
                           >
                             <Icon className="size-3.5" aria-hidden="true" />
                             {social.label}
