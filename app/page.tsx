@@ -6,7 +6,7 @@ import {
   Compass,
   Lightbulb,
   Network,
-  Sparkles,
+  Rocket,
 } from "lucide-react";
 
 import { Footer } from "@/components/layout/footer";
@@ -97,9 +97,9 @@ export default async function HomePage() {
           />
           <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-10 lg:py-32">
             <div>
-              <p className="inline-flex items-center gap-2.5 rounded-full border border-primary/10 bg-white/70 px-4 py-2 font-heading text-xs font-bold uppercase tracking-[0.16em] text-primary-700 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-primary-200">
-                <Sparkles
-                  className="size-3.5 text-accent"
+              <p className="inline-flex items-center gap-2.5 rounded-full border border-primary/20 bg-primary-50 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-[0.13em] text-primary-800 shadow-[0_10px_30px_-20px_rgba(27,42,94,0.55)] dark:border-primary-400/25 dark:bg-primary-800/75 dark:text-primary-100">
+                <Rocket
+                  className="size-4 text-accent-600 dark:text-accent-300"
                   aria-hidden="true"
                 />
                 {homeContent.hero.eyebrow}
