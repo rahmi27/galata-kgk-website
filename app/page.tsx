@@ -139,7 +139,7 @@ export default async function HomePage() {
               />
               <div className="relative overflow-hidden rounded-[2rem] bg-primary-900 p-8 text-white shadow-[0_32px_90px_-40px_rgba(27,42,94,0.8)] sm:p-10">
                 <div
-                  className="absolute -right-14 -top-14 size-44 rounded-full border-[28px] border-accent/25"
+                  className="absolute -right-14 -top-14 size-44 rounded-full border-[28px] border-accent/45 bg-accent/10 dark:border-accent/35 dark:bg-accent/10"
                   aria-hidden="true"
                 />
                 <CalendarDays
