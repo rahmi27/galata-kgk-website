@@ -15,7 +15,14 @@ export const metadata = createPageMetadata({
 
 export const dynamic = "force-dynamic";
 
-export default async function EventsPage() {
+type EventsPageProps = {
+  searchParams: Promise<{
+    view?: string | string[];
+  }>;
+};
+
+export default async function EventsPage({ searchParams }: EventsPageProps) {
+  const { view } = await searchParams;
   const events = await prisma.event.findMany({
     orderBy: [
       {
@@ -65,6 +72,7 @@ export default async function EventsPage() {
                 date: event.date?.toISOString() ?? null,
               }))}
               currentDate={new Date().toISOString()}
+              initialView={view === "takvim" ? "calendar" : "list"}
             />
           </div>
         </section>

@@ -22,7 +22,18 @@
       "value": "all"
     }
   ],
+  "viewModes": [
+    {
+      "label": "Liste",
+      "value": "list"
+    },
+    {
+      "label": "Yıllık Takvim",
+      "value": "calendar"
+    }
+  ],
   "resultLabel": "{count} etkinlik gösteriliyor",
+  "calendarResultLabel": "{count} kesin tarihli etkinlik takvimde işaretli",
   "emptyState": {
     "title": "Bu filtrede etkinlik bulunamadı.",
     "description": "Diğer etkinlikleri görmek için farklı bir filtre seçebilirsin."
