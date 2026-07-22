@@ -104,7 +104,39 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         return true;
       }
 
-      return Boolean(session?.user);
+      if (session?.user) {
+        return true;
+      }
+
+      if (process.env.NODE_ENV !== "development") {
+        return false;
+      }
+
+      const forwardedHost = request.headers
+        .get("x-forwarded-host")
+        ?.split(",")[0]
+        ?.trim();
+      const requestHost = forwardedHost ?? request.headers.get("host");
+
+      if (!requestHost) {
+        return false;
+      }
+
+      const forwardedProtocol = request.headers
+        .get("x-forwarded-proto")
+        ?.split(",")[0]
+        ?.trim();
+      const protocol = forwardedProtocol === "https" ? "https" : "http";
+      const externalOrigin = `${protocol}://${requestHost}`;
+      const signInUrl = new URL("/admin/giris", externalOrigin);
+      const callbackUrl = new URL(
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+        externalOrigin,
+      );
+
+      signInUrl.searchParams.set("callbackUrl", callbackUrl.href);
+
+      return Response.redirect(signInUrl);
     },
   },
 });

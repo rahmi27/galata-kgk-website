@@ -78,7 +78,7 @@
 | --- | --- |
 | `DATABASE_URL` | SQLite dosya bağlantısı; yerel kullanım için `file:./dev.db` biçimindedir. |
 | `AUTH_SECRET` | Auth.js JWT ve oturum güvenliği için uzun, rastgele ve gizli anahtar. |
-| `AUTH_URL` | Uygulamanın Auth.js tarafından kullanılan ana adresi. |
+| `AUTH_URL` | Yalnızca production ortamında isteğe bağlı ana adres. Yerel geliştirmede tanımlamayın; böylece Auth.js hem localhost hem de ngrok/cloudflared adresini gelen istekten otomatik algılar. |
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL, Open Graph, sitemap ve robots çıktıları için sitenin herkese açık ana adresi. |
 | `ADMIN_SEED_PASSWORD` | Seed sırasında oluşturulan `admin` hesabının geçici parolası; en az 12 karakter olmalıdır. |
 
