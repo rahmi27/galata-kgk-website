@@ -88,6 +88,7 @@ export default async function TeamPage() {
                         key={member.id}
                         name={member.name}
                         role={member.role}
+                        department={member.department}
                         imageSrc={member.photoUrl ?? undefined}
                         imageAlt={member.photoAlt ?? undefined}
                       />

@@ -136,6 +136,7 @@ export default async function DesignSystemPage() {
                   key={member.id}
                   name={member.name}
                   role={member.role}
+                  department={member.department}
                   imageSrc={member.photoUrl ?? undefined}
                 />
               ))}

@@ -55,7 +55,7 @@ export default async function EditTeamMemberPage({
       <AdminPageHeader
         eyebrow="Ekip Üyesi Düzenleme"
         title={member.name}
-        description="Görev, departman, fotoğraf ve sıralama bilgisini güncelleyin."
+        description="Görev, bölüm, ekip kategorisi, fotoğraf ve sıralama bilgisini güncelleyin."
         actions={
           <Button asChild variant="outline" className="rounded-xl">
             <Link href="/admin/ekip">
@@ -74,6 +74,7 @@ export default async function EditTeamMemberPage({
           defaultValues={{
             name: member.name,
             role: member.role,
+            department: member.department,
             categoryId: member.categoryId,
             photoUrl: member.photoUrl ?? "",
             photoAlt: member.photoAlt ?? "",

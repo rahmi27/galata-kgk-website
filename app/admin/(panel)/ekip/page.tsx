@@ -113,6 +113,9 @@ export default async function AdminTeamPage({
                           <p className="mt-1 text-sm text-primary-500">
                             {member.role}
                           </p>
+                          <p className="mt-1 text-xs text-primary-400">
+                            {member.department}
+                          </p>
                           <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-500">
                             <ListOrdered className="size-3.5" aria-hidden="true" />
                             Sıra {member.order}

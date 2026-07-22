@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 type TeamMemberCardProps = {
   name: string;
   role: string;
+  department: string;
   imageSrc?: string;
   imageAlt?: string;
   className?: string;
@@ -13,6 +14,7 @@ type TeamMemberCardProps = {
 export function TeamMemberCard({
   name,
   role,
+  department,
   imageSrc,
   imageAlt,
   className,
@@ -28,11 +30,11 @@ export function TeamMemberCard({
   return (
     <article
       className={cn(
-        "group overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card shadow-[0_24px_70px_-48px_rgba(27,42,94,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 dark:border-white/10 dark:bg-white/[0.035]",
+        "group overflow-hidden rounded-[1.75rem] border border-primary/10 bg-primary-900 shadow-[0_24px_70px_-48px_rgba(27,42,94,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 dark:border-white/10 dark:bg-primary-950",
         className,
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-primary-50 dark:bg-primary-900">
+      <div className="relative aspect-[5/6] overflow-hidden bg-primary-50 dark:bg-primary-900">
         {imageSrc ? (
           <Image
             src={imageSrc}
@@ -56,16 +58,19 @@ export function TeamMemberCard({
           </div>
         )}
       </div>
-      <div className="relative p-6">
+      <div className="relative flex min-h-40 flex-col justify-center bg-primary-900 px-6 pb-6 pt-8 dark:bg-primary-950">
         <span
-          className="absolute left-6 top-0 h-1 w-10 -translate-y-1/2 rounded-full bg-accent"
+          className="absolute left-6 top-0 h-8 w-1.5 rounded-b-full bg-accent"
           aria-hidden="true"
         />
-        <h3 className="font-heading text-lg font-bold tracking-[-0.025em] text-primary dark:text-white">
+        <h3 className="font-heading text-xl font-bold tracking-[-0.03em] text-white">
           {name}
         </h3>
-        <p className="mt-1.5 text-sm font-medium text-muted-foreground">
+        <p className="mt-2 text-sm font-semibold leading-6 text-primary-100">
           {role}
+        </p>
+        <p className="mt-2 text-xs font-normal tracking-[0.01em] text-primary-300">
+          {department}
         </p>
       </div>
     </article>

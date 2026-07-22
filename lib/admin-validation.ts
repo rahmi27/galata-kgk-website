@@ -26,6 +26,7 @@ export type EventAdminInput = {
 export type TeamMemberAdminInput = {
   name: string;
   role: string;
+  department: string;
   categoryId: number | null;
   newCategoryName: string | null;
   photoAlt: string | null;
@@ -155,6 +156,7 @@ export function validateTeamMemberForm(
 ): ValidationResult<TeamMemberAdminInput> {
   const name = getFormString(formData, "name");
   const role = getFormString(formData, "role");
+  const department = getFormString(formData, "department");
   const categoryValue = getFormString(formData, "categoryId");
   const newCategoryName = getFormString(formData, "newCategoryName");
   const orderValue = getFormString(formData, "order");
@@ -172,6 +174,13 @@ export function validateTeamMemberForm(
     return {
       success: false,
       error: "Görev 2–100 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (department.length < 2 || department.length > 120) {
+    return {
+      success: false,
+      error: "Bölüm bilgisi 2–120 karakter arasında olmalıdır.",
     };
   }
 
@@ -215,6 +224,7 @@ export function validateTeamMemberForm(
     data: {
       name,
       role,
+      department,
       categoryId,
       newCategoryName:
         categoryValue === "new" ? newCategoryName : null,

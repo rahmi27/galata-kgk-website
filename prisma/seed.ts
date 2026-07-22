@@ -85,6 +85,7 @@ async function main() {
     data: teamContent.members.map((member) => ({
       name: member.name,
       role: member.role,
+      department: "Belirtilmedi",
       categoryId: categoryIdByName.get(member.department)!,
       photoUrl: member.photoUrl,
       photoAlt: member.photoUrl ? `${member.name} portresi` : null,

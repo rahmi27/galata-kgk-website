@@ -105,6 +105,7 @@ export async function createTeamMemberAction(
     const memberData = {
       name: validation.data.name,
       role: validation.data.role,
+      department: validation.data.department,
       categoryId: category.id,
       photoAlt: validation.data.photoAlt,
       order: validation.data.order,
@@ -194,6 +195,7 @@ export async function updateTeamMemberAction(
     const memberData = {
       name: validation.data.name,
       role: validation.data.role,
+      department: validation.data.department,
       categoryId: category.id,
       photoAlt: validation.data.photoAlt,
       order: validation.data.order,

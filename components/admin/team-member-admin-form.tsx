@@ -13,6 +13,7 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 type TeamMemberFormValues = {
   name: string;
   role: string;
+  department: string;
   categoryId: number | "new" | "";
   photoUrl: string;
   photoAlt: string;
@@ -36,6 +37,7 @@ type TeamMemberAdminFormProps = {
 const emptyValues: TeamMemberFormValues = {
   name: "",
   role: "",
+  department: "",
   categoryId: "",
   photoUrl: "",
   photoAlt: "",
@@ -99,6 +101,20 @@ export function TeamMemberAdminForm({
             required
           />
         </FormField>
+        <FormField label="Bölüm" htmlFor="member-department">
+          <Input
+            id="member-department"
+            name="department"
+            defaultValue={defaultValues.department}
+            placeholder="Örn. İç Mimarlık"
+            minLength={2}
+            maxLength={120}
+            required
+          />
+        </FormField>
+      </div>
+
+      <div>
         <FormField label="Ekip Kategorisi" htmlFor="member-category">
           <select
             id="member-category"
