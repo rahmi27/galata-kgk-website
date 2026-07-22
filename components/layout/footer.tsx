@@ -80,15 +80,13 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 pt-7 text-xs leading-5 text-primary-300 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            {copyright}
-          </p>
+        <div className="flex flex-col items-center gap-3 pt-7 text-xs leading-5 text-primary-300 sm:grid sm:grid-cols-[1fr_auto_1fr]">
+          <p className="text-center sm:col-start-2">{copyright}</p>
           <Link
             href={footer.institutionHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-fit items-center gap-2 transition-colors hover:text-white"
+            className="inline-flex w-fit items-center gap-2 transition-colors hover:text-white sm:col-start-3 sm:justify-self-end"
           >
             <GraduationCap className="size-4" aria-hidden="true" />
             {footer.institution}
