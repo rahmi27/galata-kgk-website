@@ -1,5 +1,13 @@
 const isDevelopment = process.env.NODE_ENV === "development";
 
+const developmentTunnelOrigins = (
+  process.env.DEV_TUNNEL_ORIGINS ??
+  "*.ngrok-free.dev,*.ngrok.app,*.ngrok.io,*.trycloudflare.com"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -54,9 +62,19 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(isDevelopment
+    ? {
+        allowedDevOrigins: developmentTunnelOrigins,
+      }
+    : {}),
   experimental: {
     serverActions: {
       bodySizeLimit: "6mb",
+      ...(isDevelopment
+        ? {
+            allowedOrigins: developmentTunnelOrigins,
+          }
+        : {}),
     },
   },
   async headers() {
