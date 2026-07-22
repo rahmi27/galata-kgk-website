@@ -142,11 +142,20 @@ export default async function HomePage() {
                   className="absolute -right-14 -top-14 size-44 rounded-full border-[28px] border-accent/45 bg-accent/10 dark:border-accent/35 dark:bg-accent/10"
                   aria-hidden="true"
                 />
-                <CalendarDays
-                  className="size-8 text-accent-300"
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
+                <Link
+                  href={homeContent.hero.spotlight.calendarCta.href}
+                  className="group/calendar relative z-10 -m-2 inline-flex size-12 cursor-pointer items-center justify-center rounded-2xl text-accent-300 outline-none transition-all hover:scale-105 hover:bg-white/[0.08] hover:text-accent-200 focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900"
+                  aria-label={homeContent.hero.spotlight.calendarCta.label}
+                >
+                  <CalendarDays
+                    className="size-8 transition-transform group-hover/calendar:-rotate-3"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
+                  <span className="pointer-events-none absolute left-full top-1/2 ml-2.5 w-max -translate-y-1/2 translate-x-1 rounded-lg border border-white/10 bg-primary-950 px-2.5 py-1.5 text-[0.68rem] font-semibold text-white opacity-0 shadow-lg transition-all group-hover/calendar:translate-x-0 group-hover/calendar:opacity-100 group-focus-visible/calendar:translate-x-0 group-focus-visible/calendar:opacity-100">
+                    {homeContent.hero.spotlight.calendarCta.label}
+                  </span>
+                </Link>
                 <p className="mt-12 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
                   {homeContent.hero.spotlight.eyebrow}
                 </p>

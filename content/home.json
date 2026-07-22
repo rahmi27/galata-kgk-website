@@ -20,6 +20,10 @@
       "eyebrow": "Bu dönem odağımız",
       "title": "Merak eden, deneyen ve paylaşan bir topluluk.",
       "description": "İş dünyasına yakından bakarken kendi yolunu çizmen için alan açıyoruz.",
+      "calendarCta": {
+        "label": "Takvimi gör",
+        "href": "/etkinliklerimiz?view=takvim"
+      },
       "topics": [
         "Kariyer buluşmaları",
         "Girişimcilik atölyeleri",
