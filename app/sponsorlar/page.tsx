@@ -112,17 +112,21 @@ export default async function SponsorsPage() {
                 })}
               </div>
             ) : (
-              <div className="mx-auto max-w-3xl rounded-[2rem] border border-dashed border-primary/20 bg-primary-50/45 px-6 py-16 text-center dark:border-white/15 dark:bg-white/[0.035] sm:px-12 sm:py-20">
-                <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-white text-accent shadow-sm dark:bg-white/10 dark:text-accent-300">
+              <div className="relative mx-auto max-w-3xl overflow-hidden rounded-[2rem] border border-primary-800 bg-primary-900 px-6 py-16 text-center text-white shadow-[0_30px_80px_-46px_rgba(27,42,94,0.9)] dark:border-white/10 dark:bg-primary-950 sm:px-12 sm:py-20">
+                <span
+                  className="absolute -right-16 -top-16 size-44 rounded-full border-[26px] border-accent/25"
+                  aria-hidden="true"
+                />
+                <div className="relative mx-auto flex size-14 items-center justify-center rounded-2xl bg-white/10 text-accent-300 ring-1 ring-white/10">
                   <Handshake className="size-6" aria-hidden="true" />
                 </div>
-                <h2 className="mt-6 font-heading text-3xl font-bold tracking-[-0.04em] text-primary dark:text-white">
+                <h2 className="relative mt-6 font-heading text-3xl font-bold tracking-[-0.04em] text-white">
                   {sponsorContent.emptyState.title}
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground">
+                <p className="relative mx-auto mt-4 max-w-xl leading-7 text-primary-200">
                   {sponsorContent.emptyState.description}
                 </p>
-                <Button asChild variant="secondary" className="mt-8">
+                <Button asChild variant="secondary" className="relative mt-8">
                   <Link href="/iletisim">
                     {sponsorContent.emptyState.cta}
                     <ArrowRight aria-hidden="true" />
