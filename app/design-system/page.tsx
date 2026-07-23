@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
@@ -45,8 +43,7 @@ export default async function DesignSystemPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
 
       <main>
         <section className="border-b border-primary/10 bg-primary-50/70 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -144,8 +141,6 @@ export default async function DesignSystemPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

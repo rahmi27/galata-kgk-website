@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
       <main className="relative isolate flex min-h-[70vh] items-center overflow-hidden border-b border-primary/10 px-5 py-24 dark:border-white/10">
         <div
           className="absolute -right-36 top-10 -z-10 size-[30rem] rounded-full border-[70px] border-accent/10"
@@ -46,7 +43,6 @@ export default function NotFound() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

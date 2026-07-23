@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Handshake, Sparkles } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SponsorCard } from "@/components/sponsors/sponsor-card";
 import { Button } from "@/components/ui/button";
@@ -41,8 +39,7 @@ export default async function SponsorsPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -201,8 +198,6 @@ export default async function SponsorsPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

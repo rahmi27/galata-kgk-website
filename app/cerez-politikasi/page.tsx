@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { BarChart3, Cookie, LockKeyhole, ShieldCheck } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { createPageMetadata } from "@/lib/site-metadata";
 
@@ -43,8 +41,7 @@ const sections = [
 
 export default function CookiePolicyPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
       <main>
         <section className="border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
@@ -122,7 +119,6 @@ export default function CookiePolicyPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

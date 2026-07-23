@@ -3,8 +3,6 @@ import { MapPin } from "lucide-react";
 import { FaInstagram } from "react-icons/fa6";
 
 import { ContactForm } from "@/components/contact/contact-form";
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import contactContent from "@/content/contact.json";
 import { createPageMetadata } from "@/lib/site-metadata";
@@ -24,8 +22,7 @@ export default function ContactPage() {
   const { details, hero } = contactContent;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -121,8 +118,6 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }
