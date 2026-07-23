@@ -1,11 +1,9 @@
 import "server-only";
 
+import { del, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-const uploadRoot = path.join(process.cwd(), "public", "uploads");
 
 const imageTypes = {
   "image/jpeg": {
@@ -99,39 +97,73 @@ export async function saveImageUpload(
     };
   }
 
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+
+  if (!token) {
+    return {
+      success: false,
+      error:
+        "Görsel yükleme servisi yapılandırılmamış. Lütfen yöneticiyle iletişime geçin.",
+    };
+  }
+
   const safeBaseName = sanitizeFileName(value.name) || "gorsel";
   const uniqueName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeBaseName}.${imageType.extension}`;
-  const destinationDirectory = path.join(uploadRoot, directory);
-  const destinationPath = path.join(destinationDirectory, uniqueName);
 
-  await mkdir(destinationDirectory, {
-    recursive: true,
-  });
-  await writeFile(destinationPath, buffer);
+  try {
+    const blob = await put(`uploads/${directory}/${uniqueName}`, buffer, {
+      access: "public",
+      contentType: value.type,
+      addRandomSuffix: false,
+      token,
+    });
 
-  return {
-    success: true,
-    path: `/uploads/${directory}/${uniqueName}`,
-  };
+    return {
+      success: true,
+      path: blob.url,
+    };
+  } catch (error) {
+    console.error("Görsel Vercel Blob'a yüklenemedi.", error);
+
+    return {
+      success: false,
+      error: "Görsel yüklenemedi. Lütfen tekrar deneyin.",
+    };
+  }
 }
 
 export async function deleteUploadedImage(imagePath: string | null) {
-  if (!imagePath?.startsWith("/uploads/")) {
+  if (!imagePath) {
     return;
   }
 
-  const relativePath = imagePath.replace(/^\/uploads\//, "");
-  const resolvedPath = path.resolve(uploadRoot, relativePath);
-  const resolvedRoot = `${path.resolve(uploadRoot)}${path.sep}`;
+  let imageUrl: URL;
 
-  if (!resolvedPath.startsWith(resolvedRoot)) {
+  try {
+    imageUrl = new URL(imagePath);
+  } catch {
+    return;
+  }
+
+  if (
+    imageUrl.protocol !== "https:" ||
+    !imageUrl.hostname.endsWith(".blob.vercel-storage.com")
+  ) {
+    return;
+  }
+
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+
+  if (!token) {
+    console.error("BLOB_READ_WRITE_TOKEN tanımlı olmadığı için görsel silinemedi.");
     return;
   }
 
   try {
-    await unlink(resolvedPath);
-  } catch {
-    // Dosya daha önce silinmişse veritabanı işlemini başarısız sayma.
+    await del(imageUrl.href, { token });
+  } catch (error) {
+    // Blob temizliği veritabanı işlemini başarısız hale getirmemeli.
+    console.error("Vercel Blob görseli silinemedi.", error);
   }
 }
 
