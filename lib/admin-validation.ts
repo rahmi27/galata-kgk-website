@@ -45,7 +45,7 @@ export type SponsorAdminInput = {
   description: string | null;
   tierId: number | null;
   newTierName: string | null;
-  logoAlt: string;
+  logoAlt: string | null;
   order: number;
 };
 
@@ -266,7 +266,7 @@ export function validateSponsorForm(
     };
   }
 
-  if (logoAlt.length < 3 || logoAlt.length > 180) {
+  if (logoAlt && (logoAlt.length < 3 || logoAlt.length > 180)) {
     return {
       success: false,
       error: "Logo alt metni 3–180 karakter arasında olmalıdır.",
@@ -304,7 +304,7 @@ export function validateSponsorForm(
       description: description || null,
       tierId,
       newTierName: tierValue === "new" ? newTierName : null,
-      logoAlt,
+      logoAlt: logoAlt || null,
       order,
     },
   };

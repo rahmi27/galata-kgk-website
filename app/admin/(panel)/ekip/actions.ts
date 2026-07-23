@@ -109,7 +109,7 @@ export async function createTeamMemberAction(
       role: validation.data.role,
       department: validation.data.department,
       categoryId: category.id,
-      photoAlt: validation.data.photoAlt,
+      photoAlt: imageUpload.path ? validation.data.photoAlt : null,
       order: validation.data.order,
     };
 
@@ -172,6 +172,7 @@ export async function updateTeamMemberAction(
     formData.get("memberPhoto"),
     "team",
   );
+  const removePhoto = formData.get("removeMemberPhoto") === "true";
 
   if (!imageUpload.success) {
     return {
@@ -194,12 +195,15 @@ export async function updateTeamMemberAction(
   }
 
   try {
+    const nextPhotoUrl = imageUpload.path ?? (
+      removePhoto ? null : member.photoUrl
+    );
     const memberData = {
       name: validation.data.name,
       role: validation.data.role,
       department: validation.data.department,
       categoryId: category.id,
-      photoAlt: validation.data.photoAlt,
+      photoAlt: nextPhotoUrl ? validation.data.photoAlt : null,
       order: validation.data.order,
     };
 
@@ -209,11 +213,11 @@ export async function updateTeamMemberAction(
       },
       data: {
         ...memberData,
-        photoUrl: imageUpload.path ?? member.photoUrl,
+        photoUrl: nextPhotoUrl,
       },
     });
 
-    if (imageUpload.path && imageUpload.path !== member.photoUrl) {
+    if (member.photoUrl && member.photoUrl !== nextPhotoUrl) {
       await deleteUploadedImage(member.photoUrl);
     }
 

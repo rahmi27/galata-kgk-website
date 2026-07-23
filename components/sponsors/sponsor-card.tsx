@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Building2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 type SponsorCardProps = {
   name: string;
-  logoUrl: string;
+  logoUrl?: string | null;
   logoAlt?: string | null;
   websiteUrl?: string | null;
   description?: string | null;
@@ -32,17 +32,24 @@ export function SponsorCard({
           "group-hover:-translate-y-1 group-hover:border-accent/35 group-hover:shadow-[0_24px_60px_-36px_rgba(27,42,94,0.55)]",
       )}
     >
-      <Image
-        src={logoUrl}
-        alt={logoAlt ?? `${name} logosu`}
-        width={featured ? 360 : 240}
-        height={featured ? 160 : 96}
-        sizes={featured ? "(min-width: 1024px) 30vw, 50vw" : "(min-width: 1024px) 20vw, 50vw"}
-        className={cn(
-          "h-auto max-h-20 w-auto max-w-[80%] object-contain",
-          featured && "max-h-28 sm:max-h-32",
-        )}
-      />
+      {logoUrl ? (
+        <Image
+          src={logoUrl}
+          alt={logoAlt ?? `${name} logosu`}
+          width={featured ? 360 : 240}
+          height={featured ? 160 : 96}
+          sizes={featured ? "(min-width: 1024px) 30vw, 50vw" : "(min-width: 1024px) 20vw, 50vw"}
+          className={cn(
+            "h-auto max-h-20 w-auto max-w-[80%] object-contain",
+            featured && "max-h-28 sm:max-h-32",
+          )}
+        />
+      ) : (
+        <div className="flex flex-col items-center gap-2 text-center text-primary-500 dark:text-primary-200">
+          <Building2 className="size-8" aria-hidden="true" />
+          <span className="font-heading text-sm font-bold">{name}</span>
+        </div>
+      )}
     </div>
   );
 

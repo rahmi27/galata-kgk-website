@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  Building2,
   CalendarDays,
   Compass,
   Lightbulb,
@@ -219,14 +220,23 @@ export default async function HomePage() {
                 {sponsors.map((sponsor) => {
                   const logo = (
                     <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
-                      <Image
-                        src={sponsor.logoUrl}
-                        alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
-                        width={180}
-                        height={64}
-                        sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
-                        className="h-auto max-h-12 w-auto max-w-full object-contain"
-                      />
+                      {sponsor.logoUrl ? (
+                        <Image
+                          src={sponsor.logoUrl}
+                          alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
+                          width={180}
+                          height={64}
+                          sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
+                          className="h-auto max-h-12 w-auto max-w-full object-contain"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1.5 text-center text-primary-500 dark:text-primary-200">
+                          <Building2 className="size-6" aria-hidden="true" />
+                          <span className="line-clamp-2 font-heading text-xs font-bold">
+                            {sponsor.name}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   );
 

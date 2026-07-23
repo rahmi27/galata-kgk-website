@@ -152,6 +152,7 @@ export function EventAdminForm({
         name="eventImage"
         label="Etkinlik görseli"
         defaultImageUrl={defaultValues.imageUrl || undefined}
+        removeName="removeEventImage"
       />
 
       <FormField

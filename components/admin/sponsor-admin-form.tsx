@@ -162,7 +162,7 @@ export function SponsorAdminForm({
         name="sponsorLogo"
         label="Sponsor Logosu"
         defaultImageUrl={defaultValues.logoUrl || undefined}
-        required={!defaultValues.logoUrl}
+        removeName="removeSponsorLogo"
       />
 
       <FormField
@@ -175,9 +175,7 @@ export function SponsorAdminForm({
           name="logoAlt"
           defaultValue={defaultValues.logoAlt}
           placeholder="Örn. Marka adı logosu"
-          minLength={3}
           maxLength={180}
-          required
         />
       </FormField>
 

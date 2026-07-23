@@ -1,0 +1,2 @@
+ALTER TABLE "Sponsor"
+ALTER COLUMN "logoUrl" DROP NOT NULL;

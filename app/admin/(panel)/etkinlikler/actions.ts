@@ -167,6 +167,7 @@ export async function updateEventAction(
     formData.get("eventImage"),
     "events",
   );
+  const removeImage = formData.get("removeEventImage") === "true";
 
   if (!imageUpload.success) {
     return {
@@ -177,6 +178,9 @@ export async function updateEventAction(
 
   try {
     const slug = await findAvailableSlug(validation.data.title, eventId);
+    const nextImageUrl = imageUpload.path ?? (
+      removeImage ? null : existingEvent.imageUrl
+    );
     const eventData = {
       title: validation.data.title,
       description: validation.data.description,
@@ -184,7 +188,7 @@ export async function updateEventAction(
       date: validation.data.date,
       location: validation.data.location,
       category: validation.data.category,
-      imageAlt: validation.data.imageAlt,
+      imageAlt: nextImageUrl ? validation.data.imageAlt : null,
     };
 
     await prisma.event.update({
@@ -193,14 +197,17 @@ export async function updateEventAction(
       },
       data: {
         ...eventData,
-        imageUrl: imageUpload.path ?? existingEvent.imageUrl,
+        imageUrl: nextImageUrl,
         slug,
       },
     });
 
     await refreshEventPages([existingEvent.slug, slug]);
 
-    if (imageUpload.path && imageUpload.path !== existingEvent.imageUrl) {
+    if (
+      existingEvent.imageUrl &&
+      existingEvent.imageUrl !== nextImageUrl
+    ) {
       await deleteUploadedImage(existingEvent.imageUrl);
     }
   } catch (error) {

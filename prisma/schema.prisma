@@ -25,9 +25,9 @@ model AdminLoginAttempt {
 }
 
 model Event {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   title           String
-  slug            String   @unique
+  slug            String    @unique
   description     String
   longDescription String
   date            DateTime?
@@ -35,7 +35,7 @@ model Event {
   imageUrl        String?
   imageAlt        String?
   category        String
-  createdAt       DateTime @default(now())
+  createdAt       DateTime  @default(now())
 
   @@index([date])
 }
@@ -68,7 +68,7 @@ model TeamCategory {
 model Sponsor {
   id          Int         @id @default(autoincrement())
   name        String
-  logoUrl     String
+  logoUrl     String?
   logoAlt     String?
   websiteUrl  String?
   description String?

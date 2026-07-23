@@ -166,6 +166,7 @@ export function TeamMemberAdminForm({
         name="memberPhoto"
         label="Üye fotoğrafı"
         defaultImageUrl={defaultValues.photoUrl || undefined}
+        removeName="removeMemberPhoto"
       />
 
       <FormField

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FolderCog, Handshake, ListOrdered, Pencil } from "lucide-react";
+import { Building2, FolderCog, Handshake, ListOrdered, Pencil } from "lucide-react";
 
 import { createSponsorAction } from "@/app/admin/(panel)/sponsorlar/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
@@ -85,14 +85,21 @@ export default async function AdminSponsorsPage({
                       >
                         <div className="flex min-w-0 items-center gap-4">
                           <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary-100 bg-white p-2 dark:border-white/10">
-                            <Image
-                              src={sponsor.logoUrl}
-                              alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
-                              width={64}
-                              height={64}
-                              sizes="64px"
-                              className="h-auto max-h-full w-auto max-w-full object-contain"
-                            />
+                            {sponsor.logoUrl ? (
+                              <Image
+                                src={sponsor.logoUrl}
+                                alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
+                                width={64}
+                                height={64}
+                                sizes="64px"
+                                className="h-auto max-h-full w-auto max-w-full object-contain"
+                              />
+                            ) : (
+                              <Building2
+                                className="size-6 text-primary-400"
+                                aria-label="Logo yok"
+                              />
+                            )}
                           </div>
                           <div className="min-w-0">
                             <h3 className="truncate font-heading font-bold text-primary-950 dark:text-white">

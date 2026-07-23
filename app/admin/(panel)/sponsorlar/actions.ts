@@ -73,8 +73,12 @@ export async function createSponsorAction(
     return { success: false, message: imageUpload.error };
   }
 
-  if (!imageUpload.path) {
-    return { success: false, message: "Sponsor logosu seçmelisiniz." };
+  if (imageUpload.path && !validation.data.logoAlt) {
+    await deleteUploadedImage(imageUpload.path);
+    return {
+      success: false,
+      message: "Logo yüklediğinizde erişilebilir bir alt metin yazmalısınız.",
+    };
   }
 
   const tier = await resolveTier(
@@ -96,7 +100,7 @@ export async function createSponsorAction(
         order: validation.data.order,
         tierId: tier.id,
         logoUrl: imageUpload.path,
-        logoAlt: validation.data.logoAlt,
+        logoAlt: imageUpload.path ? validation.data.logoAlt : null,
       },
     });
     await refreshSponsorPages();
@@ -136,9 +140,22 @@ export async function updateSponsorAction(
     formData.get("sponsorLogo"),
     "sponsors",
   );
+  const removeLogo = formData.get("removeSponsorLogo") === "true";
 
   if (!imageUpload.success) {
     return { success: false, message: imageUpload.error };
+  }
+
+  const nextLogoUrl = imageUpload.path ?? (
+    removeLogo ? null : sponsor.logoUrl
+  );
+
+  if (nextLogoUrl && !validation.data.logoAlt) {
+    await deleteUploadedImage(imageUpload.path);
+    return {
+      success: false,
+      message: "Logo varsa erişilebilir bir alt metin yazmalısınız.",
+    };
   }
 
   const tier = await resolveTier(
@@ -160,12 +177,12 @@ export async function updateSponsorAction(
         description: validation.data.description,
         order: validation.data.order,
         tierId: tier.id,
-        logoUrl: imageUpload.path ?? sponsor.logoUrl,
-        logoAlt: validation.data.logoAlt,
+        logoUrl: nextLogoUrl,
+        logoAlt: nextLogoUrl ? validation.data.logoAlt : null,
       },
     });
 
-    if (imageUpload.path && imageUpload.path !== sponsor.logoUrl) {
+    if (sponsor.logoUrl && sponsor.logoUrl !== nextLogoUrl) {
       await deleteUploadedImage(sponsor.logoUrl);
     }
 
