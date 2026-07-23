@@ -78,8 +78,8 @@
 
 | Değişken | Açıklama |
 | --- | --- |
-| `DATABASE_URL` | Prisma Client'ın çalışma zamanında kullandığı, host adında `-pooler` bulunan Neon pooled bağlantı adresi. |
-| `DIRECT_URL` | Prisma CLI migration işlemlerinde kullanılan, host adında `-pooler` bulunmayan doğrudan Neon bağlantı adresi. |
+| `DATABASE_URL` | Prisma Client'ın çalışma zamanında kullandığı, host adında `-pooler` bulunan ve `sslmode=verify-full` kullanan Neon pooled bağlantı adresi. |
+| `DIRECT_URL` | Prisma CLI migration işlemlerinde kullanılan, host adında `-pooler` bulunmayan ve `sslmode=verify-full` kullanan doğrudan Neon bağlantı adresi. |
 | `AUTH_SECRET` | Auth.js JWT ve oturum güvenliği için uzun, rastgele ve gizli anahtar. |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob'a görsel yüklemek ve yönetilen görselleri silmek için gereken gizli token. |
 | `INDEXNOW_KEY` | İçerik değişikliklerini IndexNow destekli arama motorlarına bildiren, 8–128 karakterlik doğrulama anahtarı. |
