@@ -9,8 +9,16 @@ export const SITE_DESCRIPTION =
 const fallbackSiteUrl = "http://localhost:3000";
 
 export const siteUrl = (() => {
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const vercelHostname =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() ??
+    process.env.VERCEL_URL?.trim();
+  const resolvedSiteUrl =
+    configuredSiteUrl ||
+    (vercelHostname ? `https://${vercelHostname}` : fallbackSiteUrl);
+
   try {
-    return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? fallbackSiteUrl);
+    return new URL(resolvedSiteUrl);
   } catch {
     return new URL(fallbackSiteUrl);
   }

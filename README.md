@@ -12,21 +12,23 @@
 - Kullanıcı adı ve bcrypt ile hashlenmiş parola kullanan korumalı admin paneli
 - Açık/koyu tema, marka tipografisi ve yeniden kullanılabilir tasarım sistemi
 - Sayfa bazlı SEO metadata, Open Graph/Twitter Card, JSON-LD, sitemap ve robots kuralları
-- Güvenli görsel yükleme: tür, dosya imzası, boyut ve dosya adı kontrolleri
+- Vercel Blob destekli güvenli görsel yükleme: tür, dosya imzası, boyut ve dosya adı kontrolleri
 
 ## Kullanılan Teknolojiler
 
 - Next.js 16 — App Router ve Server Components
 - React 19 ve TypeScript
 - Tailwind CSS 3 ve shadcn/ui
-- Prisma ORM 7 ve SQLite
+- Prisma ORM 7, Neon PostgreSQL ve `@prisma/adapter-pg`
+- Vercel Blob nesne depolama
 - Auth.js / NextAuth — Credentials provider ve JWT oturumu
 - bcryptjs — yönetici parolalarının hashlenmesi
 
 ## Gereksinimler
 
-- Node.js 20.9 veya üzeri
+- Node.js 20.19 veya üzeri
 - npm 10 veya üzeri
+- Yerel veya Neon üzerinde erişilebilir bir PostgreSQL veritabanı
 
 ## Yerel Kurulum
 
@@ -50,10 +52,10 @@
 
 3. `.env` içindeki örnek değerleri kendi yerel değerlerinizle değiştirin. Özellikle `AUTH_SECRET` için en az 32 baytlık rastgele bir değer, `ADMIN_SEED_PASSWORD` için en az 12 karakterli güçlü bir geçici parola kullanın.
 
-4. Veritabanı migration'larını uygulayın:
+4. PostgreSQL migration'larını uygulayın:
 
    ```bash
-   npx prisma migrate dev
+   npx prisma migrate deploy
    ```
 
 5. Başlangıç verilerini ve ilk admin hesabını oluşturun:
@@ -76,11 +78,11 @@
 
 | Değişken | Açıklama |
 | --- | --- |
-| `DATABASE_URL` | SQLite dosya bağlantısı; yerel kullanım için `file:./dev.db` biçimindedir. |
+| `DATABASE_URL` | Neon PostgreSQL bağlantı adresi. Build sırasında migration ve çalışma zamanında Prisma tarafından kullanılır. |
 | `AUTH_SECRET` | Auth.js JWT ve oturum güvenliği için uzun, rastgele ve gizli anahtar. |
-| `AUTH_URL` | Yalnızca production ortamında isteğe bağlı ana adres. Yerel geliştirmede tanımlamayın; böylece Auth.js hem localhost hem de ngrok/cloudflared adresini gelen istekten otomatik algılar. |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URL, Open Graph, sitemap ve robots çıktıları için sitenin herkese açık ana adresi. |
-| `ADMIN_SEED_PASSWORD` | Seed sırasında oluşturulan `admin` hesabının geçici parolası; en az 12 karakter olmalıdır. |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob'a görsel yüklemek ve yönetilen görselleri silmek için gereken gizli token. |
+| `ADMIN_SEED_PASSWORD` | Yalnızca seed sırasında kullanılan geçici admin parolası; Vercel çalışma zamanı için zorunlu değildir. |
+| `NEXT_PUBLIC_SITE_URL` | İsteğe bağlı canonical URL geçersiz kılma değeri; Vercel alan adı otomatik algılanır. |
 
 Gerçek değerleri yalnızca `.env` içinde tutun. `.env` dosyaları Git tarafından yok sayılır; `.env.example` yalnızca değişken adlarını ve güvenli örnekleri gösterir.
 
@@ -89,10 +91,10 @@ Gerçek değerleri yalnızca `.env` içinde tutun. `.env` dosyaları Git tarafı
 | Komut | Amaç |
 | --- | --- |
 | `npm run dev` | Geliştirme sunucusunu başlatır. |
-| `npm run build` | Optimize production derlemesi oluşturur ve TypeScript kontrolünü çalıştırır. |
+| `npm run build` | Prisma Client üretir, production migration'larını uygular ve optimize Next.js derlemesini oluşturur. |
 | `npm run start` | Oluşturulmuş production derlemesini başlatır. |
 | `npm run lint` | ESLint denetimini çalıştırır. |
-| `npx prisma migrate dev` | Yerel migration'ları uygular/geliştirir. |
+| `npx prisma migrate deploy` | Bekleyen production migration'larını uygular. |
 | `npx prisma db seed` | İçerik ve ilk admin hesabı için seed işlemini çalıştırır. |
 | `npx prisma studio` | Yerel veritabanını tarayıcı arayüzünde görüntüler. |
 
@@ -123,20 +125,19 @@ components/             Paylaşılan site, admin, form, SEO ve shadcn/ui bileşe
 content/                Koddan bağımsız düzenlenebilen site metinleri ve içerik kaynakları
 lib/                    Prisma, doğrulama, kimlik doğrulama ve dosya yükleme servisleri
 prisma/                 Veri modeli, migration'lar ve seed betiği
-public/uploads/         Yerelde admin panelinden yüklenen görseller
 types/                  Auth.js TypeScript genişletmeleri
 ```
 
 ## Veritabanı Özeti
 
-Prisma şeması etkinlikleri, ekip kategorileri/üyeleri, sponsor tier'ları/sponsorları, site istatistiklerini, iletişim mesajlarını, üyelik başvurularını, admin kullanıcılarını ve başarısız giriş denemelerini tutar. SQLite geliştirme kolaylığı için seçilmiştir; Prisma katmanı ileride PostgreSQL'e geçişi kolaylaştırır.
+Prisma şeması etkinlikleri, ekip kategorileri/üyeleri, sponsor tier'ları/sponsorları, site istatistiklerini, iletişim mesajlarını, üyelik başvurularını, admin kullanıcılarını ve başarısız giriş denemelerini Neon PostgreSQL üzerinde tutar. Migration'lar `prisma migrate deploy` ile production veritabanına uygulanır.
 
 ## Güvenlik ve Yayına Alma Notları
 
 - Admin işlemleri middleware'e ek olarak her Server Action içinde aktif kullanıcıyı veritabanından doğrular.
 - İletişim ve katılım formlarında 10 dakikalık tekrar gönderim koruması; admin girişinde 5 başarısız denemeden sonra 10 dakikalık kilit vardır.
-- Production ortamında HTTPS kullanın ve `AUTH_SECRET`, `ADMIN_SEED_PASSWORD` gibi değerleri hosting sağlayıcınızın secret yönetiminde saklayın.
-- SQLite dosyası ve `public/uploads` dizini kalıcı disk gerektirir. Serverless/çok instance'lı production dağıtımında PostgreSQL ve nesne depolama çözümüne geçilmesi önerilir.
+- Vercel'de `DATABASE_URL`, `AUTH_SECRET` ve `BLOB_READ_WRITE_TOKEN` değerlerini Production ile Preview ortamlarına secret olarak ekleyin.
+- Görseller Vercel Blob'da tutulur; Vercel'in geçici dosya sistemine kalıcı dosya yazılmaz.
 
 ## Ekran Görüntüsü
 
