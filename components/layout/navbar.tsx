@@ -33,7 +33,7 @@ export function Navbar() {
           : "border-transparent bg-background/75 backdrop-blur-md",
       )}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-10">
         <Link
           href="/"
           className="group inline-flex min-w-0 max-w-[10.5rem] items-center gap-2.5 font-heading text-[0.72rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[19rem] sm:text-sm dark:text-primary-100"
@@ -41,8 +41,8 @@ export function Navbar() {
         >
           <BrandLogo
             priority
-            sizes="(min-width: 640px) 48px, 36px"
-            className="size-9 transition-transform duration-300 group-hover:scale-105 sm:size-12 dark:ring-white/15"
+            sizes="(min-width: 640px) 64px, 44px"
+            className="size-11 transition-transform duration-300 group-hover:scale-105 sm:size-16 dark:ring-white/15"
           />
           <span className="block">{brand.name}</span>
         </Link>

@@ -24,7 +24,7 @@ export function BrandLogo({
       priority={priority}
       sizes={sizes}
       className={cn(
-        "shrink-0 rounded-full bg-white object-cover ring-1 ring-primary/10",
+        "shrink-0 rounded-full object-contain ring-1 ring-primary/10",
         className,
       )}
     />
