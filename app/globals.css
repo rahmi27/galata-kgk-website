@@ -69,7 +69,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .page-enter {
-    animation: page-enter 80ms ease-out both;
+    animation: page-enter 100ms ease-out both;
   }
 }
 
@@ -144,7 +144,7 @@
 }
 
 .view-fade-in {
-  animation: view-fade-in 80ms ease-out both;
+  animation: view-fade-in 100ms ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
