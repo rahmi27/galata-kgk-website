@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { validateSiteStatForm } from "@/lib/admin-validation";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 
 export async function updateSiteStatAction(
@@ -33,6 +34,7 @@ export async function updateSiteStatAction(
     revalidatePath("/");
     revalidatePath("/sponsorlar");
     revalidatePath("/admin/istatistikler");
+    await notifyIndexNow(["/", "/sponsorlar"]);
 
     return {
       success: true,

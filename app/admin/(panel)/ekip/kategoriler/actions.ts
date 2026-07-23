@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateTeamCategoryName } from "@/lib/team-category";
 
@@ -14,10 +15,11 @@ function parseOrder(formData: FormData) {
     : null;
 }
 
-function revalidateCategoryPages() {
+async function refreshCategoryPages() {
   revalidatePath("/ekibimiz");
   revalidatePath("/admin/ekip");
   revalidatePath("/admin/ekip/kategoriler");
+  await notifyIndexNow(["/ekibimiz"]);
 }
 
 export async function createTeamCategoryAction(
@@ -68,7 +70,7 @@ export async function createTeamCategoryAction(
         order,
       },
     });
-    revalidateCategoryPages();
+    await refreshCategoryPages();
 
     return {
       success: true,
@@ -139,7 +141,7 @@ export async function updateTeamCategoryAction(
         order,
       },
     });
-    revalidateCategoryPages();
+    await refreshCategoryPages();
 
     return {
       success: true,
@@ -194,7 +196,7 @@ export async function deleteTeamCategoryAction(
         id: category.id,
       },
     });
-    revalidateCategoryPages();
+    await refreshCategoryPages();
 
     return {
       success: true,

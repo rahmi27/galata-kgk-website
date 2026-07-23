@@ -10,6 +10,7 @@ import {
   deleteUploadedImage,
   saveImageUpload,
 } from "@/lib/image-upload";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 
 function createSlug(value: string) {
@@ -52,7 +53,7 @@ async function findAvailableSlug(title: string, currentEventId?: number) {
   return candidate;
 }
 
-function revalidateEventPages(slug?: string) {
+async function refreshEventPages(slugs: string[] = []) {
   updateTag("events");
   revalidatePath("/");
   revalidatePath("/etkinliklerimiz");
@@ -60,9 +61,15 @@ function revalidateEventPages(slug?: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/etkinlikler");
 
-  if (slug) {
+  for (const slug of new Set(slugs)) {
     revalidatePath(`/etkinliklerimiz/${slug}`);
   }
+
+  await notifyIndexNow([
+    "/",
+    "/etkinliklerimiz",
+    ...slugs.map((slug) => `/etkinliklerimiz/${slug}`),
+  ]);
 }
 
 export async function createEventAction(
@@ -111,7 +118,7 @@ export async function createEventAction(
       },
     });
 
-    revalidateEventPages(slug);
+    await refreshEventPages([slug]);
 
     return {
       success: true,
@@ -191,8 +198,7 @@ export async function updateEventAction(
       },
     });
 
-    revalidateEventPages(existingEvent.slug);
-    revalidateEventPages(slug);
+    await refreshEventPages([existingEvent.slug, slug]);
 
     if (imageUpload.path && imageUpload.path !== existingEvent.imageUrl) {
       await deleteUploadedImage(existingEvent.imageUrl);
@@ -240,7 +246,7 @@ export async function deleteEventAction(
     });
 
     await deleteUploadedImage(event.imageUrl);
-    revalidateEventPages(event.slug);
+    await refreshEventPages([event.slug]);
 
     return {
       success: true,

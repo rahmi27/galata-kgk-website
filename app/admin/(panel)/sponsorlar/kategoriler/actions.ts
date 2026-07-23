@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateSponsorTierName } from "@/lib/sponsor-tier";
 
@@ -14,11 +15,12 @@ function parseOrder(formData: FormData) {
     : null;
 }
 
-function revalidateTierPages() {
+async function refreshTierPages() {
   revalidatePath("/");
   revalidatePath("/sponsorlar");
   revalidatePath("/admin/sponsorlar");
   revalidatePath("/admin/sponsorlar/kategoriler");
+  await notifyIndexNow(["/", "/sponsorlar"]);
 }
 
 export async function createSponsorTierAction(
@@ -57,7 +59,7 @@ export async function createSponsorTierAction(
     await prisma.sponsorTier.create({
       data: { ...validation.data, order },
     });
-    revalidateTierPages();
+    await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı oluşturuldu." };
   } catch (error) {
     console.error("Sponsor tier'ı oluşturulamadı.", error);
@@ -109,7 +111,7 @@ export async function updateSponsorTierAction(
       where: { id: tierId },
       data: { ...validation.data, order },
     });
-    revalidateTierPages();
+    await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı güncellendi." };
   } catch (error) {
     console.error("Sponsor tier'ı güncellenemedi.", error);
@@ -146,7 +148,7 @@ export async function deleteSponsorTierAction(
 
   try {
     await prisma.sponsorTier.delete({ where: { id: tier.id } });
-    revalidateTierPages();
+    await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı silindi." };
   } catch (error) {
     console.error("Sponsor tier'ı silinemedi.", error);

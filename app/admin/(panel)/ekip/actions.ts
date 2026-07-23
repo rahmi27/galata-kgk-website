@@ -10,14 +10,16 @@ import {
   deleteUploadedImage,
   saveImageUpload,
 } from "@/lib/image-upload";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateTeamCategoryName } from "@/lib/team-category";
 
-function revalidateTeamPages() {
+async function refreshTeamPages() {
   revalidatePath("/ekibimiz");
   revalidatePath("/admin");
   revalidatePath("/admin/ekip");
   revalidatePath("/admin/ekip/kategoriler");
+  await notifyIndexNow(["/ekibimiz"]);
 }
 
 async function resolveCategory(
@@ -117,7 +119,7 @@ export async function createTeamMemberAction(
         photoUrl: imageUpload.path,
       },
     });
-    revalidateTeamPages();
+    await refreshTeamPages();
 
     return {
       success: true,
@@ -215,7 +217,7 @@ export async function updateTeamMemberAction(
       await deleteUploadedImage(member.photoUrl);
     }
 
-    revalidateTeamPages();
+    await refreshTeamPages();
   } catch (error) {
     await deleteUploadedImage(imageUpload.path);
     console.error("Ekip üyesi güncellenemedi.", error);
@@ -241,7 +243,7 @@ export async function deleteTeamMemberAction(
       },
     });
     await deleteUploadedImage(member.photoUrl);
-    revalidateTeamPages();
+    await refreshTeamPages();
 
     return {
       success: true,

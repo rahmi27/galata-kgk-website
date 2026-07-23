@@ -10,14 +10,16 @@ import {
   deleteUploadedImage,
   saveImageUpload,
 } from "@/lib/image-upload";
+import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateSponsorTierName } from "@/lib/sponsor-tier";
 
-function revalidateSponsorPages() {
+async function refreshSponsorPages() {
   revalidatePath("/");
   revalidatePath("/sponsorlar");
   revalidatePath("/admin/sponsorlar");
   revalidatePath("/admin/sponsorlar/kategoriler");
+  await notifyIndexNow(["/", "/sponsorlar"]);
 }
 
 async function resolveTier(tierId: number | null, newTierName: string | null) {
@@ -97,7 +99,7 @@ export async function createSponsorAction(
         logoAlt: validation.data.logoAlt,
       },
     });
-    revalidateSponsorPages();
+    await refreshSponsorPages();
 
     return { success: true, message: "Sponsor başarıyla eklendi." };
   } catch (error) {
@@ -167,7 +169,7 @@ export async function updateSponsorAction(
       await deleteUploadedImage(sponsor.logoUrl);
     }
 
-    revalidateSponsorPages();
+    await refreshSponsorPages();
   } catch (error) {
     await deleteUploadedImage(imageUpload.path);
     console.error("Sponsor güncellenemedi.", error);
@@ -197,7 +199,7 @@ export async function deleteSponsorAction(
   try {
     await prisma.sponsor.delete({ where: { id: sponsorId } });
     await deleteUploadedImage(sponsor.logoUrl);
-    revalidateSponsorPages();
+    await refreshSponsorPages();
     return { success: true, message: "Sponsor silindi." };
   } catch (error) {
     console.error("Sponsor silinemedi.", error);
