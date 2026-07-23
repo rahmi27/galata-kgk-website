@@ -69,7 +69,7 @@ export default function ContactPage() {
                       rel="noreferrer"
                       className="group flex gap-4"
                     >
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-white">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
                         <MapPin className="size-5" aria-hidden="true" />
                       </span>
                       <span>
@@ -86,7 +86,7 @@ export default function ContactPage() {
                       href={details.email.href}
                       className="group flex gap-4"
                     >
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-white">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
                         <Mail className="size-5" aria-hidden="true" />
                       </span>
                       <span>
