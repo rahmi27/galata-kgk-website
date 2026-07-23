@@ -38,3 +38,32 @@ export async function markMessageAsReadAction(
     };
   }
 }
+
+export async function deleteMessageAction(
+  messageId: number,
+): Promise<AdminActionState> {
+  await requireAdmin();
+
+  try {
+    await prisma.contactSubmission.delete({
+      where: {
+        id: messageId,
+      },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/mesajlar");
+
+    return {
+      success: true,
+      message: "İletişim mesajı kalıcı olarak silindi.",
+    };
+  } catch (error) {
+    console.error("İletişim mesajı silinemedi.", error);
+
+    return {
+      success: false,
+      message: "Mesaj silinemedi veya artık mevcut değil.",
+    };
+  }
+}

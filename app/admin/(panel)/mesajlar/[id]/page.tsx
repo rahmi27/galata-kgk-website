@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCheck, Mail, UserRound } from "lucide-react";
 
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { DeleteMessageButton } from "@/components/admin/delete-message-button";
 import { MarkMessageReadButton } from "@/components/admin/mark-message-read-button";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
@@ -43,12 +44,18 @@ export default async function AdminMessageDetailPage({
         title={message.name}
         description={`Gönderim: ${dateFormatter.format(message.createdAt)}`}
         actions={
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href="/admin/mesajlar">
-              <ArrowLeft aria-hidden="true" />
-              Mesajlara dön
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link href="/admin/mesajlar">
+                <ArrowLeft aria-hidden="true" />
+                Mesajlara dön
+              </Link>
+            </Button>
+            <DeleteMessageButton
+              messageId={message.id}
+              senderName={message.name}
+            />
+          </div>
         }
       />
 

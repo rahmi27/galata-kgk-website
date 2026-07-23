@@ -49,3 +49,32 @@ export async function updateMembershipStatusAction(
     };
   }
 }
+
+export async function deleteMembershipApplicationAction(
+  applicationId: number,
+): Promise<AdminActionState> {
+  await requireAdmin();
+
+  try {
+    await prisma.membershipApplication.delete({
+      where: {
+        id: applicationId,
+      },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/katilim-basvurulari");
+
+    return {
+      success: true,
+      message: "Katılım başvurusu kalıcı olarak silindi.",
+    };
+  } catch (error) {
+    console.error("Katılım başvurusu silinemedi.", error);
+
+    return {
+      success: false,
+      message: "Başvuru silinemedi veya artık mevcut değil.",
+    };
+  }
+}

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { DeleteMembershipApplicationButton } from "@/components/admin/delete-membership-application-button";
 import { MembershipStatusSelect } from "@/components/admin/membership-status-select";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
@@ -79,13 +80,17 @@ export default async function AdminMembershipApplicationsPage() {
                     {dateFormatter.format(application.createdAt)}
                   </p>
                 </div>
-                <div className="w-full lg:w-auto">
+                <div className="flex w-full flex-col items-start gap-3 lg:w-auto lg:items-end">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-primary-400">
                     Başvuru durumu
                   </label>
                   <MembershipStatusSelect
                     applicationId={application.id}
                     currentStatus={application.status}
+                  />
+                  <DeleteMembershipApplicationButton
+                    applicationId={application.id}
+                    applicantName={application.fullName}
                   />
                 </div>
               </div>
