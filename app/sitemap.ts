@@ -13,6 +13,7 @@ const publicPaths = [
   "/sponsorlar",
   "/iletisim",
   "/katilim",
+  "/cerez-politikasi",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
