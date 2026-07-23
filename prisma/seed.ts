@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "bcryptjs";
 import { PrismaClient } from "../lib/generated/prisma/client";
 import eventsContent from "../content/events.json";
@@ -8,9 +8,13 @@ import homeContent from "../content/home.json";
 import teamContent from "../content/team.json";
 import { createNormalizedSlug } from "../lib/slug";
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL ?? "file:./dev.db",
-});
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL ortam değişkeni tanımlanmalıdır.");
+}
+
+const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
