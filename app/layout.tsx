@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { SiteTelemetry } from "@/components/site-telemetry";
 import { ThemeProvider } from "@/components/theme-provider";
 import siteContent from "@/content/site.json";
 import {
@@ -58,8 +57,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-        <Analytics />
-        <SpeedInsights />
+        <SiteTelemetry />
       </body>
     </html>
   );
