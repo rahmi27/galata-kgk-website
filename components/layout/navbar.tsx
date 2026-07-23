@@ -35,7 +35,7 @@ export function Navbar() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
         <Link
           href="/"
-          className="group inline-flex min-w-0 max-w-[10.5rem] items-center gap-2.5 font-heading text-[0.68rem] font-bold leading-[1.15] tracking-[-0.02em] text-primary sm:max-w-64 sm:text-xs dark:text-primary-100"
+          className="group inline-flex min-w-0 max-w-[10.5rem] items-center gap-2.5 font-heading text-[0.72rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[19rem] sm:text-sm dark:text-primary-100"
           aria-label={brand.homeAriaLabel}
         >
           <span
