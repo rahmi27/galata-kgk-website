@@ -73,6 +73,37 @@
   }
 }
 
+@keyframes skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: hsl(var(--muted));
+}
+
+.skeleton-shimmer::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--foreground) / 0.08),
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton-shimmer::after {
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+}
+
 @layer components {
   .dark .admin-shell :where(.bg-white) {
     background-color: #0a1026;
