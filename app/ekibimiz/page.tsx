@@ -1,5 +1,3 @@
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
 import teamContent from "@/content/team.json";
@@ -41,7 +39,6 @@ export default async function TeamPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -99,8 +96,6 @@ export default async function TeamPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import { unstable_cache } from "next/cache";
 
 import { EventList } from "@/components/events/event-list";
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import eventsPageContent from "@/content/events-page.json";
 import { prisma } from "@/lib/prisma";
@@ -66,7 +64,6 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -94,8 +91,6 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

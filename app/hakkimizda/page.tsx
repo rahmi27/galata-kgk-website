@@ -1,7 +1,5 @@
 import { Flag, Target } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Timeline } from "@/components/shared/timeline";
 import aboutContent from "@/content/about.json";
@@ -17,7 +15,6 @@ export const metadata = createPageMetadata({
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -114,8 +111,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

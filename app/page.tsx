@@ -10,8 +10,6 @@ import {
   Rocket,
 } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -88,7 +86,6 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <OrganizationJsonLd />
-      <Navbar />
 
       <main>
         <section className="relative isolate overflow-hidden border-b border-primary/10 dark:border-white/10">
@@ -366,8 +363,6 @@ export default async function HomePage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

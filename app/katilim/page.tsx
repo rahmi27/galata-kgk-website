@@ -1,7 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
 
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { MembershipForm } from "@/components/membership/membership-form";
 import { SectionHeading } from "@/components/shared/section-heading";
 import membershipContent from "@/content/membership.json";
@@ -19,7 +17,6 @@ export default function MembershipPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
@@ -89,8 +86,6 @@ export default function MembershipPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
 import { SiteTelemetry } from "@/components/site-telemetry";
+import { SiteShell } from "@/components/layout/site-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 import siteContent from "@/content/site.json";
 import {
@@ -62,7 +63,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {children}
+          <SiteShell>{children}</SiteShell>
         </ThemeProvider>
         <SiteTelemetry />
       </body>
