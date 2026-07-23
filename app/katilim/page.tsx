@@ -16,7 +16,7 @@ export default function MembershipPage() {
   const { hero, process } = membershipContent;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
 
       <main>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">

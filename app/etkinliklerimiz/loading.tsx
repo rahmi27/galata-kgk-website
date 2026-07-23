@@ -28,7 +28,7 @@ function EventCardSkeleton() {
 
 export default function EventsLoading() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <main aria-busy="true" aria-label="Etkinlikler yükleniyor">
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">

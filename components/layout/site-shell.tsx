@@ -19,12 +19,12 @@ export function SiteShell({ children }: SiteShellProps) {
   }
 
   return (
-    <>
+    <div className="grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <Navbar />
-      <div key={pathname} className="page-enter">
+      <div key={pathname} className="page-enter min-w-0 bg-background">
         {children}
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

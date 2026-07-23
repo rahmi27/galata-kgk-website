@@ -77,7 +77,7 @@ export default async function EventDetailPage({
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
 
       <main>
         <section className="border-b border-primary/10 bg-primary-50/65 py-16 dark:border-white/10 dark:bg-primary-900/30 sm:py-20">
