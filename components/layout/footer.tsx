@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BriefcaseBusiness, GraduationCap } from "lucide-react";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
 
+import { BrandLogo } from "@/components/brand-logo";
 import siteContent from "@/content/site.json";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 
@@ -23,10 +24,10 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
         <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-7 lg:col-span-8">
-            <div className="flex items-center gap-3">
-              <span
-                className="h-8 w-1.5 rounded-full bg-accent"
-                aria-hidden="true"
+            <div className="flex items-center gap-4">
+              <BrandLogo
+                sizes="64px"
+                className="size-16 ring-white/15"
               />
               <p className="font-heading text-2xl font-bold tracking-[-0.04em] text-white">
                 {brand.name}

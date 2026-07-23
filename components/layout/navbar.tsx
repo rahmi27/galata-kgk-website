@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
+import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import siteContent from "@/content/site.json";
@@ -38,9 +39,10 @@ export function Navbar() {
           className="group inline-flex min-w-0 max-w-[10.5rem] items-center gap-2.5 font-heading text-[0.72rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[19rem] sm:text-sm dark:text-primary-100"
           aria-label={brand.homeAriaLabel}
         >
-          <span
-            className="h-8 w-1.5 shrink-0 rounded-full bg-accent transition-transform duration-300 group-hover:scale-y-75"
-            aria-hidden="true"
+          <BrandLogo
+            priority
+            sizes="(min-width: 640px) 48px, 36px"
+            className="size-9 transition-transform duration-300 group-hover:scale-105 sm:size-12 dark:ring-white/15"
           />
           <span className="block">{brand.name}</span>
         </Link>

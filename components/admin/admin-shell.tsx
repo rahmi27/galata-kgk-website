@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -138,7 +139,7 @@ export function AdminShell({
           href="/admin"
           className="flex items-center gap-3 px-2 font-heading text-lg font-bold tracking-[-0.03em] text-white"
         >
-          <span className="h-8 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+          <BrandLogo sizes="44px" className="size-11 ring-white/15" />
           Galata KGK
         </Link>
         <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary-300">
@@ -175,7 +176,7 @@ export function AdminShell({
           href="/admin"
           className="flex items-center gap-2.5 font-heading font-bold text-primary-950"
         >
-          <span className="h-6 w-1 rounded-full bg-accent" aria-hidden="true" />
+          <BrandLogo sizes="36px" className="size-9 dark:ring-white/15" />
           Galata KGK Admin
         </Link>
         <div className="flex items-center gap-2">
@@ -203,9 +204,12 @@ export function AdminShell({
           />
           <aside className="absolute inset-y-0 left-0 flex w-[min(20rem,88vw)] flex-col bg-primary-950 px-5 py-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <span className="font-heading text-lg font-bold text-white">
-                Yönetim Paneli
-              </span>
+              <div className="flex items-center gap-3">
+                <BrandLogo sizes="40px" className="size-10 ring-white/15" />
+                <span className="font-heading text-lg font-bold text-white">
+                  Yönetim Paneli
+                </span>
+              </div>
               <Button
                 type="button"
                 size="icon"

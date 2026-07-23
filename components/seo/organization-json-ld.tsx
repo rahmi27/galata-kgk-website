@@ -6,6 +6,7 @@ const organizationData = {
   name: SITE_NAME,
   alternateName: "Galata KGK",
   url: siteUrl.toString(),
+  logo: new URL("/brand/galata-kgk-logo.png", siteUrl).toString(),
   slogan: "Galata'da Okunur, Gelecek Burada Kurulur",
   description:
     "İstanbul Galata Üniversitesi öğrencilerini kariyer ve girişimcilik odağında bir araya getiren disiplinler arası öğrenci kulübü.",

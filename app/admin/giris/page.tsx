@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 
 import { AdminLoginForm } from "@/components/admin/login-form";
+import { BrandLogo } from "@/components/brand-logo";
 import { getCurrentAdmin } from "@/lib/admin-auth";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default async function AdminLoginPage() {
       />
       <div className="w-full max-w-md">
         <div className="mb-7 flex items-center justify-center gap-3 text-white">
-          <span className="h-8 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+          <BrandLogo priority sizes="56px" className="size-14 ring-white/15" />
           <span className="font-heading text-xl font-bold tracking-[-0.03em]">
             Galata KGK
           </span>

@@ -1,4 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
+
+import { siteUrl } from "@/lib/site-metadata";
 
 export const alt = "Galata KGK — Galata'da Okunur, Gelecek Burada Kurulur";
 export const size = {
@@ -8,6 +11,11 @@ export const size = {
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
+  const logoUrl = new URL(
+    "/brand/galata-kgk-logo.png",
+    siteUrl,
+  ).toString();
+
   return new ImageResponse(
     <div
       style={{
@@ -36,17 +44,26 @@ export default function OpenGraphImage() {
         }}
       />
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <div
-          style={{
-            color: "#F59B78",
-            display: "flex",
-            fontSize: 24,
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}
-        >
-          İstanbul Galata Üniversitesi
+        <div style={{ alignItems: "center", display: "flex", gap: 24 }}>
+          <img
+            src={logoUrl}
+            alt=""
+            width={116}
+            height={116}
+            style={{ borderRadius: 999 }}
+          />
+          <div
+            style={{
+              color: "#F59B78",
+              display: "flex",
+              fontSize: 24,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+            }}
+          >
+            İstanbul Galata Üniversitesi
+          </div>
         </div>
         <div
           style={{
