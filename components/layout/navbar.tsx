@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { brand, navigation } = siteContent;
@@ -23,6 +24,27 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const routes = [
+      ...navigation.items.map((item) => item.href),
+      navigation.joinCta.href,
+    ].filter((href) => href !== pathname);
+    const prefetchRoutes = () => {
+      routes.forEach((href) => router.prefetch(href));
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(prefetchRoutes, {
+        timeout: 1500,
+      });
+
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = setTimeout(prefetchRoutes, 800);
+    return () => clearTimeout(timeoutId);
+  }, [navigation.items, navigation.joinCta.href, pathname, router]);
 
   return (
     <header

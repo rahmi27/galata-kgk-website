@@ -13,7 +13,7 @@ export const metadata = createPageMetadata({
   keywords: ["kariyer etkinlikleri", "girişimcilik etkinlikleri", "networking"],
 });
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const getCachedEvents = unstable_cache(
   async () => {
@@ -50,17 +50,8 @@ const getCachedEvents = unstable_cache(
   },
 );
 
-type EventsPageProps = {
-  searchParams: Promise<{
-    view?: string | string[];
-  }>;
-};
-
-export default async function EventsPage({ searchParams }: EventsPageProps) {
-  const [{ view }, events] = await Promise.all([
-    searchParams,
-    getCachedEvents(),
-  ]);
+export default async function EventsPage() {
+  const events = await getCachedEvents();
 
   return (
     <div className="bg-background">
@@ -86,7 +77,6 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
             <EventList
               events={events}
               currentDate={new Date().toISOString()}
-              initialView={view === "takvim" ? "calendar" : "list"}
             />
           </div>
         </section>

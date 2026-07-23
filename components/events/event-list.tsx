@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CalendarRange, CalendarSearch, List } from "lucide-react";
 
 import { YearCalendar } from "@/components/events/year-calendar";
@@ -43,6 +43,20 @@ export function EventList({
   const [activeFilter, setActiveFilter] =
     useState<EventFilter>("upcoming");
   const [activeView, setActiveView] = useState<EventView>(initialView);
+
+  useEffect(() => {
+    const requestedView = new URLSearchParams(window.location.search).get(
+      "view",
+    );
+
+    if (requestedView === "takvim") {
+      const frameId = window.requestAnimationFrame(() => {
+        setActiveView("calendar");
+      });
+
+      return () => window.cancelAnimationFrame(frameId);
+    }
+  }, []);
 
   const filteredEvents = useMemo(() => {
     const now = new Date(currentDate).getTime();
