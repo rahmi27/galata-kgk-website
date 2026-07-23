@@ -17,7 +17,7 @@ export const metadata = createPageMetadata({
   keywords: ["üniversite sponsorluk", "öğrenci kulübü iş ortaklığı"],
 });
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function SponsorsPage() {
   const [tiers, stats] = await Promise.all([

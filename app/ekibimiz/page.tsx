@@ -13,7 +13,7 @@ export const metadata = createPageMetadata({
   keywords: ["Galata KGK ekibi", "öğrenci kulübü yönetimi"],
 });
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function TeamPage() {
   const categories = await prisma.teamCategory.findMany({

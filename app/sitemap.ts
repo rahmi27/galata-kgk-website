@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { siteUrl } from "@/lib/site-metadata";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const publicPaths = [
   "",

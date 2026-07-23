@@ -28,7 +28,7 @@ export const metadata = createPageMetadata({
   keywords: ["öğrenci etkinlikleri", "networking", "kariyer gelişimi"],
 });
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const whyUsIcons = {
   compass: Compass,

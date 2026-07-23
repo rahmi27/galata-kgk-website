@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import { EventList } from "@/components/events/event-list";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
@@ -15,6 +17,41 @@ export const metadata = createPageMetadata({
 
 export const dynamic = "force-dynamic";
 
+const getCachedEvents = unstable_cache(
+  async () => {
+    const events = await prisma.event.findMany({
+      orderBy: [
+        {
+          date: "asc",
+        },
+        {
+          title: "asc",
+        },
+      ],
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        date: true,
+        imageUrl: true,
+        imageAlt: true,
+        category: true,
+      },
+    });
+
+    return events.map((event) => ({
+      ...event,
+      date: event.date?.toISOString() ?? null,
+    }));
+  },
+  ["public-events"],
+  {
+    revalidate: 300,
+    tags: ["events"],
+  },
+);
+
 type EventsPageProps = {
   searchParams: Promise<{
     view?: string | string[];
@@ -22,27 +59,10 @@ type EventsPageProps = {
 };
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
-  const { view } = await searchParams;
-  const events = await prisma.event.findMany({
-    orderBy: [
-      {
-        date: "asc",
-      },
-      {
-        title: "asc",
-      },
-    ],
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      description: true,
-      date: true,
-      imageUrl: true,
-      imageAlt: true,
-      category: true,
-    },
-  });
+  const [{ view }, events] = await Promise.all([
+    searchParams,
+    getCachedEvents(),
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,10 +87,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
         <section className="py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <EventList
-              events={events.map((event) => ({
-                ...event,
-                date: event.date?.toISOString() ?? null,
-              }))}
+              events={events}
               currentDate={new Date().toISOString()}
               initialView={view === "takvim" ? "calendar" : "list"}
             />

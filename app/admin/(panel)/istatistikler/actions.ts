@@ -31,6 +31,7 @@ export async function updateSiteStatAction(
     });
 
     revalidatePath("/");
+    revalidatePath("/sponsorlar");
     revalidatePath("/admin/istatistikler");
 
     return {

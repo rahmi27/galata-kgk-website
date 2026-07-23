@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { AdminActionState } from "@/lib/admin-action-state";
@@ -53,8 +53,10 @@ async function findAvailableSlug(title: string, currentEventId?: number) {
 }
 
 function revalidateEventPages(slug?: string) {
+  updateTag("events");
   revalidatePath("/");
   revalidatePath("/etkinliklerimiz");
+  revalidatePath("/sitemap.xml");
   revalidatePath("/admin");
   revalidatePath("/admin/etkinlikler");
 

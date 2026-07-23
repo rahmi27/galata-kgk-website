@@ -32,7 +32,15 @@ const getEventBySlug = cache((slug: string) =>
   }),
 );
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  return prisma.event.findMany({
+    select: {
+      slug: true,
+    },
+  });
+}
 
 export async function generateMetadata({
   params,
