@@ -4,8 +4,8 @@
     "description": "Kariyerini keşfetmek, girişimci düşünceyi deneyimlemek ve güçlü bağlantılar kurmak isteyen öğrencilerin buluşma noktası."
   },
   "brand": {
-    "name": "Galata KGK",
-    "homeAriaLabel": "Galata KGK ana sayfa"
+    "name": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
+    "homeAriaLabel": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü ana sayfa"
   },
   "navigation": {
     "desktopAriaLabel": "Ana menü",
@@ -52,7 +52,7 @@
         "href": "https://www.instagram.com/galatakariyergirisimcilik/"
       }
     ],
-    "copyright": "© {year} Galata KGK. Tüm hakları saklıdır.",
+    "copyright": "© {year} İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü. Tüm hakları saklıdır.",
     "institution": "İstanbul Galata Üniversitesi",
     "institutionHref": "https://aday.galata.edu.tr/tr"
   }

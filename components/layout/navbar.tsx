@@ -35,18 +35,18 @@ export function Navbar() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
         <Link
           href="/"
-          className="group inline-flex items-center gap-3 font-heading text-lg font-bold tracking-[-0.03em] text-primary dark:text-primary-100"
+          className="group inline-flex min-w-0 max-w-[10.5rem] items-center gap-2.5 font-heading text-[0.68rem] font-bold leading-[1.15] tracking-[-0.02em] text-primary sm:max-w-64 sm:text-xs dark:text-primary-100"
           aria-label={brand.homeAriaLabel}
         >
           <span
-            className="h-7 w-1.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-y-75"
+            className="h-8 w-1.5 shrink-0 rounded-full bg-accent transition-transform duration-300 group-hover:scale-y-75"
             aria-hidden="true"
           />
-          <span>{brand.name}</span>
+          <span className="block">{brand.name}</span>
         </Link>
 
         <nav
-          className="hidden items-center gap-7 lg:flex"
+          className="hidden items-center gap-6 xl:flex"
           aria-label={navigation.desktopAriaLabel}
         >
           {navigation.items.map((item) => {
@@ -84,7 +84,7 @@ export function Navbar() {
             type="button"
             variant="ghost"
             size="icon"
-            className="rounded-full text-primary hover:bg-primary-50 lg:hidden dark:text-primary-100 dark:hover:bg-white/10"
+            className="rounded-full text-primary hover:bg-primary-50 xl:hidden dark:text-primary-100 dark:hover:bg-white/10"
             onClick={() => setIsMenuOpen((current) => !current)}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
@@ -106,7 +106,7 @@ export function Navbar() {
       {isMenuOpen ? (
         <div
           id="mobile-navigation"
-          className="border-t border-primary/10 bg-background/95 px-5 py-5 backdrop-blur-xl lg:hidden dark:border-white/10"
+          className="border-t border-primary/10 bg-background/95 px-5 py-5 backdrop-blur-xl xl:hidden dark:border-white/10"
         >
           <nav
             className="mx-auto flex max-w-7xl flex-col gap-1"
