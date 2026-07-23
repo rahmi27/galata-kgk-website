@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import Link from "next/link";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import membershipContent from "@/content/membership.json";
 import { cn } from "@/lib/utils";
+import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 
 type FormFeedback = {
   type: "success" | "error";
@@ -50,6 +52,8 @@ export function MembershipForm() {
           department: formData.get("department"),
           phone: formData.get("phone"),
           motivation: formData.get("motivation"),
+          privacyAcknowledged:
+            formData.get("privacyAcknowledged") === "on",
         }),
       });
       const result = (await response.json().catch(() => ({}))) as {
@@ -207,6 +211,27 @@ export function MembershipForm() {
           />
         </div>
       </div>
+
+      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-primary/10 bg-primary-50/50 p-4 text-sm leading-6 text-muted-foreground dark:border-white/10 dark:bg-white/[0.035]">
+        <input
+          type="checkbox"
+          name="privacyAcknowledged"
+          required
+          className="mt-1 size-4 shrink-0 accent-accent"
+        />
+        <span>
+          İstanbul Galata Üniversitesi{" "}
+          <Link
+            href={OFFICIAL_PRIVACY_NOTICE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-accent-700 underline underline-offset-4 dark:text-accent-300"
+          >
+            KVKK Aydınlatma Metni’ni
+          </Link>{" "}
+          okudum ve kişisel verilerimin işlenmesi hakkında bilgi edindim.
+        </span>
+      </label>
 
       <Button
         type="submit"

@@ -3,6 +3,7 @@ import { BriefcaseBusiness, GraduationCap } from "lucide-react";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
 
 import siteContent from "@/content/site.json";
+import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 
 const socialIcons = {
   Instagram: FaInstagram,
@@ -81,6 +82,14 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-3 pt-7 text-xs leading-5 text-primary-300 sm:grid sm:grid-cols-[1fr_auto_1fr]">
+          <Link
+            href={OFFICIAL_PRIVACY_NOTICE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-fit transition-colors hover:text-white sm:col-start-1 sm:justify-self-start"
+          >
+            KVKK Aydınlatma Metni
+          </Link>
           <p className="text-center sm:col-start-2">{copyright}</p>
           <Link
             href={footer.institutionHref}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { validateMembershipApplication } from "@/lib/form-validation";
 import { prisma } from "@/lib/prisma";
+import { PRIVACY_NOTICE_VERSION } from "@/lib/privacy";
 import {
   hasRecentMembershipApplication,
   SUBMISSION_RATE_LIMIT_MINUTES,
@@ -55,7 +56,11 @@ export async function POST(request: Request) {
     }
 
     await prisma.membershipApplication.create({
-      data: validation.data,
+      data: {
+        ...validation.data,
+        privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
+        privacyAcknowledgedAt: new Date(),
+      },
     });
 
     return NextResponse.json(

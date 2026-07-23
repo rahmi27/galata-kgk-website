@@ -91,26 +91,30 @@ model SponsorTier {
 }
 
 model ContactSubmission {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  message   String
-  createdAt DateTime @default(now())
-  isRead    Boolean  @default(false)
+  id                    Int       @id @default(autoincrement())
+  name                  String
+  email                 String
+  message               String
+  createdAt             DateTime  @default(now())
+  isRead                Boolean   @default(false)
+  privacyNoticeVersion  String?
+  privacyAcknowledgedAt DateTime?
 
   @@index([email, createdAt])
 }
 
 model MembershipApplication {
-  id            Int      @id @default(autoincrement())
-  fullName      String
-  email         String
-  studentNumber String?
-  department    String
-  phone         String?
-  motivation    String
-  createdAt     DateTime @default(now())
-  status        String   @default("beklemede")
+  id                    Int       @id @default(autoincrement())
+  fullName              String
+  email                 String
+  studentNumber         String?
+  department            String
+  phone                 String?
+  motivation            String
+  createdAt             DateTime  @default(now())
+  status                String    @default("beklemede")
+  privacyNoticeVersion  String?
+  privacyAcknowledgedAt DateTime?
 
   @@index([email, createdAt])
 }

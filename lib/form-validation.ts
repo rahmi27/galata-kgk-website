@@ -42,6 +42,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function hasAcknowledgedPrivacy(payload: Record<string, unknown>) {
+  return payload.privacyAcknowledged === true;
+}
+
 function validateEmail(email: string): string | null {
   if (!email) {
     return "E-posta alanı zorunludur.";
@@ -61,6 +65,13 @@ export function validateContactSubmission(
     return {
       success: false,
       error: "Form verileri geçerli bir biçimde gönderilmedi.",
+    };
+  }
+
+  if (!hasAcknowledgedPrivacy(payload)) {
+    return {
+      success: false,
+      error: "Formu göndermeden önce KVKK aydınlatma metnini okuyup bilgi edindiğinizi belirtmelisiniz.",
     };
   }
 
@@ -122,6 +133,13 @@ export function validateMembershipApplication(
     return {
       success: false,
       error: "Form verileri geçerli bir biçimde gönderilmedi.",
+    };
+  }
+
+  if (!hasAcknowledgedPrivacy(payload)) {
+    return {
+      success: false,
+      error: "Formu göndermeden önce KVKK aydınlatma metnini okuyup bilgi edindiğinizi belirtmelisiniz.",
     };
   }
 
