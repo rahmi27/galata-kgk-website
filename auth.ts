@@ -14,11 +14,14 @@ import {
 } from "@/lib/admin-credentials";
 import { prisma } from "@/lib/prisma";
 
-const developmentHostTrust =
-  process.env.NODE_ENV === "development" ? { trustHost: true } : {};
+const shouldTrustHost =
+  process.env.NODE_ENV === "development" ||
+  Boolean(process.env.VERCEL) ||
+  Boolean(process.env.VERCEL_URL);
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  ...developmentHostTrust,
+  secret: process.env.AUTH_SECRET,
+  trustHost: shouldTrustHost,
   session: {
     strategy: "jwt",
     maxAge: 8 * 60 * 60,
