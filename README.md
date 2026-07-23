@@ -78,7 +78,8 @@
 
 | Değişken | Açıklama |
 | --- | --- |
-| `DATABASE_URL` | Neon PostgreSQL bağlantı adresi. Build sırasında migration ve çalışma zamanında Prisma tarafından kullanılır. |
+| `DATABASE_URL` | Prisma Client'ın çalışma zamanında kullandığı, host adında `-pooler` bulunan Neon pooled bağlantı adresi. |
+| `DIRECT_URL` | Prisma CLI migration işlemlerinde kullanılan, host adında `-pooler` bulunmayan doğrudan Neon bağlantı adresi. |
 | `AUTH_SECRET` | Auth.js JWT ve oturum güvenliği için uzun, rastgele ve gizli anahtar. |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob'a görsel yüklemek ve yönetilen görselleri silmek için gereken gizli token. |
 | `ADMIN_SEED_PASSWORD` | Yalnızca seed sırasında kullanılan geçici admin parolası; Vercel çalışma zamanı için zorunlu değildir. |
@@ -136,7 +137,7 @@ Prisma şeması etkinlikleri, ekip kategorileri/üyeleri, sponsor tier'ları/spo
 
 - Admin işlemleri middleware'e ek olarak her Server Action içinde aktif kullanıcıyı veritabanından doğrular.
 - İletişim ve katılım formlarında 10 dakikalık tekrar gönderim koruması; admin girişinde 5 başarısız denemeden sonra 10 dakikalık kilit vardır.
-- Vercel'de `DATABASE_URL`, `AUTH_SECRET` ve `BLOB_READ_WRITE_TOKEN` değerlerini Production ile Preview ortamlarına secret olarak ekleyin.
+- Vercel Production ortamında `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `BLOB_READ_WRITE_TOKEN` ve ana domaini belirleyen `NEXT_PUBLIC_SITE_URL` değerlerini tanımlayın. Preview deployment'ları production veritabanına bağlamayın; ayrı bir Neon branch kullanın.
 - Görseller Vercel Blob'da tutulur; Vercel'in geçici dosya sistemine kalıcı dosya yazılmaz.
 
 ## Ekran Görüntüsü
