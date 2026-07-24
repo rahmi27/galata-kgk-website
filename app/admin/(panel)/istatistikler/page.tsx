@@ -22,8 +22,11 @@ export default async function AdminStatsPage() {
         description="Anasayfada kulübün etkisini anlatan sayı, etiket ve sıralamayı buradan yönetin. Düşük sıra değeri önce gösterilir."
       />
 
-      <p className="mt-6 rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-sm leading-6 text-primary-800">
-        Editör notu: Kaydedilen değerler anasayfaya doğrudan yansır.
+      <p className="mt-6 rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-sm leading-6 text-primary-800 dark:border-accent-700/60 dark:bg-accent-900/25 dark:text-primary-100">
+        <strong className="font-semibold text-primary-950 dark:text-white">
+          Editör notu:
+        </strong>{" "}
+        Kaydedilen değerler anasayfaya doğrudan yansır.
         Yalnızca kulübün doğrulanmış güncel rakamlarını kullanın; kesinleşmeyen
         sayılar için tahmin eklemeyin.
       </p>
