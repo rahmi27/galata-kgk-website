@@ -218,7 +218,7 @@ function MonthCard({
           <abbr
             key={weekday.long}
             title={weekday.long}
-            className="flex aspect-square items-center justify-center text-[0.65rem] font-bold uppercase text-primary-400 no-underline dark:text-primary-300"
+            className="flex aspect-square items-center justify-center text-[0.65rem] font-bold uppercase text-primary-500 no-underline dark:text-primary-300"
           >
             {weekday.short}
           </abbr>

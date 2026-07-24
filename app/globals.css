@@ -105,6 +105,10 @@
 }
 
 @layer components {
+  .admin-shell :where(.text-primary-400) {
+    color: #344c8e;
+  }
+
   .dark .admin-shell :where(.bg-white) {
     background-color: #0a1026;
   }
