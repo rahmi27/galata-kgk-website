@@ -185,9 +185,9 @@ export default async function HomePage() {
               title={homeContent.statsSection.title}
               description={homeContent.statsSection.description}
             />
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
               {stats.map((stat) => (
-                <StatCard key={stat.label} {...stat} />
+                <StatCard key={stat.id} {...stat} />
               ))}
             </div>
           </div>

@@ -8,6 +8,47 @@ import { validateSiteStatForm } from "@/lib/admin-validation";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 
+async function revalidateSiteStats() {
+  revalidatePath("/");
+  revalidatePath("/sponsorlar");
+  revalidatePath("/admin/istatistikler");
+  await notifyIndexNow(["/", "/sponsorlar"]);
+}
+
+export async function createSiteStatAction(
+  formData: FormData,
+): Promise<AdminActionState> {
+  await requireAdmin();
+  const validation = validateSiteStatForm(formData);
+
+  if (!validation.success) {
+    return {
+      success: false,
+      message: validation.error,
+    };
+  }
+
+  try {
+    await prisma.siteStat.create({
+      data: validation.data,
+    });
+
+    await revalidateSiteStats();
+
+    return {
+      success: true,
+      message: "İstatistik kartı eklendi.",
+    };
+  } catch (error) {
+    console.error("İstatistik kartı eklenemedi.", error);
+
+    return {
+      success: false,
+      message: "İstatistik kartı eklenemedi. Lütfen tekrar deneyin.",
+    };
+  }
+}
+
 export async function updateSiteStatAction(
   statId: number,
   _previousState: AdminActionState,
@@ -31,10 +72,7 @@ export async function updateSiteStatAction(
       data: validation.data,
     });
 
-    revalidatePath("/");
-    revalidatePath("/sponsorlar");
-    revalidatePath("/admin/istatistikler");
-    await notifyIndexNow(["/", "/sponsorlar"]);
+    await revalidateSiteStats();
 
     return {
       success: true,
@@ -46,6 +84,41 @@ export async function updateSiteStatAction(
     return {
       success: false,
       message: "İstatistik güncellenemedi veya artık mevcut değil.",
+    };
+  }
+}
+
+export async function deleteSiteStatAction(
+  statId: number,
+): Promise<AdminActionState> {
+  await requireAdmin();
+
+  if (!Number.isInteger(statId) || statId <= 0) {
+    return {
+      success: false,
+      message: "Silinecek istatistik kartı geçersiz.",
+    };
+  }
+
+  try {
+    await prisma.siteStat.delete({
+      where: {
+        id: statId,
+      },
+    });
+
+    await revalidateSiteStats();
+
+    return {
+      success: true,
+      message: "İstatistik kartı silindi.",
+    };
+  } catch (error) {
+    console.error("İstatistik kartı silinemedi.", error);
+
+    return {
+      success: false,
+      message: "İstatistik kartı silinemedi veya artık mevcut değil.",
     };
   }
 }

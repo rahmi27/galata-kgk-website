@@ -2,6 +2,8 @@ import { BarChart3, GripVertical } from "lucide-react";
 
 import { updateSiteStatAction } from "@/app/admin/(panel)/istatistikler/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { CreateStatButton } from "@/components/admin/create-stat-button";
+import { DeleteStatButton } from "@/components/admin/delete-stat-button";
 import { StatAdminForm } from "@/components/admin/stat-admin-form";
 import { prisma } from "@/lib/prisma";
 
@@ -13,6 +15,9 @@ export default async function AdminStatsPage() {
       order: "asc",
     },
   });
+  const suggestedOrder =
+    stats.reduce((highestOrder, stat) => Math.max(highestOrder, stat.order), 0) +
+    1;
 
   return (
     <>
@@ -20,6 +25,7 @@ export default async function AdminStatsPage() {
         eyebrow="Anasayfa İçeriği"
         title="İstatistik Kartları"
         description="Anasayfada kulübün etkisini anlatan sayı, etiket ve sıralamayı buradan yönetin. Düşük sıra değeri önce gösterilir."
+        actions={<CreateStatButton suggestedOrder={suggestedOrder} />}
       />
 
       <p className="mt-6 rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-sm leading-6 text-primary-800 dark:border-accent-700/60 dark:bg-accent-900/25 dark:text-primary-100">
@@ -57,13 +63,21 @@ export default async function AdminStatsPage() {
                     aria-hidden="true"
                   />
                 </div>
-                <StatAdminForm
-                  action={updateAction}
-                  statId={stat.id}
-                  label={stat.label}
-                  value={stat.value}
-                  order={stat.order}
-                />
+                <div>
+                  <StatAdminForm
+                    action={updateAction}
+                    statId={stat.id}
+                    label={stat.label}
+                    value={stat.value}
+                    order={stat.order}
+                  />
+                  <div className="mt-4 flex justify-end border-t border-primary-100 pt-4 dark:border-white/10">
+                    <DeleteStatButton
+                      statId={stat.id}
+                      statLabel={stat.label}
+                    />
+                  </div>
+                </div>
               </article>
             );
           })
