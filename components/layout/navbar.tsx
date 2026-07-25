@@ -8,15 +8,15 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import siteContent from "@/content/site.json";
+import type { SiteChromeContent } from "@/lib/site-content";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export function Navbar({ content }: { content: SiteChromeContent }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { brand, navigation } = siteContent;
+  const { brand, navigation } = content;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 16);

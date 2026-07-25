@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum SiteContentType {
+  text
+  richtext
+  image
+}
+
 model AdminUser {
   id           Int      @id @default(autoincrement())
   username     String   @unique
@@ -126,4 +132,16 @@ model SiteStat {
   order Int
 
   @@index([order])
+}
+
+model SiteContent {
+  id        Int             @id @default(autoincrement())
+  key       String          @unique
+  value     String          @db.Text
+  type      SiteContentType @default(text)
+  page      String
+  label     String
+  updatedAt DateTime        @updatedAt
+
+  @@index([page])
 }

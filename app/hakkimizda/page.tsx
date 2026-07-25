@@ -4,6 +4,10 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { Timeline } from "@/components/shared/timeline";
 import aboutContent from "@/content/about.json";
 import { createPageMetadata } from "@/lib/site-metadata";
+import {
+  getAboutContentFromRows,
+  getPublicSiteContentRows,
+} from "@/lib/site-content";
 
 export const metadata = createPageMetadata({
   title: aboutContent.meta.title,
@@ -12,7 +16,11 @@ export const metadata = createPageMetadata({
   keywords: ["Galata KGK vizyon", "Galata KGK misyon"],
 });
 
-export default function AboutPage() {
+export const revalidate = 300;
+
+export default async function AboutPage() {
+  const content = getAboutContentFromRows(await getPublicSiteContentRows());
+
   return (
     <div className="bg-background">
 
@@ -25,9 +33,9 @@ export default function AboutPage() {
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow={aboutContent.hero.eyebrow}
-              title={aboutContent.hero.title}
-              description={aboutContent.hero.description}
+              eyebrow={content.hero.eyebrow}
+              title={content.hero.title}
+              description={content.hero.description}
             />
           </div>
         </section>
@@ -36,11 +44,11 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:px-10">
             <div>
               <SectionHeading
-                eyebrow={aboutContent.introduction.eyebrow}
-                title={aboutContent.introduction.title}
+                eyebrow={content.introduction.eyebrow}
+                title={content.introduction.title}
               />
               <div className="mt-8 space-y-5 text-base leading-8 text-muted-foreground sm:text-lg">
-                {aboutContent.introduction.paragraphs.map((paragraph) => (
+                {content.introduction.paragraphs.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
@@ -52,10 +60,10 @@ export default function AboutPage() {
                 aria-hidden="true"
               />
               <p className="relative font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                {aboutContent.introduction.principle.label}
+                {content.introduction.principle.label}
               </p>
               <p className="relative mt-8 font-heading text-2xl font-semibold leading-relaxed tracking-[-0.025em] sm:text-3xl">
-                “{aboutContent.introduction.principle.text}”
+                “{content.introduction.principle.text}”
               </p>
             </aside>
           </div>
@@ -70,13 +78,13 @@ export default function AboutPage() {
                 aria-hidden="true"
               />
               <p className="mt-12 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                {aboutContent.visionMission.vision.eyebrow}
+                {content.visionMission.vision.eyebrow}
               </p>
               <h2 className="mt-5 font-heading text-3xl font-bold leading-tight tracking-[-0.04em]">
-                {aboutContent.visionMission.vision.title}
+                {content.visionMission.vision.title}
               </h2>
               <p className="mt-5 leading-7 text-primary-200">
-                {aboutContent.visionMission.vision.description}
+                {content.visionMission.vision.description}
               </p>
             </article>
 
@@ -87,13 +95,13 @@ export default function AboutPage() {
                 aria-hidden="true"
               />
               <p className="mt-12 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                {aboutContent.visionMission.mission.eyebrow}
+                {content.visionMission.mission.eyebrow}
               </p>
               <h2 className="mt-5 font-heading text-3xl font-bold leading-tight tracking-[-0.04em] text-primary dark:text-white">
-                {aboutContent.visionMission.mission.title}
+                {content.visionMission.mission.title}
               </h2>
               <p className="mt-5 leading-7 text-muted-foreground">
-                {aboutContent.visionMission.mission.description}
+                {content.visionMission.mission.description}
               </p>
             </article>
           </div>
@@ -102,12 +110,12 @@ export default function AboutPage() {
         <section className="border-t border-primary/10 py-20 dark:border-white/10 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-10">
             <SectionHeading
-              eyebrow={aboutContent.timelineSection.eyebrow}
-              title={aboutContent.timelineSection.title}
-              description={aboutContent.timelineSection.description}
+              eyebrow={content.timelineSection.eyebrow}
+              title={content.timelineSection.title}
+              description={content.timelineSection.description}
               className="self-start lg:sticky lg:top-32"
             />
-            <Timeline milestones={aboutContent.timelineSection.milestones} />
+            <Timeline milestones={content.timelineSection.milestones} />
           </div>
         </section>
       </main>

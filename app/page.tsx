@@ -19,6 +19,10 @@ import homeContent from "@/content/home.json";
 import { formatEventDate } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
+import {
+  getHomeHeroContentFromRows,
+  getPublicSiteContentRows,
+} from "@/lib/site-content";
 
 export const metadata = createPageMetadata({
   title: homeContent.meta.title,
@@ -36,7 +40,7 @@ const whyUsIcons = {
 } as const;
 
 export default async function HomePage() {
-  const [stats, featuredEvents, sponsors] = await Promise.all([
+  const [stats, featuredEvents, sponsors, siteContentRows] = await Promise.all([
     prisma.siteStat.findMany({
       orderBy: {
         order: "asc",
@@ -81,7 +85,9 @@ export default async function HomePage() {
       ],
       take: 8,
     }),
+    getPublicSiteContentRows(),
   ]);
+  const heroContent = getHomeHeroContentFromRows(siteContentRows);
 
   return (
     <div className="bg-background">
@@ -100,12 +106,12 @@ export default async function HomePage() {
                   className="size-4 text-accent-600 dark:text-accent-300"
                   aria-hidden="true"
                 />
-                {homeContent.hero.eyebrow}
+                {heroContent.eyebrow}
               </p>
               <h1 className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[0.98] tracking-[-0.055em] text-primary sm:text-6xl lg:text-7xl dark:text-white">
-                {homeContent.hero.title}{" "}
+                {heroContent.title}{" "}
                 <span className="relative inline-block text-primary dark:text-primary-100">
-                  {homeContent.hero.emphasis}
+                  {heroContent.emphasis}
                   <span
                     className="absolute inset-x-0 -bottom-1 h-1.5 rounded-full bg-accent sm:-bottom-2"
                     aria-hidden="true"
@@ -113,18 +119,18 @@ export default async function HomePage() {
                 </span>
               </h1>
               <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9">
-                {homeContent.hero.description}
+                {heroContent.description}
               </p>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="primary">
-                  <Link href={homeContent.hero.primaryCta.href}>
-                    {homeContent.hero.primaryCta.label}
+                  <Link href={heroContent.primaryCta.href}>
+                    {heroContent.primaryCta.label}
                     <ArrowRight aria-hidden="true" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link href={homeContent.hero.secondaryCta.href}>
-                    {homeContent.hero.secondaryCta.label}
+                  <Link href={heroContent.secondaryCta.href}>
+                    {heroContent.secondaryCta.label}
                   </Link>
                 </Button>
               </div>
@@ -141,9 +147,9 @@ export default async function HomePage() {
                   aria-hidden="true"
                 />
                 <Link
-                  href={homeContent.hero.spotlight.calendarCta.href}
+                  href={heroContent.spotlight.calendarCta.href}
                   className="group/calendar relative z-10 -m-2 inline-flex size-12 cursor-pointer items-center justify-center rounded-2xl text-accent-300 outline-none transition-all hover:scale-105 hover:bg-white/[0.08] hover:text-accent-200 focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900"
-                  aria-label={homeContent.hero.spotlight.calendarCta.label}
+                  aria-label={heroContent.spotlight.calendarCta.label}
                 >
                   <CalendarDays
                     className="size-8 transition-transform group-hover/calendar:-rotate-3"
@@ -151,20 +157,20 @@ export default async function HomePage() {
                     aria-hidden="true"
                   />
                   <span className="pointer-events-none absolute left-full top-1/2 ml-2.5 w-max -translate-y-1/2 translate-x-1 rounded-lg border border-white/10 bg-primary-950 px-2.5 py-1.5 text-[0.68rem] font-semibold text-white opacity-0 shadow-lg transition-all group-hover/calendar:translate-x-0 group-hover/calendar:opacity-100 group-focus-visible/calendar:translate-x-0 group-focus-visible/calendar:opacity-100">
-                    {homeContent.hero.spotlight.calendarCta.label}
+                    {heroContent.spotlight.calendarCta.label}
                   </span>
                 </Link>
                 <p className="mt-12 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                  {homeContent.hero.spotlight.eyebrow}
+                  {heroContent.spotlight.eyebrow}
                 </p>
                 <h2 className="mt-4 max-w-md font-heading text-3xl font-bold leading-tight tracking-[-0.035em] sm:text-4xl">
-                  {homeContent.hero.spotlight.title}
+                  {heroContent.spotlight.title}
                 </h2>
                 <p className="mt-5 max-w-md leading-7 text-primary-200">
-                  {homeContent.hero.spotlight.description}
+                  {heroContent.spotlight.description}
                 </p>
                 <div className="mt-9 flex flex-wrap gap-2.5">
-                  {homeContent.hero.spotlight.topics.map((topic) => (
+                  {heroContent.spotlight.topics.map((topic) => (
                     <span
                       key={topic}
                       className="rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-xs font-semibold text-primary-100"

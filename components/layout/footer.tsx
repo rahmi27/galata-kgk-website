@@ -1,19 +1,26 @@
 import Link from "next/link";
 import { BriefcaseBusiness, GraduationCap } from "lucide-react";
-import { FaInstagram, FaTiktok } from "react-icons/fa6";
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaTiktok,
+  FaXTwitter,
+} from "react-icons/fa6";
 
 import { BrandLogo } from "@/components/brand-logo";
-import siteContent from "@/content/site.json";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
+import type { SiteChromeContent } from "@/lib/site-content";
 
 const socialIcons = {
   Instagram: FaInstagram,
+  LinkedIn: FaLinkedinIn,
+  X: FaXTwitter,
   TikTok: FaTiktok,
   Portfolyo: BriefcaseBusiness,
 } as const;
 
-export function Footer() {
-  const { brand, footer, navigation } = siteContent;
+export function Footer({ content }: { content: SiteChromeContent }) {
+  const { brand, footer, navigation } = content;
   const copyright = footer.copyright.replace(
     "{year}",
     new Date().getFullYear().toString(),
