@@ -307,6 +307,13 @@ export const staticSiteContentDefinitions: SiteContentDefinition[] = [
 ];
 
 export const repeatableSiteContentDefinitions: SiteContentDefinition[] = [
+  {
+    key: "home.hero.spotlight.topics.initialized",
+    value: "true",
+    type: "text",
+    page: "anasayfa",
+    label: "Odak etiketleri başlangıç işareti",
+  },
   ...homeContent.hero.spotlight.topics.map(
     (topic, index): SiteContentDefinition => ({
       key: `home.hero.spotlight.topic.${String(index + 1).padStart(3, "0")}`,
@@ -316,6 +323,13 @@ export const repeatableSiteContentDefinitions: SiteContentDefinition[] = [
       label: "Odak etiketi",
     }),
   ),
+  {
+    key: "about.timeline.milestones.initialized",
+    value: "true",
+    type: "text",
+    page: "hakkimizda",
+    label: "Zaman tüneli başlangıç işareti",
+  },
   ...aboutContent.timelineSection.milestones.map(
     (milestone, index): SiteContentDefinition => ({
       key: `about.timeline.milestone.${String(index + 1).padStart(3, "0")}`,

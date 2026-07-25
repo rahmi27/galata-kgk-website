@@ -2,6 +2,7 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
+import homeContent from "@/content/home.json";
 import siteContent from "@/content/site.json";
 import { prisma } from "@/lib/prisma";
 import { siteContentDefaults } from "@/lib/site-content-defaults";
@@ -103,6 +104,49 @@ export async function getAdminSiteContentRows() {
 
 export async function getAdminSiteContentMap() {
   return mergeSiteContent(await getAdminSiteContentRows());
+}
+
+export function getHomeHeroContentFromRows(rows: SiteContentRow[]) {
+  const values = mergeSiteContent(rows);
+  const topicsAreInitialized = rows.some(
+    (row) => row.key === "home.hero.spotlight.topics.initialized",
+  );
+  const topicSource = topicsAreInitialized
+    ? rows
+    : Object.entries(siteContentDefaults).map(([key, value]) => ({
+        key,
+        value,
+      }));
+  const topics = topicSource
+    .filter(({ key }) => key.startsWith("home.hero.spotlight.topic."))
+    .sort((first, second) => first.key.localeCompare(second.key, "tr"))
+    .map(({ value }) => value);
+
+  return {
+    eyebrow: values["home.hero.eyebrow"],
+    title: values["home.hero.title"],
+    emphasis: values["home.hero.emphasis"],
+    description: values["home.hero.description"],
+    primaryCta: {
+      ...homeContent.hero.primaryCta,
+      label: values["home.hero.primaryCta.label"],
+    },
+    secondaryCta: {
+      ...homeContent.hero.secondaryCta,
+      label: values["home.hero.secondaryCta.label"],
+    },
+    spotlight: {
+      ...homeContent.hero.spotlight,
+      calendarCta: {
+        ...homeContent.hero.spotlight.calendarCta,
+        label: values["home.hero.spotlight.calendarCta.label"],
+      },
+      eyebrow: values["home.hero.spotlight.eyebrow"],
+      title: values["home.hero.spotlight.title"],
+      description: values["home.hero.spotlight.description"],
+      topics,
+    },
+  };
 }
 
 export async function getSiteChromeContent(): Promise<SiteChromeContent> {
