@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { Footer } from "@/components/layout/footer";
@@ -13,8 +14,32 @@ type SiteShellProps = {
 
 export function SiteShell({ children, content }: SiteShellProps) {
   const pathname = usePathname();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const previousPathname = useRef(pathname);
   const isAdminRoute =
     pathname === "/admin" || pathname.startsWith("/admin/");
+
+  useLayoutEffect(() => {
+    if (previousPathname.current === pathname) {
+      return;
+    }
+
+    previousPathname.current = pathname;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const animation = contentRef.current?.animate(
+      [{ opacity: 0 }, { opacity: 1 }],
+      {
+        duration: 100,
+        easing: "ease-out",
+      },
+    );
+
+    return () => animation?.cancel();
+  }, [pathname]);
 
   if (isAdminRoute) {
     return children;
@@ -23,7 +48,7 @@ export function SiteShell({ children, content }: SiteShellProps) {
   return (
     <div className="grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <Navbar content={content} />
-      <div className="min-w-0 bg-background">
+      <div ref={contentRef} className="min-w-0 bg-background">
         {children}
       </div>
       <Footer content={content} />
