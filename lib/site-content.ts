@@ -149,6 +149,87 @@ export function getHomeHeroContentFromRows(rows: SiteContentRow[]) {
   };
 }
 
+export function getAboutContentFromRows(rows: SiteContentRow[]) {
+  const values = mergeSiteContent(rows);
+  const milestonesAreInitialized = rows.some(
+    (row) => row.key === "about.timeline.milestones.initialized",
+  );
+  const milestoneSource = milestonesAreInitialized
+    ? rows
+    : Object.entries(siteContentDefaults).map(([key, value]) => ({
+        key,
+        value,
+      }));
+  const milestones = milestoneSource
+    .filter(({ key }) => key.startsWith("about.timeline.milestone."))
+    .sort((first, second) => first.key.localeCompare(second.key, "tr"))
+    .flatMap(({ value }) => {
+      try {
+        const milestone = JSON.parse(value) as {
+          year?: unknown;
+          title?: unknown;
+          description?: unknown;
+        };
+
+        if (
+          typeof milestone.year === "string" &&
+          typeof milestone.title === "string" &&
+          typeof milestone.description === "string"
+        ) {
+          return [
+            {
+              year: milestone.year,
+              title: milestone.title,
+              description: milestone.description,
+            },
+          ];
+        }
+      } catch {
+        // Hatalı tek kayıt tüm zaman tünelini bozmasın.
+      }
+
+      return [];
+    });
+
+  return {
+    hero: {
+      eyebrow: values["about.hero.eyebrow"],
+      title: values["about.hero.title"],
+      description: values["about.hero.description"],
+    },
+    introduction: {
+      eyebrow: values["about.introduction.eyebrow"],
+      title: values["about.introduction.title"],
+      paragraphs: values["about.introduction.paragraphs"]
+        .split(/\n\s*\n/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean),
+      principle: {
+        label: values["about.introduction.principle.label"],
+        text: values["about.introduction.principle.text"],
+      },
+    },
+    visionMission: {
+      vision: {
+        eyebrow: values["about.vision.eyebrow"],
+        title: values["about.vision.title"],
+        description: values["about.vision.description"],
+      },
+      mission: {
+        eyebrow: values["about.mission.eyebrow"],
+        title: values["about.mission.title"],
+        description: values["about.mission.description"],
+      },
+    },
+    timelineSection: {
+      eyebrow: values["about.timeline.eyebrow"],
+      title: values["about.timeline.title"],
+      description: values["about.timeline.description"],
+      milestones,
+    },
+  };
+}
+
 export async function getSiteChromeContent(): Promise<SiteChromeContent> {
   const values = mergeSiteContent(await getPublicSiteContentRows());
   const items = navigationRoutes
