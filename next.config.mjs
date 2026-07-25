@@ -76,6 +76,7 @@ const nextConfig = {
       }
     : {}),
   experimental: {
+    inlineCss: true,
     serverActions: {
       bodySizeLimit: "6mb",
       ...(isDevelopment
