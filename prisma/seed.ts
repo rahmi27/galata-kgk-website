@@ -6,6 +6,7 @@ import { PrismaClient } from "../lib/generated/prisma/client";
 import eventsContent from "../content/events.json";
 import homeContent from "../content/home.json";
 import teamContent from "../content/team.json";
+import { siteContentDefinitions } from "../lib/site-content-defaults";
 import { createNormalizedSlug } from "../lib/slug";
 
 const connectionString = process.env.DATABASE_URL;
@@ -105,16 +106,36 @@ async function main() {
     })),
   });
 
-  const [eventCount, teamMemberCount, categoryCount, siteStatCount] =
-    await Promise.all([
+  for (const content of siteContentDefinitions) {
+    await prisma.siteContent.upsert({
+      where: {
+        key: content.key,
+      },
+      update: {
+        label: content.label,
+        page: content.page,
+        type: content.type,
+      },
+      create: content,
+    });
+  }
+
+  const [
+    eventCount,
+    teamMemberCount,
+    categoryCount,
+    siteStatCount,
+    siteContentCount,
+  ] = await Promise.all([
     prisma.event.count(),
     prisma.teamMember.count(),
     prisma.teamCategory.count(),
     prisma.siteStat.count(),
-    ]);
+    prisma.siteContent.count(),
+  ]);
 
   console.log(
-    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik.`,
+    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik, ${siteContentCount} düzenlenebilir içerik.`,
   );
   console.log(`Admin kullanıcı adı: ${adminUsername}`);
   console.log(`Admin geçici şifre: ${adminPassword}`);
