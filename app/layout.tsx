@@ -11,6 +11,7 @@ import {
   SITE_SHORT_NAME,
   siteUrl,
 } from "@/lib/site-metadata";
+import { getSiteChromeContent } from "@/lib/site-content";
 
 import "./globals.css";
 
@@ -47,11 +48,13 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const chromeContent = await getSiteChromeContent();
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
@@ -63,7 +66,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <SiteShell>{children}</SiteShell>
+          <SiteShell content={chromeContent}>{children}</SiteShell>
         </ThemeProvider>
         <SiteTelemetry />
       </body>

@@ -1,0 +1,160 @@
+import "server-only";
+
+import { unstable_cache } from "next/cache";
+
+import siteContent from "@/content/site.json";
+import { prisma } from "@/lib/prisma";
+import { siteContentDefaults } from "@/lib/site-content-defaults";
+
+export const navigationRoutes = [
+  { id: "anasayfa", href: "/" },
+  { id: "hakkimizda", href: "/hakkimizda" },
+  { id: "etkinliklerimiz", href: "/etkinliklerimiz" },
+  { id: "ekibimiz", href: "/ekibimiz" },
+  { id: "sponsorlar", href: "/sponsorlar" },
+  { id: "iletisim", href: "/iletisim" },
+] as const;
+
+export type SiteContentRow = {
+  key: string;
+  value: string;
+  type: "text" | "richtext" | "image";
+  page: string;
+  label: string;
+};
+
+export type SiteChromeContent = {
+  brand: {
+    name: string;
+    homeAriaLabel: string;
+  };
+  navigation: {
+    desktopAriaLabel: string;
+    mobileAriaLabel: string;
+    openMenuLabel: string;
+    closeMenuLabel: string;
+    items: Array<{
+      id: (typeof navigationRoutes)[number]["id"];
+      label: string;
+      href: string;
+      order: number;
+    }>;
+    joinCta: {
+      label: string;
+      href: string;
+    };
+  };
+  footer: {
+    description: string;
+    quickLinksLabel: string;
+    copyright: string;
+    institution: string;
+    institutionHref: string;
+    socials: Array<{
+      platform: "Instagram" | "LinkedIn" | "X";
+      href: string;
+    }>;
+  };
+};
+
+async function readSiteContentRows() {
+  try {
+    return (await prisma.siteContent.findMany({
+      select: {
+        key: true,
+        value: true,
+        type: true,
+        page: true,
+        label: true,
+      },
+    })) as SiteContentRow[];
+  } catch (error) {
+    console.warn(
+      "SiteContent tablosu okunamadı; statik varsayılanlar kullanılıyor.",
+      error,
+    );
+    return [];
+  }
+}
+
+const readCachedSiteContentRows = unstable_cache(
+  readSiteContentRows,
+  ["public-site-content-v1"],
+  {
+    revalidate: 300,
+    tags: ["site-content"],
+  },
+);
+
+export function mergeSiteContent(rows: SiteContentRow[]) {
+  return {
+    ...siteContentDefaults,
+    ...Object.fromEntries(rows.map((row) => [row.key, row.value])),
+  };
+}
+
+export async function getPublicSiteContentRows() {
+  return readCachedSiteContentRows();
+}
+
+export async function getAdminSiteContentRows() {
+  return readSiteContentRows();
+}
+
+export async function getAdminSiteContentMap() {
+  return mergeSiteContent(await getAdminSiteContentRows());
+}
+
+export async function getSiteChromeContent(): Promise<SiteChromeContent> {
+  const values = mergeSiteContent(await getPublicSiteContentRows());
+  const items = navigationRoutes
+    .map((item, fallbackIndex) => ({
+      ...item,
+      label: values[`header.nav.${item.id}.label`],
+      order:
+        Number.parseInt(values[`header.nav.${item.id}.order`], 10) ||
+        fallbackIndex + 1,
+    }))
+    .sort((first, second) => first.order - second.order);
+
+  const socials = [
+    {
+      platform: "Instagram" as const,
+      href: values["footer.social.instagram"],
+    },
+    {
+      platform: "LinkedIn" as const,
+      href: values["footer.social.linkedin"],
+    },
+    {
+      platform: "X" as const,
+      href: values["footer.social.x"],
+    },
+  ].filter((social) => social.href.trim().length > 0);
+
+  return {
+    brand: {
+      name: values["header.brand.name"],
+      homeAriaLabel: siteContent.brand.homeAriaLabel,
+    },
+    navigation: {
+      desktopAriaLabel: siteContent.navigation.desktopAriaLabel,
+      mobileAriaLabel: siteContent.navigation.mobileAriaLabel,
+      openMenuLabel: siteContent.navigation.openMenuLabel,
+      closeMenuLabel: siteContent.navigation.closeMenuLabel,
+      items,
+      joinCta: {
+        label: values["header.cta.label"],
+        href: siteContent.navigation.joinCta.href,
+      },
+    },
+    footer: {
+      description: values["footer.description"],
+      quickLinksLabel: values["footer.quickLinksLabel"],
+      copyright: values["footer.copyright"],
+      institution: values["footer.institution"],
+      institutionHref: values["footer.institutionHref"],
+      socials,
+    },
+  };
+}
