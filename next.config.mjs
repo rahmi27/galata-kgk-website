@@ -1,4 +1,13 @@
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 const isDevelopment = process.env.NODE_ENV === "development";
+const nextLegacyPolyfills = require.resolve(
+  "next/dist/build/polyfills/polyfill-module",
+);
+const modernBrowserPolyfills = require.resolve(
+  "./lib/modern-browser-polyfills.js",
+);
 
 const developmentTunnelOrigins = (
   process.env.DEV_TUNNEL_ORIGINS ??
@@ -85,6 +94,13 @@ const nextConfig = {
           }
         : {}),
     },
+  },
+  webpack(config, { dev, isServer }) {
+    if (!dev && !isServer) {
+      config.resolve.alias[nextLegacyPolyfills] = modernBrowserPolyfills;
+    }
+
+    return config;
   },
   async headers() {
     return [
