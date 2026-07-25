@@ -8,10 +8,14 @@ import {
   BarChart3,
   CalendarDays,
   Handshake,
+  House,
   Inbox,
+  Info,
   LayoutDashboard,
   LogOut,
   Menu,
+  PanelBottom,
+  PanelTop,
   ShieldCheck,
   UserRoundCheck,
   UsersRound,
@@ -66,6 +70,29 @@ const navigation = [
   },
 ] as const;
 
+const appearanceNavigation = [
+  {
+    label: "Header",
+    href: "/admin/gorunum/header",
+    icon: PanelTop,
+  },
+  {
+    label: "Footer",
+    href: "/admin/gorunum/footer",
+    icon: PanelBottom,
+  },
+  {
+    label: "Anasayfa",
+    href: "/admin/gorunum/anasayfa",
+    icon: House,
+  },
+  {
+    label: "Hakkımızda",
+    href: "/admin/gorunum/hakkimizda",
+    icon: Info,
+  },
+] as const;
+
 type AdminShellProps = {
   children: React.ReactNode;
   userName: string;
@@ -79,41 +106,51 @@ function AdminNavigation({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  function renderNavigationItem(
+    item: (typeof navigation)[number] | (typeof appearanceNavigation)[number],
+  ) {
+    const Icon = item.icon;
+    const isActive =
+      item.href === "/admin"
+        ? pathname === item.href
+        : pathname.startsWith(item.href);
+
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={onNavigate}
+        className={cn(
+          "group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors",
+          isActive
+            ? "bg-white text-primary-950 shadow-sm"
+            : "text-primary-100 hover:bg-white/15 hover:text-white",
+        )}
+        aria-current={isActive ? "page" : undefined}
+      >
+        <Icon
+          className={cn(
+            "size-4.5",
+            isActive
+              ? "text-accent-600"
+              : "text-primary-200 group-hover:text-accent-200",
+          )}
+          aria-hidden="true"
+        />
+        {item.label}
+      </Link>
+    );
+  }
+
   return (
     <nav className="mt-8 space-y-1" aria-label="Yönetim menüsü">
-      {navigation.map((item) => {
-        const Icon = item.icon;
-        const isActive =
-          item.href === "/admin"
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
-
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={cn(
-              "group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors",
-              isActive
-                ? "bg-white text-primary-950 shadow-sm"
-                : "text-primary-100 hover:bg-white/15 hover:text-white",
-            )}
-            aria-current={isActive ? "page" : undefined}
-          >
-            <Icon
-              className={cn(
-                "size-4.5",
-                isActive
-                  ? "text-accent-600"
-                  : "text-primary-200 group-hover:text-accent-200",
-              )}
-              aria-hidden="true"
-            />
-            {item.label}
-          </Link>
-        );
-      })}
+      {navigation.map(renderNavigationItem)}
+      <p className="px-3.5 pb-2 pt-7 font-heading text-[0.68rem] font-bold uppercase tracking-[0.18em] text-accent-200">
+        Görünüm Yönetimi
+      </p>
+      <div className="space-y-1 border-l border-white/15 pl-2">
+        {appearanceNavigation.map(renderNavigationItem)}
+      </div>
     </nav>
   );
 }
