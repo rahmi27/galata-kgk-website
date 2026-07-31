@@ -12,7 +12,7 @@ export const navigationRoutes = [
   { id: "hakkimizda", href: "/hakkimizda" },
   { id: "etkinliklerimiz", href: "/etkinliklerimiz" },
   { id: "ekibimiz", href: "/ekibimiz" },
-  { id: "sponsorlar", href: "/sponsorlar" },
+  { id: "ortaklarimiz", href: "/sponsorlar" },
   { id: "iletisim", href: "/iletisim" },
 ] as const;
 
