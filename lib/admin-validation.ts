@@ -49,6 +49,20 @@ export type SponsorAdminInput = {
   order: number;
 };
 
+export type PartnerClubAdminInput = {
+  name: string;
+  shortDescription: string;
+  logoAlt: string;
+  order: number;
+};
+
+export type CollaborationItemAdminInput = {
+  title: string;
+  description: string;
+  date: Date | null;
+  order: number;
+};
+
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
@@ -346,5 +360,90 @@ export function validateSiteStatForm(
       value,
       order,
     },
+  };
+}
+
+export function validatePartnerClubForm(
+  formData: FormData,
+): ValidationResult<PartnerClubAdminInput> {
+  const name = getFormString(formData, "name");
+  const shortDescription = getFormString(formData, "shortDescription");
+  const logoAlt = getFormString(formData, "logoAlt");
+  const order = Number(getFormString(formData, "order"));
+
+  if (name.length < 2 || name.length > 120) {
+    return {
+      success: false,
+      error: "Partner kulüp adı 2–120 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (shortDescription.length < 10 || shortDescription.length > 500) {
+    return {
+      success: false,
+      error: "Kısa açıklama 10–500 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (logoAlt.length < 3 || logoAlt.length > 180) {
+    return {
+      success: false,
+      error: "Logo alt metni 3–180 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (!Number.isInteger(order) || order < 0 || order > 9999) {
+    return {
+      success: false,
+      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  return {
+    success: true,
+    data: { name, shortDescription, logoAlt, order },
+  };
+}
+
+export function validateCollaborationItemForm(
+  formData: FormData,
+): ValidationResult<CollaborationItemAdminInput> {
+  const title = getFormString(formData, "title");
+  const description = getFormString(formData, "description");
+  const dateValue = getFormString(formData, "date");
+  const order = Number(getFormString(formData, "order"));
+  const date = dateValue ? new Date(`${dateValue}T12:00:00.000Z`) : null;
+
+  if (title.length < 3 || title.length > 140) {
+    return {
+      success: false,
+      error: "İş birliği başlığı 3–140 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (description.length < 10 || description.length > 2000) {
+    return {
+      success: false,
+      error: "Açıklama 10–2000 karakter arasında olmalıdır.",
+    };
+  }
+
+  if (date && Number.isNaN(date.getTime())) {
+    return {
+      success: false,
+      error: "Geçerli bir tarih seçin veya alanı boş bırakın.",
+    };
+  }
+
+  if (!Number.isInteger(order) || order < 0 || order > 9999) {
+    return {
+      success: false,
+      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
+    };
+  }
+
+  return {
+    success: true,
+    data: { title, description, date, order },
   };
 }
