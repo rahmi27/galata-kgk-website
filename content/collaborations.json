@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "title": "İş Birlikleri | Galata KGK",
+    "description": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübünün partner öğrenci kulüpleriyle yürüttüğü iş birliklerini keşfedin."
+  },
+  "hero": {
+    "eyebrow": "Birlikte daha güçlüyüz",
+    "title": "İş Birlikleri",
+    "description": "Farklı toplulukların deneyimini, enerjisini ve fikirlerini ortak bir hedefte buluşturuyoruz."
+  },
+  "emptyState": {
+    "title": "Yeni iş birlikleri hazırlanıyor",
+    "description": "Partner kulüplerimiz bu sayfada yakında yer alacak. Birlikte proje geliştirmek için bizimle iletişime geçebilirsiniz.",
+    "cta": "İletişime geç"
+  },
+  "detail": {
+    "backLabel": "Tüm iş birliklerine dön",
+    "datedTitle": "Birlikte gerçekleştirdiklerimiz",
+    "ongoingTitle": "Devam eden iş birlikleri",
+    "emptyItems": "Bu partner kulüple yürütülen çalışmalar yakında eklenecek."
+  }
+}
