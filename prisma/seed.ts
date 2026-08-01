@@ -106,6 +106,93 @@ async function main() {
     })),
   });
 
+  const entrepreneurshipClub = await prisma.partnerClub.upsert({
+    where: { slug: "ornek-girisimcilik-kulubu" },
+    update: {
+      name: "Örnek Girişimcilik Kulübü",
+      logoUrl: "/brand/galata-kgk-logo.webp",
+      logoAlt: "Örnek Girişimcilik Kulübü logosu",
+      shortDescription:
+        "Girişimci fikirleri ortak atölyeler ve deneyim paylaşımıyla buluşturan örnek partner kulüp.",
+      order: 1,
+    },
+    create: {
+      name: "Örnek Girişimcilik Kulübü",
+      slug: "ornek-girisimcilik-kulubu",
+      logoUrl: "/brand/galata-kgk-logo.webp",
+      logoAlt: "Örnek Girişimcilik Kulübü logosu",
+      shortDescription:
+        "Girişimci fikirleri ortak atölyeler ve deneyim paylaşımıyla buluşturan örnek partner kulüp.",
+      order: 1,
+    },
+  });
+
+  const careerClub = await prisma.partnerClub.upsert({
+    where: { slug: "ornek-kariyer-kulubu" },
+    update: {
+      name: "Örnek Kariyer Kulübü",
+      logoUrl: "/brand/galata-kgk-logo.webp",
+      logoAlt: "Örnek Kariyer Kulübü logosu",
+      shortDescription:
+        "Farklı disiplinlerden öğrencileri kariyer buluşmalarında bir araya getiren örnek partner kulüp.",
+      order: 2,
+    },
+    create: {
+      name: "Örnek Kariyer Kulübü",
+      slug: "ornek-kariyer-kulubu",
+      logoUrl: "/brand/galata-kgk-logo.webp",
+      logoAlt: "Örnek Kariyer Kulübü logosu",
+      shortDescription:
+        "Farklı disiplinlerden öğrencileri kariyer buluşmalarında bir araya getiren örnek partner kulüp.",
+      order: 2,
+    },
+  });
+
+  const collaborationSeeds = [
+    {
+      partnerClubId: entrepreneurshipClub.id,
+      title: "Ortak Girişimcilik Atölyesi",
+      description:
+        "Kulüp üyelerinin fikir geliştirme ve sunum becerilerini birlikte deneyimleyeceği örnek atölye planı.",
+      date: null,
+      order: 1,
+    },
+    {
+      partnerClubId: entrepreneurshipClub.id,
+      title: "Mentor Buluşması",
+      description:
+        "Girişimcilik ekosisteminden mentorlarla ortak bir deneyim paylaşımı oturumu.",
+      date: null,
+      order: 2,
+    },
+    {
+      partnerClubId: careerClub.id,
+      title: "Ortak Kariyer Günü",
+      description:
+        "Sektör temsilcileriyle öğrencileri buluşturmayı amaçlayan örnek etkinlik iş birliği.",
+      date: null,
+      order: 1,
+    },
+  ];
+
+  for (const collaboration of collaborationSeeds) {
+    const existing = await prisma.collaborationItem.findFirst({
+      where: {
+        partnerClubId: collaboration.partnerClubId,
+        title: collaboration.title,
+      },
+    });
+
+    if (existing) {
+      await prisma.collaborationItem.update({
+        where: { id: existing.id },
+        data: collaboration,
+      });
+    } else {
+      await prisma.collaborationItem.create({ data: collaboration });
+    }
+  }
+
   for (const content of siteContentDefinitions) {
     await prisma.siteContent.upsert({
       where: {
@@ -126,16 +213,20 @@ async function main() {
     categoryCount,
     siteStatCount,
     siteContentCount,
+    partnerClubCount,
+    collaborationCount,
   ] = await Promise.all([
     prisma.event.count(),
     prisma.teamMember.count(),
     prisma.teamCategory.count(),
     prisma.siteStat.count(),
     prisma.siteContent.count(),
+    prisma.partnerClub.count(),
+    prisma.collaborationItem.count(),
   ]);
 
   console.log(
-    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik, ${siteContentCount} düzenlenebilir içerik.`,
+    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik, ${siteContentCount} düzenlenebilir içerik, ${partnerClubCount} partner kulüp, ${collaborationCount} iş birliği maddesi.`,
   );
   console.log(`Admin kullanıcı adı: ${adminUsername}`);
   console.log(`Admin geçici şifre: ${adminPassword}`);

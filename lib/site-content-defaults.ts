@@ -17,7 +17,7 @@ const navigationKeys = [
   "hakkimizda",
   "etkinliklerimiz",
   "ekibimiz",
-  "sponsorlar",
+  "ortaklarimiz",
   "iletisim",
 ] as const;
 

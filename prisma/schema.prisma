@@ -96,6 +96,33 @@ model SponsorTier {
   @@index([order])
 }
 
+model PartnerClub {
+  id               Int                 @id @default(autoincrement())
+  name             String
+  slug             String              @unique
+  logoUrl          String
+  logoAlt          String?
+  shortDescription String
+  order            Int
+  createdAt        DateTime            @default(now())
+  collaborations   CollaborationItem[]
+
+  @@index([order])
+}
+
+model CollaborationItem {
+  id            Int         @id @default(autoincrement())
+  partnerClubId Int
+  title         String
+  description   String
+  date          DateTime?
+  order         Int
+  createdAt     DateTime    @default(now())
+  partnerClub   PartnerClub @relation(fields: [partnerClubId], references: [id], onDelete: Cascade)
+
+  @@index([partnerClubId, date, order])
+}
+
 model ContactSubmission {
   id                    Int       @id @default(autoincrement())
   name                  String

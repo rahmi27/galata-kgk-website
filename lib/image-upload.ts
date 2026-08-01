@@ -50,6 +50,19 @@ type ImageUploadResult =
       error: string;
     };
 
+function getBlobAuthOptions() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+
+  if (token) {
+    return { token };
+  }
+
+  const oidcToken = process.env.VERCEL_OIDC_TOKEN?.trim();
+  const storeId = process.env.BLOB_STORE_ID?.trim();
+
+  return oidcToken && storeId ? { oidcToken, storeId } : null;
+}
+
 function sanitizeFileName(fileName: string) {
   return fileName
     .normalize("NFD")
@@ -64,7 +77,7 @@ function sanitizeFileName(fileName: string) {
 
 export async function saveImageUpload(
   value: FormDataEntryValue | null,
-  directory: "events" | "team" | "sponsors",
+  directory: "events" | "team" | "sponsors" | "partners",
 ): Promise<ImageUploadResult> {
   if (!(value instanceof File) || value.size === 0) {
     return {
@@ -97,9 +110,9 @@ export async function saveImageUpload(
     };
   }
 
-  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  const blobAuth = getBlobAuthOptions();
 
-  if (!token) {
+  if (!blobAuth) {
     return {
       success: false,
       error:
@@ -115,7 +128,7 @@ export async function saveImageUpload(
       access: "public",
       contentType: value.type,
       addRandomSuffix: false,
-      token,
+      ...blobAuth,
     });
 
     return {
@@ -152,15 +165,15 @@ export async function deleteUploadedImage(imagePath: string | null) {
     return;
   }
 
-  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  const blobAuth = getBlobAuthOptions();
 
-  if (!token) {
-    console.error("BLOB_READ_WRITE_TOKEN tanımlı olmadığı için görsel silinemedi.");
+  if (!blobAuth) {
+    console.error("Blob kimliği tanımlı olmadığı için görsel silinemedi.");
     return;
   }
 
   try {
-    await del(imageUrl.href, { token });
+    await del(imageUrl.href, blobAuth);
   } catch (error) {
     // Blob temizliği veritabanı işlemini başarısız hale getirmemeli.
     console.error("Vercel Blob görseli silinemedi.", error);

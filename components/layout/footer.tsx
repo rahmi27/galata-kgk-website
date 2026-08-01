@@ -10,6 +10,7 @@ import {
 import { BrandLogo } from "@/components/brand-logo";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
+import { partnerLinks } from "@/lib/partner-links";
 
 const socialIcons = {
   Instagram: FaInstagram,
@@ -76,7 +77,9 @@ export function Footer({ content }: { content: SiteChromeContent }) {
               className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4"
               aria-label="Alt menü"
             >
-              {navigation.items.map((item) => (
+              {navigation.items
+                .filter((item) => item.id !== "ortaklarimiz")
+                .map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -84,8 +87,26 @@ export function Footer({ content }: { content: SiteChromeContent }) {
                 >
                   {item.label}
                 </Link>
-              ))}
+                ))}
             </nav>
+
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="font-heading text-sm font-semibold text-white">
+                {navigation.items.find((item) => item.id === "ortaklarimiz")
+                  ?.label ?? "Ortaklarımız"}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+                {partnerLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="text-sm text-primary-200 transition-colors hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

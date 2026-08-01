@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Handshake, Menu, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import type { SiteChromeContent } from "@/lib/site-content";
+import { partnerLinks } from "@/lib/partner-links";
 import { cn } from "@/lib/utils";
 
 export function Navbar({ content }: { content: SiteChromeContent }) {
@@ -16,6 +17,8 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPartnersOpen, setIsPartnersOpen] = useState(false);
+  const [isMobilePartnersOpen, setIsMobilePartnersOpen] = useState(false);
   const { brand, navigation } = content;
 
   useEffect(() => {
@@ -27,7 +30,10 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
 
   useEffect(() => {
     const routes = [
-      ...navigation.items.map((item) => item.href),
+      ...navigation.items
+        .filter((item) => item.id !== "ortaklarimiz")
+        .map((item) => item.href),
+      ...partnerLinks.map((item) => item.href),
       navigation.joinCta.href,
     ].filter((href) => href !== pathname);
     const prefetchRoutes = () => {
@@ -74,7 +80,76 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
           aria-label={navigation.desktopAriaLabel}
         >
           {navigation.items.map((item) => {
-            const isActive = pathname === item.href;
+            const isPartnersItem = item.id === "ortaklarimiz";
+            const isActive = isPartnersItem
+              ? partnerLinks.some((link) => pathname.startsWith(link.href))
+              : pathname === item.href;
+
+            if (isPartnersItem) {
+              return (
+                <div
+                  key={item.id}
+                  className="group relative"
+                  onMouseEnter={() => setIsPartnersOpen(true)}
+                  onMouseLeave={() => setIsPartnersOpen(false)}
+                >
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative flex items-center gap-1.5 py-2 text-sm font-medium text-primary-700 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-accent after:transition-transform hover:text-primary dark:text-primary-200 dark:hover:text-white",
+                      isActive
+                        ? "text-primary after:scale-x-100 dark:text-white"
+                        : "after:scale-x-0 group-hover:after:scale-x-100",
+                    )}
+                    onClick={() => setIsPartnersOpen((current) => !current)}
+                    aria-expanded={isPartnersOpen}
+                    aria-haspopup="menu"
+                  >
+                    {item.label}
+                    <ChevronDown
+                      className={cn(
+                        "size-3.5 transition-transform duration-150",
+                        isPartnersOpen && "rotate-180",
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  <div
+                    className={cn(
+                      "absolute left-1/2 top-full w-72 -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-150 ease-out",
+                      isPartnersOpen
+                        ? "visible translate-y-0 opacity-100"
+                        : "invisible -translate-y-1 opacity-0 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100",
+                    )}
+                  >
+                    <div className="rounded-2xl border border-primary-100 bg-background/98 p-2 shadow-[0_22px_60px_-32px_rgba(27,42,94,0.65)] backdrop-blur-xl dark:border-white/10">
+                      {partnerLinks.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          role="menuitem"
+                          className="flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-primary-50 dark:hover:bg-white/[0.07]"
+                          onClick={() => setIsPartnersOpen(false)}
+                        >
+                          <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-700 dark:bg-accent/15 dark:text-accent-300">
+                            <Handshake className="size-4" aria-hidden="true" />
+                          </span>
+                          <span>
+                            <span className="block font-heading text-sm font-bold text-primary dark:text-white">
+                              {link.label}
+                            </span>
+                            <span className="mt-0.5 block text-xs leading-5 text-primary-600 dark:text-primary-200">
+                              {link.description}
+                            </span>
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <Link
@@ -136,20 +211,79 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             className="mx-auto flex max-w-7xl flex-col gap-1"
             aria-label={navigation.mobileAriaLabel}
           >
-            {navigation.items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
-                  pathname === item.href && "bg-primary-50 dark:bg-white/10",
-                )}
-                onClick={() => setIsMenuOpen(false)}
-                aria-current={pathname === item.href ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navigation.items.map((item) => {
+              if (item.id === "ortaklarimiz") {
+                const isActive = partnerLinks.some((link) =>
+                  pathname.startsWith(link.href),
+                );
+
+                return (
+                  <div key={item.id}>
+                    <button
+                      type="button"
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
+                        isActive && "bg-primary-50 dark:bg-white/10",
+                      )}
+                      onClick={() =>
+                        setIsMobilePartnersOpen((current) => !current)
+                      }
+                      aria-expanded={isMobilePartnersOpen}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        className={cn(
+                          "size-4 transition-transform duration-150",
+                          isMobilePartnersOpen && "rotate-180",
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div
+                      className={cn(
+                        "grid transition-[grid-template-rows,opacity] duration-150 ease-out",
+                        isMobilePartnersOpen
+                          ? "grid-rows-[1fr] opacity-100"
+                          : "grid-rows-[0fr] opacity-0",
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="ml-4 border-l border-primary-100 py-1 pl-3 dark:border-white/10">
+                          {partnerLinks.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="block rounded-xl px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10"
+                              onClick={() => {
+                                setIsMenuOpen(false);
+                                setIsMobilePartnersOpen(false);
+                              }}
+                            >
+                              {link.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
+                    pathname === item.href && "bg-primary-50 dark:bg-white/10",
+                  )}
+                  onClick={() => setIsMenuOpen(false)}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <Button
               asChild
               variant="secondary"

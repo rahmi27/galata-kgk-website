@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Network,
   PanelBottom,
   PanelTop,
   ShieldCheck,
@@ -47,6 +48,11 @@ const navigation = [
     label: "Sponsorlar",
     href: "/admin/sponsorlar",
     icon: Handshake,
+  },
+  {
+    label: "İş Birlikleri",
+    href: "/admin/is-birlikleri",
+    icon: Network,
   },
   {
     label: "Mesajlar",
