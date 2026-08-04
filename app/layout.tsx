@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
+import { BrandMountainBackdrop } from "@/components/effects/brand-mountain-motif";
 import { SiteTelemetry } from "@/components/site-telemetry";
 import { SiteShell } from "@/components/layout/site-shell";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -67,6 +68,7 @@ export default async function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <BrandMountainBackdrop />
           <SiteShell content={chromeContent}>{children}</SiteShell>
         </ThemeProvider>
         <SiteTelemetry />

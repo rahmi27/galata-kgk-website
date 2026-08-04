@@ -47,12 +47,12 @@ export function SiteShell({ children, content }: SiteShellProps) {
   }
 
   return (
-    <div className="grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
+    <div className="site-public-shell grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <Navbar content={content} />
       <div
         id="site-content"
         ref={contentRef}
-        className="min-w-0 bg-background"
+        className="relative z-10 min-w-0 bg-transparent"
       >
         <ScrollMotionRuntime routeKey={pathname} />
         {children}

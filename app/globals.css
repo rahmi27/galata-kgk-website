@@ -291,6 +291,147 @@
   }
 }
 
+@keyframes brand-mountain-breathe {
+  0%,
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.03, 1.03, 1);
+  }
+}
+
+@keyframes brand-mountain-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2.5deg);
+  }
+  50% {
+    transform: translate3d(-9px, -7px, 0) rotate(-0.5deg);
+  }
+}
+
+@keyframes brand-mountain-glow {
+  0%,
+  100% {
+    opacity: 0.032;
+  }
+  50% {
+    opacity: 0.078;
+  }
+}
+
+@keyframes brand-mountain-echo-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(5px, -4px, 0) rotate(1.5deg);
+  }
+}
+
+.site-public-shell {
+  position: relative;
+}
+
+body:has(.admin-shell) > .brand-mountain-backdrop {
+  display: none;
+}
+
+#site-content > :where(.bg-background) {
+  background-color: transparent;
+}
+
+.brand-mountain-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+}
+
+.brand-mountain-backdrop__breathe {
+  position: absolute;
+  right: -16vw;
+  bottom: -18vh;
+  width: min(78vw, 68rem);
+  transform-origin: 74% 78%;
+}
+
+.brand-mountain-backdrop__drift {
+  transform-origin: 72% 74%;
+}
+
+.brand-mountain-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.05;
+  filter: saturate(0.92);
+}
+
+.brand-mountain-echo {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.brand-mountain-echo .brand-mountain-art {
+  opacity: 0.075;
+  filter: saturate(0.82);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brand-mountain-backdrop__breathe {
+    animation: brand-mountain-breathe 10s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .brand-mountain-backdrop__drift {
+    animation: brand-mountain-drift 18s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .brand-mountain-backdrop .brand-mountain-art {
+    animation: brand-mountain-glow 14s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  .brand-mountain-echo__drift {
+    animation: brand-mountain-echo-drift 20s ease-in-out infinite;
+    will-change: transform;
+  }
+}
+
+@media (max-width: 639px) {
+  .brand-mountain-backdrop__breathe {
+    right: -22vw;
+    bottom: -8vh;
+    width: min(92vw, 26rem);
+  }
+
+  .brand-mountain-backdrop__drift {
+    transform: rotate(-1deg);
+  }
+
+  .brand-mountain-backdrop .brand-mountain-art {
+    opacity: 0.04;
+  }
+
+  .brand-mountain-echo {
+    width: 20rem;
+  }
+}
+
+@media (max-width: 639px) and (prefers-reduced-motion: no-preference) {
+  .brand-mountain-backdrop__drift,
+  .brand-mountain-echo__drift {
+    animation: none;
+  }
+}
+
 @keyframes hero-scroll-hint {
   0%,
   100% {

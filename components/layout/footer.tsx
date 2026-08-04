@@ -9,6 +9,7 @@ import {
 
 import { BrandLogo } from "@/components/brand-logo";
 import { AmbientParticles } from "@/components/effects/ambient-particles";
+import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
 import { partnerLinks } from "@/lib/partner-links";
@@ -31,6 +32,9 @@ export function Footer({ content }: { content: SiteChromeContent }) {
   return (
     <footer className="relative isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
       <AmbientParticles className="opacity-55" />
+      <BrandMountainEcho
+        className="-bottom-40 -right-28 w-[32rem] rotate-[-8deg] opacity-30 sm:-right-20 sm:w-[38rem]"
+      />
       <div className="relative z-10 mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
         <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-7 lg:col-span-8">

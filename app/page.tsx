@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { AmbientParticles } from "@/components/effects/ambient-particles";
+import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
 import { HeroScrollIndicator } from "@/components/effects/hero-scroll-indicator";
 import { MagneticTarget } from "@/components/effects/magnetic-target";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
@@ -355,6 +356,9 @@ export default async function HomePage() {
         <section className="px-5 pb-20 sm:px-8 sm:pb-28 lg:px-10">
           <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-primary-900 px-6 py-14 text-white shadow-[0_32px_90px_-44px_rgba(27,42,94,0.9)] sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between lg:gap-14 lg:px-16" data-reveal="">
             <AmbientParticles className="opacity-65" />
+            <BrandMountainEcho
+              className="-bottom-24 -right-16 w-[24rem] rotate-[7deg] opacity-25 sm:w-[30rem]"
+            />
             <div
               className="absolute -bottom-32 -right-20 size-72 rounded-full border-[44px] border-accent/20"
               aria-hidden="true"
