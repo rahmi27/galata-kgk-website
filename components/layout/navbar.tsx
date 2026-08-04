@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 export function Navbar({ content }: { content: SiteChromeContent }) {
   const pathname = usePathname();
+  const currentPathname = pathname?.replace(/\/+$/, "") || "/";
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +36,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
         .map((item) => item.href),
       ...partnerLinks.map((item) => item.href),
       navigation.joinCta.href,
-    ].filter((href) => href !== pathname);
+    ].filter((href) => href !== currentPathname);
     const prefetchRoutes = () => {
       routes.forEach((href) => router.prefetch(href));
     };
@@ -50,7 +51,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
 
     const timeoutId = setTimeout(prefetchRoutes, 800);
     return () => clearTimeout(timeoutId);
-  }, [navigation.items, navigation.joinCta.href, pathname, router]);
+  }, [currentPathname, navigation.items, navigation.joinCta.href, router]);
 
   return (
     <header
@@ -82,8 +83,10 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
           {navigation.items.map((item) => {
             const isPartnersItem = item.id === "ortaklarimiz";
             const isActive = isPartnersItem
-              ? partnerLinks.some((link) => pathname.startsWith(link.href))
-              : pathname === item.href;
+              ? partnerLinks.some((link) =>
+                  currentPathname.startsWith(link.href),
+                )
+              : currentPathname === item.href;
 
             if (isPartnersItem) {
               return (
@@ -224,7 +227,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             {navigation.items.map((item) => {
               if (item.id === "ortaklarimiz") {
                 const isActive = partnerLinks.some((link) =>
-                  pathname.startsWith(link.href),
+                  currentPathname.startsWith(link.href),
                 );
 
                 return (
@@ -285,10 +288,13 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                   href={item.href}
                   className={cn(
                     "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
-                    pathname === item.href && "bg-primary-50 dark:bg-white/10",
+                    currentPathname === item.href &&
+                      "bg-primary-50 dark:bg-white/10",
                   )}
                   onClick={() => setIsMenuOpen(false)}
-                  aria-current={pathname === item.href ? "page" : undefined}
+                  aria-current={
+                    currentPathname === item.href ? "page" : undefined
+                  }
                 >
                   {item.label}
                 </Link>
