@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa6";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
 import { partnerLinks } from "@/lib/partner-links";
@@ -28,8 +29,9 @@ export function Footer({ content }: { content: SiteChromeContent }) {
   );
 
   return (
-    <footer className="bg-primary-900 text-primary-100 dark:bg-[#080d20]">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+    <footer className="relative isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
+      <AmbientParticles count={20} className="opacity-55" />
+      <div className="relative z-10 mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
         <div className="grid gap-12 border-b border-white/10 pb-14 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-7 lg:col-span-8">
             <div className="flex items-center gap-4">

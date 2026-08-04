@@ -10,6 +10,7 @@ import {
   Rocket,
 } from "lucide-react";
 
+import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -99,7 +100,8 @@ export default async function HomePage() {
             className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_80%_15%,rgba(232,93,44,0.12),transparent_24%),radial-gradient(circle_at_10%_85%,rgba(27,42,94,0.1),transparent_28%)] dark:bg-[radial-gradient(circle_at_80%_15%,rgba(232,93,44,0.12),transparent_24%),radial-gradient(circle_at_10%_85%,rgba(109,127,190,0.12),transparent_30%)]"
             aria-hidden="true"
           />
-          <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-10 lg:py-32">
+          <AmbientParticles count={22} className="opacity-75 dark:opacity-100" />
+          <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-10 lg:py-32">
             <div>
               <p className="inline-flex items-center gap-2.5 rounded-full border border-primary/20 bg-primary-50 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-[0.13em] text-primary-800 shadow-[0_10px_30px_-20px_rgba(27,42,94,0.55)] dark:border-primary-400/25 dark:bg-primary-800/75 dark:text-primary-100">
                 <Rocket
@@ -142,6 +144,7 @@ export default async function HomePage() {
                 aria-hidden="true"
               />
               <div className="relative overflow-hidden rounded-[2rem] bg-primary-900 p-8 text-white shadow-[0_32px_90px_-40px_rgba(27,42,94,0.8)] sm:p-10">
+                <AmbientParticles count={16} className="opacity-70" />
                 <div
                   className="absolute -right-14 -top-14 size-44 rounded-full border-[28px] border-accent/45 bg-accent/10 dark:border-accent/35 dark:bg-accent/10"
                   aria-hidden="true"
@@ -340,6 +343,7 @@ export default async function HomePage() {
 
         <section className="px-5 pb-20 sm:px-8 sm:pb-28 lg:px-10">
           <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-primary-900 px-6 py-14 text-white shadow-[0_32px_90px_-44px_rgba(27,42,94,0.9)] sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between lg:gap-14 lg:px-16">
+            <AmbientParticles count={16} className="opacity-65" />
             <div
               className="absolute -bottom-32 -right-20 size-72 rounded-full border-[44px] border-accent/20"
               aria-hidden="true"

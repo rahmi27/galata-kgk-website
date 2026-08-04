@@ -140,3 +140,53 @@
     animation: none;
   }
 }
+
+@keyframes ambient-particle-drift {
+  0%,
+  100% {
+    opacity: 0.045;
+    transform: translate3d(0, 0, 0) scale(0.88);
+  }
+  42% {
+    opacity: var(--ambient-peak-opacity);
+    transform: translate3d(
+        var(--ambient-drift-x),
+        var(--ambient-drift-y),
+        0
+      )
+      scale(1);
+  }
+  72% {
+    opacity: 0.07;
+    transform: translate3d(
+        var(--ambient-return-x),
+        var(--ambient-return-y),
+        0
+      )
+      scale(0.93);
+  }
+}
+
+.ambient-particle {
+  position: absolute;
+  display: block;
+  border-radius: 9999px;
+  background: rgb(245 132 91 / 0.92);
+  box-shadow: 0 0 10px rgb(232 93 44 / 0.3);
+  opacity: 0.06;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-particle {
+    animation-name: ambient-particle-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+}
+
+@media (max-width: 639px) {
+  .ambient-particle:nth-child(n + 8) {
+    display: none;
+  }
+}
