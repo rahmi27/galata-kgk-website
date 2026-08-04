@@ -25,6 +25,7 @@ import {
   getHomeHeroContentFromRows,
   getPublicSiteContentRows,
 } from "@/lib/site-content";
+import { getSafeHttpUrl } from "@/lib/url-security";
 
 export const metadata = createPageMetadata({
   title: homeContent.meta.title,
@@ -250,11 +251,13 @@ export default async function HomePage() {
                     </div>
                   );
 
-                  return sponsor.websiteUrl ? (
+                  const safeWebsiteUrl = getSafeHttpUrl(sponsor.websiteUrl);
+
+                  return safeWebsiteUrl ? (
                     <Link
                       key={sponsor.id}
                       data-reveal=""
-                      href={sponsor.websiteUrl}
+                      href={safeWebsiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group"
