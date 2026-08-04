@@ -92,6 +92,13 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                   className="group relative"
                   onMouseEnter={() => setIsPartnersOpen(true)}
                   onMouseLeave={() => setIsPartnersOpen(false)}
+                  onBlurCapture={(event) => {
+                    if (
+                      !event.currentTarget.contains(event.relatedTarget as Node)
+                    ) {
+                      setIsPartnersOpen(false);
+                    }
+                  }}
                 >
                   <button
                     type="button"
@@ -120,7 +127,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                       "absolute left-1/2 top-full w-72 -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-150 ease-out",
                       isPartnersOpen
                         ? "visible translate-y-0 opacity-100"
-                        : "invisible -translate-y-1 opacity-0 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100",
+                        : "invisible -translate-y-1 opacity-0",
                     )}
                   >
                     <div className="rounded-2xl border border-primary-100 bg-background/98 p-2 shadow-[0_22px_60px_-32px_rgba(27,42,94,0.65)] backdrop-blur-xl dark:border-white/10">
@@ -130,7 +137,10 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                           href={link.href}
                           role="menuitem"
                           className="flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-primary-50 dark:hover:bg-white/[0.07]"
-                          onClick={() => setIsPartnersOpen(false)}
+                          onClick={(event) => {
+                            event.currentTarget.blur();
+                            setIsPartnersOpen(false);
+                          }}
                         >
                           <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-700 dark:bg-accent/15 dark:text-accent-300">
                             <Handshake className="size-4" aria-hidden="true" />
