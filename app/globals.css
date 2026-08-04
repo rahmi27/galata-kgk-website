@@ -195,11 +195,19 @@
   0%,
   100% {
     opacity: 0.42;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(
+      var(--particle-pointer-x, 0px),
+      var(--particle-pointer-y, 0px),
+      0
+    );
   }
   50% {
     opacity: 0.78;
-    transform: translate3d(8px, -6px, 0);
+    transform: translate3d(
+      calc(var(--particle-pointer-x, 0px) + 8px),
+      calc(var(--particle-pointer-y, 0px) - 6px),
+      0
+    );
   }
 }
 
@@ -207,11 +215,19 @@
   0%,
   100% {
     opacity: 0.32;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(
+      var(--particle-pointer-x, 0px),
+      var(--particle-pointer-y, 0px),
+      0
+    );
   }
   48% {
     opacity: 0.7;
-    transform: translate3d(-7px, 8px, 0);
+    transform: translate3d(
+      calc(var(--particle-pointer-x, 0px) - 7px),
+      calc(var(--particle-pointer-y, 0px) + 8px),
+      0
+    );
   }
 }
 
@@ -219,11 +235,19 @@
   0%,
   100% {
     opacity: 0.28;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(
+      var(--particle-pointer-x, 0px),
+      var(--particle-pointer-y, 0px),
+      0
+    );
   }
   56% {
     opacity: 0.62;
-    transform: translate3d(5px, 7px, 0);
+    transform: translate3d(
+      calc(var(--particle-pointer-x, 0px) + 5px),
+      calc(var(--particle-pointer-y, 0px) + 7px),
+      0
+    );
   }
 }
 
@@ -346,7 +370,7 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
 .brand-mountain-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 15;
   overflow: hidden;
   pointer-events: none;
   contain: paint;
@@ -432,7 +456,7 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
   }
 }
 
-@keyframes hero-scroll-hint {
+@keyframes page-scroll-arrow {
   0%,
   100% {
     transform: translate3d(0, 0, 0);
@@ -443,8 +467,9 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero-scroll-hint {
-    animation: hero-scroll-hint 1.8s ease-in-out infinite;
+  .page-scroll-control[data-direction="down"]
+    .page-scroll-control__icon {
+    animation: page-scroll-arrow 1.8s ease-in-out infinite;
     will-change: transform;
   }
 }

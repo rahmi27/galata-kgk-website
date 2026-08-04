@@ -12,7 +12,6 @@ import {
 
 import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
-import { HeroScrollIndicator } from "@/components/effects/hero-scroll-indicator";
 import { MagneticTarget } from "@/components/effects/magnetic-target";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
@@ -192,7 +191,6 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-          <HeroScrollIndicator targetId="istatistikler" />
         </section>
 
         <section id="istatistikler" className="scroll-mt-24 py-20 sm:py-28">

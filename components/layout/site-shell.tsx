@@ -3,6 +3,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+import { PageScrollControl } from "@/components/effects/page-scroll-control";
+import { ParticlePointerRuntime } from "@/components/effects/particle-pointer-runtime";
 import { ScrollMotionRuntime } from "@/components/effects/scroll-motion-runtime";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
@@ -54,9 +56,11 @@ export function SiteShell({ children, content }: SiteShellProps) {
         ref={contentRef}
         className="relative z-10 min-w-0 bg-transparent"
       >
+        <ParticlePointerRuntime />
         <ScrollMotionRuntime routeKey={pathname} />
         {children}
       </div>
+      <PageScrollControl />
       <Footer content={content} />
     </div>
   );
