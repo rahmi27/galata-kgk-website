@@ -1,5 +1,3 @@
-import "server-only";
-
 type ValidationSuccess<T> = {
   success: true;
   data: T;
