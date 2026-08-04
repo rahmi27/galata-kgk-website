@@ -3,6 +3,7 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { getSafeHttpUrl } from "@/lib/url-security";
 
 export type PublicClubSocialLink = {
   id: number;
@@ -13,7 +14,7 @@ export type PublicClubSocialLink = {
 };
 
 async function readClubSocialLinks(): Promise<PublicClubSocialLink[]> {
-  return prisma.clubSocialLink.findMany({
+  const links = await prisma.clubSocialLink.findMany({
     orderBy: [{ order: "asc" }, { platform: "asc" }],
     select: {
       id: true,
@@ -22,6 +23,11 @@ async function readClubSocialLinks(): Promise<PublicClubSocialLink[]> {
       url: true,
       order: true,
     },
+  });
+
+  return links.flatMap((link) => {
+    const safeUrl = getSafeHttpUrl(link.url);
+    return safeUrl ? [{ ...link, url: safeUrl }] : [];
   });
 }
 

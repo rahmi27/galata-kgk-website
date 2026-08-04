@@ -7,6 +7,7 @@ import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
 import { partnerLinks } from "@/lib/partner-links";
+import { getSafeHttpUrl } from "@/lib/url-security";
 
 export function Footer({ content }: { content: SiteChromeContent }) {
   const { brand, footer, navigation } = content;
@@ -14,6 +15,8 @@ export function Footer({ content }: { content: SiteChromeContent }) {
     "{year}",
     new Date().getFullYear().toString(),
   );
+  const institutionHref =
+    getSafeHttpUrl(footer.institutionHref) ?? "https://www.galata.edu.tr/";
 
   return (
     <footer className="relative isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
@@ -119,7 +122,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
           </div>
           <p className="text-center sm:col-start-2">{copyright}</p>
           <Link
-            href={footer.institutionHref}
+            href={institutionHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-2 transition-colors hover:text-white sm:col-start-3 sm:justify-self-end"

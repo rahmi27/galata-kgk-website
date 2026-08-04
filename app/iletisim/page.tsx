@@ -12,6 +12,7 @@ import {
   getContactContentFromRows,
   getPublicSiteContentRows,
 } from "@/lib/site-content";
+import { buildGoogleMapsUrls } from "@/lib/url-security";
 
 export const metadata = createPageMetadata({
   title: contactContent.meta.title,
@@ -29,9 +30,9 @@ export default async function ContactPage() {
   ]);
   const content = getContactContentFromRows(siteContentRows, socialLinks);
   const { details, hero } = content;
-  const encodedAddress = encodeURIComponent(details.address.value);
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
-  const mapEmbedUrl = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
+  const { directionsUrl, embedUrl: mapEmbedUrl } = buildGoogleMapsUrls(
+    details.address.value,
+  );
 
   return (
     <div className="bg-background">

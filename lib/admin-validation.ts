@@ -1,5 +1,7 @@
 import "server-only";
 
+import { isSafeHttpUrl } from "@/lib/url-security";
+
 type ValidationSuccess<T> = {
   success: true;
   data: T;
@@ -71,16 +73,7 @@ function getFormString(formData: FormData, key: string) {
 }
 
 function validateOptionalUrl(value: string) {
-  if (!value) {
-    return true;
-  }
-
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
+  return !value || isSafeHttpUrl(value);
 }
 
 export function validateEventForm(

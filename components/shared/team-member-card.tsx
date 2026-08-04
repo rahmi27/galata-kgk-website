@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { getSocialPlatformLabel } from "@/lib/social-platforms";
+import { getSafeHttpUrl } from "@/lib/url-security";
 import { cn } from "@/lib/utils";
 
 type TeamMemberCardProps = {
@@ -33,6 +34,7 @@ export function TeamMemberCard({
     .join("")
     .slice(0, 2)
     .toLocaleUpperCase("tr-TR");
+  const safeSocialUrl = getSafeHttpUrl(socialUrl);
 
   return (
     <article
@@ -65,9 +67,9 @@ export function TeamMemberCard({
             </span>
           </div>
         )}
-        {socialPlatform && socialUrl ? (
+        {socialPlatform && safeSocialUrl ? (
           <Link
-            href={socialUrl}
+            href={safeSocialUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group/social absolute inset-0 z-20 flex items-end justify-end p-4 outline-none sm:items-center sm:justify-center sm:p-0"

@@ -6,6 +6,7 @@ import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { staticSiteContentDefinitions } from "@/lib/site-content-defaults";
+import { isSafeHttpUrl } from "@/lib/url-security";
 
 const footerDefinitions = staticSiteContentDefinitions.filter(
   (definition) =>
@@ -14,15 +15,6 @@ const footerDefinitions = staticSiteContentDefinitions.filter(
 );
 const optionalKeys = new Set<string>();
 const urlKeys = new Set(["footer.institutionHref"]);
-
-function isValidHttpUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
 
 export async function updateFooterContentAction(
   _previousState: AdminActionState,
@@ -42,7 +34,7 @@ export async function updateFooterContentAction(
         throw new Error(`${definition.label} çok uzun.`);
       }
 
-      if (urlKeys.has(definition.key) && value && !isValidHttpUrl(value)) {
+      if (urlKeys.has(definition.key) && value && !isSafeHttpUrl(value)) {
         throw new Error(`${definition.label} geçerli bir http(s) adresi olmalıdır.`);
       }
 
