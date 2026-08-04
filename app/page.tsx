@@ -12,6 +12,7 @@ import {
 
 import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { HeroScrollIndicator } from "@/components/effects/hero-scroll-indicator";
+import { MagneticTarget } from "@/components/effects/magnetic-target";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -125,17 +126,21 @@ export default async function HomePage() {
                 {heroContent.description}
               </p>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" variant="primary">
-                  <Link href={heroContent.primaryCta.href}>
-                    {heroContent.primaryCta.label}
-                    <ArrowRight aria-hidden="true" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link href={heroContent.secondaryCta.href}>
-                    {heroContent.secondaryCta.label}
-                  </Link>
-                </Button>
+                <MagneticTarget className="self-start">
+                  <Button asChild size="lg" variant="primary">
+                    <Link href={heroContent.primaryCta.href}>
+                      {heroContent.primaryCta.label}
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </MagneticTarget>
+                <MagneticTarget className="self-start">
+                  <Button asChild size="lg" variant="outline">
+                    <Link href={heroContent.secondaryCta.href}>
+                      {heroContent.secondaryCta.label}
+                    </Link>
+                  </Button>
+                </MagneticTarget>
               </div>
             </div>
 
@@ -361,17 +366,14 @@ export default async function HomePage() {
                 {homeContent.closingCta.description}
               </p>
             </div>
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="relative mt-8 shrink-0 lg:mt-0"
-            >
-              <Link href={homeContent.closingCta.button.href}>
-                {homeContent.closingCta.button.label}
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
+            <MagneticTarget className="relative mt-8 shrink-0 lg:mt-0">
+              <Button asChild size="lg" variant="secondary">
+                <Link href={homeContent.closingCta.button.href}>
+                  {homeContent.closingCta.button.label}
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </MagneticTarget>
           </div>
         </section>
       </main>

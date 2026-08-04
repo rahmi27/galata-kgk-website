@@ -238,3 +238,24 @@
   opacity: 1;
   transform: scaleY(1.55);
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .magnetic-target {
+    transition: transform 180ms ease-out;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

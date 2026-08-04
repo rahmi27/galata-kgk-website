@@ -10,7 +10,7 @@ export function StatCard({ value, label, className }: StatCardProps) {
   return (
     <article
       className={cn(
-        "group relative overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card p-7 shadow-[0_20px_60px_-40px_rgba(27,42,94,0.4)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 dark:border-white/10 dark:bg-white/[0.035]",
+        "group relative overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card p-7 shadow-[0_20px_60px_-40px_rgba(27,42,94,0.4)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_28px_72px_-42px_rgba(27,42,94,0.72)] dark:border-white/10 dark:bg-white/[0.035]",
         className,
       )}
     >
