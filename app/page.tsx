@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { AmbientParticles } from "@/components/effects/ambient-particles";
+import { HeroScrollIndicator } from "@/components/effects/hero-scroll-indicator";
 import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
 import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -185,9 +186,10 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+          <HeroScrollIndicator targetId="istatistikler" />
         </section>
 
-        <section className="py-20 sm:py-28">
+        <section id="istatistikler" className="scroll-mt-24 py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               eyebrow={homeContent.statsSection.eyebrow}

@@ -190,3 +190,20 @@
     display: none;
   }
 }
+
+@keyframes hero-scroll-hint {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-scroll-hint {
+    animation: hero-scroll-hint 1.8s ease-in-out infinite;
+    will-change: transform;
+  }
+}
