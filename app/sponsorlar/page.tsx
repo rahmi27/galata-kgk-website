@@ -67,6 +67,7 @@ export default async function SponsorsPage() {
                   return (
                     <section
                       key={tier.id}
+                      data-reveal=""
                       aria-labelledby={`sponsor-tier-${tier.slug}`}
                     >
                       <div className="flex items-center gap-5">
@@ -88,8 +89,8 @@ export default async function SponsorsPage() {
                       <div
                         className={
                           featured
-                            ? "mt-9 grid gap-7 sm:grid-cols-2 lg:grid-cols-3"
-                            : "mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                            ? "stagger-grid mt-9 grid gap-7 sm:grid-cols-2 lg:grid-cols-3"
+                            : "stagger-grid mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
                         }
                       >
                         {tier.sponsors.map((sponsor) => (
@@ -185,7 +186,10 @@ export default async function SponsorsPage() {
                     key={stat.id}
                     className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-5 sm:px-6"
                   >
-                    <p className="font-heading text-3xl font-bold tracking-[-0.04em] text-white">
+                    <p
+                      data-count-up={stat.value}
+                      className="font-heading text-3xl font-bold tracking-[-0.04em] text-white tabular-nums"
+                    >
                       {stat.value}
                     </p>
                     <p className="mt-1 text-sm text-primary-200">

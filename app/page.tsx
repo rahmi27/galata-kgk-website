@@ -197,11 +197,12 @@ export default async function HomePage() {
         <section id="istatistikler" className="scroll-mt-24 py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
+              reveal
               eyebrow={homeContent.statsSection.eyebrow}
               title={homeContent.statsSection.title}
               description={homeContent.statsSection.description}
             />
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
+            <div className="stagger-grid mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
               {stats.map((stat) => (
                 <StatCard key={stat.id} {...stat} />
               ))}
@@ -212,7 +213,7 @@ export default async function HomePage() {
         {sponsors.length ? (
           <section className="border-y border-primary/10 bg-primary-50/45 py-12 dark:border-white/10 dark:bg-white/[0.025] sm:py-14">
             <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between" data-reveal="">
                 <div>
                   <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
                     Birlikte değer üretiyoruz
@@ -229,7 +230,7 @@ export default async function HomePage() {
                 </Button>
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
+              <div className="stagger-grid mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
                 {sponsors.map((sponsor) => {
                   const logo = (
                     <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
@@ -256,6 +257,7 @@ export default async function HomePage() {
                   return sponsor.websiteUrl ? (
                     <Link
                       key={sponsor.id}
+                      data-reveal=""
                       href={sponsor.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -265,7 +267,7 @@ export default async function HomePage() {
                       {logo}
                     </Link>
                   ) : (
-                    <div key={sponsor.id} className="group">
+                    <div key={sponsor.id} className="group" data-reveal="">
                       {logo}
                     </div>
                   );
@@ -280,7 +282,7 @@ export default async function HomePage() {
           className="scroll-mt-24 border-y border-primary/10 bg-primary-50/55 py-20 dark:border-white/10 dark:bg-white/[0.025] sm:py-28"
         >
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between" data-reveal="">
               <SectionHeading
                 eyebrow={homeContent.eventsSection.eyebrow}
                 title={homeContent.eventsSection.title}
@@ -293,7 +295,7 @@ export default async function HomePage() {
                 </Link>
               </Button>
             </div>
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
+            <div className="stagger-grid mt-12 grid gap-6 md:grid-cols-3">
               {featuredEvents.map((event) => (
                 <EventCard
                   key={event.id}
@@ -313,11 +315,12 @@ export default async function HomePage() {
         <section className="py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-20 lg:px-10">
             <SectionHeading
+              reveal
               eyebrow={homeContent.whyUsSection.eyebrow}
               title={homeContent.whyUsSection.title}
               description={homeContent.whyUsSection.description}
             />
-            <div className="grid gap-5">
+            <div className="stagger-grid grid gap-5">
               {homeContent.whyUsSection.items.map((item, index) => {
                 const Icon =
                   whyUsIcons[item.icon as keyof typeof whyUsIcons] ?? Compass;
@@ -325,6 +328,7 @@ export default async function HomePage() {
                 return (
                   <article
                     key={item.title}
+                    data-reveal=""
                     className="group grid gap-5 rounded-[1.75rem] border border-primary/10 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/20 sm:grid-cols-[auto_1fr] sm:p-7 dark:border-white/10 dark:bg-white/[0.035]"
                   >
                     <div className="flex size-12 items-center justify-center rounded-2xl bg-primary-50 text-primary transition-colors group-hover:bg-accent-50 group-hover:text-accent-700 dark:bg-white/10 dark:text-primary-100 dark:group-hover:bg-accent/15 dark:group-hover:text-accent-300">
@@ -349,7 +353,7 @@ export default async function HomePage() {
         </section>
 
         <section className="px-5 pb-20 sm:px-8 sm:pb-28 lg:px-10">
-          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-primary-900 px-6 py-14 text-white shadow-[0_32px_90px_-44px_rgba(27,42,94,0.9)] sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between lg:gap-14 lg:px-16">
+          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-primary-900 px-6 py-14 text-white shadow-[0_32px_90px_-44px_rgba(27,42,94,0.9)] sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between lg:gap-14 lg:px-16" data-reveal="">
             <AmbientParticles count={16} className="opacity-65" />
             <div
               className="absolute -bottom-32 -right-20 size-72 rounded-full border-[44px] border-accent/20"

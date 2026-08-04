@@ -19,6 +19,7 @@ export function PartnerClubCard({
 }: PartnerClubCardProps) {
   return (
     <Link
+      data-reveal=""
       href={`/is-birlikleri/${slug}`}
       className="card-gradient-edge group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card shadow-[0_24px_70px_-52px_rgba(27,42,94,0.7)] transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_30px_80px_-48px_rgba(27,42,94,0.85)] dark:border-white/10 dark:bg-white/[0.035]"
     >

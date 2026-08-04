@@ -46,7 +46,7 @@ export default async function CollaborationsPage() {
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           {partnerClubs.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="stagger-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {partnerClubs.map((club) => (
                 <PartnerClubCard
                   key={club.id}

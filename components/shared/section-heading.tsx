@@ -7,6 +7,7 @@ type SectionHeadingProps = {
   align?: "left" | "center";
   as?: "h1" | "h2";
   className?: string;
+  reveal?: boolean;
 };
 
 export function SectionHeading({
@@ -16,11 +17,13 @@ export function SectionHeading({
   align = "left",
   as: Heading = "h2",
   className,
+  reveal = false,
 }: SectionHeadingProps) {
   const isCentered = align === "center";
 
   return (
     <div
+      data-reveal={reveal ? "" : undefined}
       className={cn(
         "flex flex-col gap-5",
         isCentered && "items-center text-center",

@@ -54,7 +54,7 @@ export function SponsorCard({
   );
 
   return (
-    <article className="group">
+    <article className="group" data-reveal="">
       {websiteUrl ? (
         <Link
           href={websiteUrl}

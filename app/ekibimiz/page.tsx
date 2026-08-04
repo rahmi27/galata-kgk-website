@@ -61,6 +61,7 @@ export default async function TeamPage() {
             {categories.map((category, categoryIndex) => (
                 <section
                   key={category.id}
+                  data-reveal=""
                   aria-labelledby={`category-${category.slug}`}
                 >
                   <div className="flex items-center gap-5">
@@ -79,7 +80,7 @@ export default async function TeamPage() {
                     />
                   </div>
 
-                  <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="stagger-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     {category.members.map((member) => (
                       <TeamMemberCard
                         key={member.id}

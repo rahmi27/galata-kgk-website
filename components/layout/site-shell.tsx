@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+import { ScrollMotionRuntime } from "@/components/effects/scroll-motion-runtime";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import type { SiteChromeContent } from "@/lib/site-content";
@@ -48,7 +49,12 @@ export function SiteShell({ children, content }: SiteShellProps) {
   return (
     <div className="grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <Navbar content={content} />
-      <div ref={contentRef} className="min-w-0 bg-background">
+      <div
+        id="site-content"
+        ref={contentRef}
+        className="min-w-0 bg-background"
+      >
+        <ScrollMotionRuntime routeKey={pathname} />
         {children}
       </div>
       <Footer content={content} />

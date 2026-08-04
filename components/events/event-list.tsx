@@ -218,7 +218,7 @@ export function EventList({
       ) : filteredEvents.length > 0 ? (
         <div
           key={`list-${activeFilter}`}
-          className="view-fade-in mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          className="stagger-grid view-fade-in mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {filteredEvents.map((event) => (
             <EventCard
