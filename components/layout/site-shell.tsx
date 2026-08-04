@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { PageScrollControl } from "@/components/effects/page-scroll-control";
 import { ParticlePointerRuntime } from "@/components/effects/particle-pointer-runtime";
 import { ScrollMotionRuntime } from "@/components/effects/scroll-motion-runtime";
@@ -21,6 +22,11 @@ export function SiteShell({ children, content }: SiteShellProps) {
   const previousPathname = useRef(pathname);
   const isAdminRoute =
     pathname === "/admin" || pathname.startsWith("/admin/");
+  const particleVariant = Array.from(pathname).reduce(
+    (total, character, index) =>
+      total + character.charCodeAt(0) * (index + 1),
+    0,
+  ) % 3;
 
   useLayoutEffect(() => {
     if (previousPathname.current === pathname) {
@@ -50,6 +56,10 @@ export function SiteShell({ children, content }: SiteShellProps) {
 
   return (
     <div className="site-public-shell grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
+      <AmbientParticles
+        variant={particleVariant}
+        className="ambient-particles--global"
+      />
       <Navbar content={content} />
       <div
         id="site-content"

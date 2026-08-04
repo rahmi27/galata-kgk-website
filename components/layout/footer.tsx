@@ -8,7 +8,6 @@ import {
 } from "react-icons/fa6";
 
 import { BrandLogo } from "@/components/brand-logo";
-import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
@@ -31,7 +30,6 @@ export function Footer({ content }: { content: SiteChromeContent }) {
 
   return (
     <footer className="relative isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
-      <AmbientParticles className="opacity-55" />
       <BrandMountainEcho
         className="-bottom-40 -right-28 w-[32rem] rotate-[-8deg] opacity-30 sm:-right-20 sm:w-[38rem]"
       />

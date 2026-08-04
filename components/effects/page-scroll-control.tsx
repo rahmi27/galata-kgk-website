@@ -12,7 +12,13 @@ export function PageScrollControl() {
     let animationFrame: number | null = null;
 
     const updateDirection = () => {
-      setDirection(window.scrollY > 96 ? "up" : "down");
+      const maxScroll = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        0,
+      );
+      const scrollProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+
+      setDirection(scrollProgress >= 0.5 ? "up" : "down");
       animationFrame = null;
     };
 
@@ -24,9 +30,15 @@ export function PageScrollControl() {
 
     updateDirection();
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+
+    const resizeObserver = new ResizeObserver(handleScroll);
+    resizeObserver.observe(document.documentElement);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      resizeObserver.disconnect();
       if (animationFrame !== null) {
         window.cancelAnimationFrame(animationFrame);
       }
@@ -44,16 +56,13 @@ export function PageScrollControl() {
       return;
     }
 
-    const firstSection = document.querySelector("#site-content main section");
-    const nextContent = firstSection?.nextElementSibling;
+    const maxScroll = Math.max(
+      document.documentElement.scrollHeight - window.innerHeight,
+      0,
+    );
 
-    if (nextContent instanceof HTMLElement) {
-      nextContent.scrollIntoView({ behavior, block: "start" });
-      return;
-    }
-
-    window.scrollBy({
-      top: Math.min(window.innerHeight * 0.82, 720),
+    window.scrollTo({
+      top: Math.min(window.scrollY + window.innerHeight * 0.82, maxScroll),
       behavior,
     });
   };

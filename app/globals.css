@@ -261,10 +261,12 @@
   position: absolute;
   inset: -4%;
   display: block;
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
+  background-position: center top;
 }
 
 .ambient-particle-field-a {
+  background-size: 100% 54rem;
   background-image:
     radial-gradient(circle at 8% 18%, rgb(245 132 91 / 0.88) 0 1px, transparent 2px),
     radial-gradient(circle at 24% 72%, rgb(232 93 44 / 0.75) 0 1.5px, transparent 2.5px),
@@ -276,6 +278,7 @@
 }
 
 .ambient-particle-field-b {
+  background-size: 100% 63rem;
   background-image:
     radial-gradient(circle at 15% 47%, rgb(232 93 44 / 0.72) 0 1.5px, transparent 2.5px),
     radial-gradient(circle at 31% 12%, rgb(245 132 91 / 0.76) 0 2px, transparent 3px),
@@ -287,6 +290,7 @@
 }
 
 .ambient-particle-field-c {
+  background-size: 100% 71rem;
   background-image:
     radial-gradient(circle at 5% 88%, rgb(245 132 91 / 0.72) 0 2px, transparent 3px),
     radial-gradient(circle at 19% 29%, rgb(232 93 44 / 0.68) 0 1px, transparent 2px),
@@ -295,6 +299,37 @@
     radial-gradient(circle at 66% 96%, rgb(245 132 91 / 0.66) 0 1px, transparent 2px),
     radial-gradient(circle at 78% 31%, rgb(232 93 44 / 0.72) 0 1.5px, transparent 2.5px),
     radial-gradient(circle at 91% 56%, rgb(245 132 91 / 0.7) 0 1px, transparent 2px);
+}
+
+.ambient-particles--global {
+  z-index: 18;
+  opacity: 0.64;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 160ms ease-out,
+    opacity 160ms ease-out;
+}
+
+.ambient-particles--variant-1.ambient-particles--global {
+  opacity: 0.58;
+  transform: translate3d(7px, -3px, 0);
+}
+
+.ambient-particles--variant-2.ambient-particles--global {
+  opacity: 0.7;
+  transform: translate3d(-6px, 4px, 0);
+}
+
+.dark .ambient-particles--global {
+  opacity: 0.82;
+}
+
+.dark .ambient-particles--variant-1.ambient-particles--global {
+  opacity: 0.74;
+}
+
+.dark .ambient-particles--variant-2.ambient-particles--global {
+  opacity: 0.88;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -318,6 +353,10 @@
 @media (max-width: 639px) {
   .ambient-particle-field:nth-child(n + 2) {
     display: none;
+  }
+
+  .ambient-particle-field-a {
+    background-size: 100% 62rem;
   }
 }
 
@@ -424,9 +463,9 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
 
 .brand-tower-backdrop__breathe {
   position: absolute;
-  top: 1rem;
-  left: -7vw;
-  width: min(36vw, 30rem);
+  top: -1rem;
+  left: -9rem;
+  width: min(48vw, 36rem);
   transform-origin: 42% 18%;
 }
 
@@ -498,9 +537,9 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
   }
 
   .brand-tower-backdrop__breathe {
-    top: 2rem;
-    left: -8rem;
-    width: 20rem;
+    top: 1rem;
+    left: -10rem;
+    width: 25rem;
   }
 
   .brand-tower-backdrop__drift {
@@ -521,6 +560,13 @@ body:has(.admin-shell) > .brand-mountain-backdrop {
   .brand-tower-backdrop__drift,
   .brand-mountain-echo__drift {
     animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-particles--global {
+    transition: none;
+    transform: none;
   }
 }
 
