@@ -135,6 +135,8 @@ export default async function DesignSystemPage() {
                   role={member.role}
                   department={member.department}
                   imageSrc={member.photoUrl ?? undefined}
+                  socialPlatform="linkedin"
+                  socialUrl="https://www.linkedin.com/"
                 />
               ))}
             </div>

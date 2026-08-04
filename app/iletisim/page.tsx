@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
-import { FaInstagram } from "react-icons/fa6";
 
 import { ContactForm } from "@/components/contact/contact-form";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { Button } from "@/components/ui/button";
 import contactContent from "@/content/contact.json";
+import { getPublicClubSocialLinks } from "@/lib/club-social-links";
 import { createPageMetadata } from "@/lib/site-metadata";
 import {
   getContactContentFromRows,
@@ -19,16 +20,14 @@ export const metadata = createPageMetadata({
   keywords: ["Galata KGK iletişim", "İstanbul Galata Üniversitesi kulüp iletişim"],
 });
 
-const socialIcons = {
-  Instagram: FaInstagram,
-} as const;
-
 export const revalidate = 300;
 
 export default async function ContactPage() {
-  const content = getContactContentFromRows(
-    await getPublicSiteContentRows(),
-  );
+  const [siteContentRows, socialLinks] = await Promise.all([
+    getPublicSiteContentRows(),
+    getPublicClubSocialLinks(),
+  ]);
+  const content = getContactContentFromRows(siteContentRows, socialLinks);
   const { details, hero } = content;
   const encodedAddress = encodeURIComponent(details.address.value);
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
@@ -93,16 +92,13 @@ export default async function ContactPage() {
                     </Link>
                   </div>
 
+                  {details.socials.length ? (
                   <div className="mt-12 border-t border-white/10 pt-8">
                     <p className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-primary-300">
                       {details.socialLabel}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3">
                       {details.socials.map((social) => {
-                        const Icon =
-                          socialIcons[
-                            social.platform as keyof typeof socialIcons
-                          ] ?? FaInstagram;
                         const isExternal = social.href.startsWith("http");
 
                         return (
@@ -112,15 +108,19 @@ export default async function ContactPage() {
                             target={isExternal ? "_blank" : undefined}
                             rel={isExternal ? "noopener noreferrer" : undefined}
                             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-xs font-semibold text-primary-100 transition-colors hover:border-accent/70 hover:bg-accent"
-                            aria-label={`${social.platform} hesabını${isExternal ? " yeni sekmede" : ""} aç`}
+                            aria-label={`${social.label} hesabını${isExternal ? " yeni sekmede" : ""} aç`}
                           >
-                            <Icon className="size-3.5" aria-hidden="true" />
+                            <SocialPlatformIcon
+                              platform={social.platform}
+                              className="size-3.5"
+                            />
                             {social.label}
                           </Link>
                         );
                       })}
                     </div>
                   </div>
+                  ) : null}
                 </div>
               </aside>
 

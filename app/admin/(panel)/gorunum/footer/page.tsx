@@ -51,31 +51,6 @@ export default async function AdminFooterContentPage() {
         },
       ],
     },
-    {
-      title: "Sosyal medya",
-      description:
-        "Boş bırakılan sosyal ağlar footer’da gösterilmez. Dolu adresler yeni sekmede açılır.",
-      fields: [
-        {
-          name: "footer.social.instagram",
-          label: "Instagram URL",
-          value: values["footer.social.instagram"],
-          kind: "url",
-        },
-        {
-          name: "footer.social.linkedin",
-          label: "LinkedIn URL",
-          value: values["footer.social.linkedin"],
-          kind: "url",
-        },
-        {
-          name: "footer.social.x",
-          label: "X URL",
-          value: values["footer.social.x"],
-          kind: "url",
-        },
-      ],
-    },
   ];
 
   return (
@@ -83,7 +58,7 @@ export default async function AdminFooterContentPage() {
       <AdminPageHeader
         eyebrow="Görünüm Yönetimi"
         title="Footer"
-        description="Alt bilgi alanındaki kulüp metinlerini, üniversite bağlantısını ve sosyal medya adreslerini yönetin."
+        description="Alt bilgi alanındaki kulüp metinlerini ve üniversite bağlantısını yönetin. Sosyal medya hesapları Görünüm Yönetimi > İletişim ekranından yönetilir."
       />
       <ContentEditorForm
         action={updateFooterContentAction}

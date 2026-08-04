@@ -5,6 +5,10 @@ import { unstable_cache } from "next/cache";
 import contactContent from "@/content/contact.json";
 import homeContent from "@/content/home.json";
 import siteContent from "@/content/site.json";
+import {
+  getPublicClubSocialLinks,
+  type PublicClubSocialLink,
+} from "@/lib/club-social-links";
 import { prisma } from "@/lib/prisma";
 import { siteContentDefaults } from "@/lib/site-content-defaults";
 
@@ -53,7 +57,8 @@ export type SiteChromeContent = {
     institution: string;
     institutionHref: string;
     socials: Array<{
-      platform: "Instagram" | "LinkedIn" | "X";
+      platform: string;
+      label: string;
       href: string;
     }>;
   };
@@ -231,7 +236,10 @@ export function getAboutContentFromRows(rows: SiteContentRow[]) {
   };
 }
 
-export function getContactContentFromRows(rows: SiteContentRow[]) {
+export function getContactContentFromRows(
+  rows: SiteContentRow[],
+  socialLinks: PublicClubSocialLink[],
+) {
   const values = mergeSiteContent(rows);
 
   return {
@@ -242,12 +250,21 @@ export function getContactContentFromRows(rows: SiteContentRow[]) {
         ...contactContent.details.address,
         value: values["contact.address.value"],
       },
+      socials: socialLinks.map((social) => ({
+        platform: social.platform,
+        label: social.label,
+        href: social.url,
+      })),
     },
   };
 }
 
 export async function getSiteChromeContent(): Promise<SiteChromeContent> {
-  const values = mergeSiteContent(await getPublicSiteContentRows());
+  const [rows, socialLinks] = await Promise.all([
+    getPublicSiteContentRows(),
+    getPublicClubSocialLinks(),
+  ]);
+  const values = mergeSiteContent(rows);
   const items = navigationRoutes
     .map((item, fallbackIndex) => ({
       ...item,
@@ -258,20 +275,11 @@ export async function getSiteChromeContent(): Promise<SiteChromeContent> {
     }))
     .sort((first, second) => first.order - second.order);
 
-  const socials = [
-    {
-      platform: "Instagram" as const,
-      href: values["footer.social.instagram"],
-    },
-    {
-      platform: "LinkedIn" as const,
-      href: values["footer.social.linkedin"],
-    },
-    {
-      platform: "X" as const,
-      href: values["footer.social.x"],
-    },
-  ].filter((social) => social.href.trim().length > 0);
+  const socials = socialLinks.map((social) => ({
+    platform: social.platform,
+    label: social.label,
+    href: social.url,
+  }));
 
   return {
     brand: {

@@ -89,6 +89,8 @@ export default async function TeamPage() {
                         department={member.department}
                         imageSrc={member.photoUrl ?? undefined}
                         imageAlt={member.photoAlt ?? undefined}
+                        socialPlatform={member.socialPlatform ?? undefined}
+                        socialUrl={member.socialUrl ?? undefined}
                       />
                     ))}
                   </div>

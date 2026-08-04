@@ -1,5 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 
+import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
+import { getSocialPlatformLabel } from "@/lib/social-platforms";
 import { cn } from "@/lib/utils";
 
 type TeamMemberCardProps = {
@@ -8,6 +11,8 @@ type TeamMemberCardProps = {
   department: string;
   imageSrc?: string;
   imageAlt?: string;
+  socialPlatform?: string;
+  socialUrl?: string;
   className?: string;
 };
 
@@ -17,6 +22,8 @@ export function TeamMemberCard({
   department,
   imageSrc,
   imageAlt,
+  socialPlatform,
+  socialUrl,
   className,
 }: TeamMemberCardProps) {
   const nameParts = name.trim().split(/\s+/).filter(Boolean);
@@ -58,6 +65,27 @@ export function TeamMemberCard({
             </span>
           </div>
         )}
+        {socialPlatform && socialUrl ? (
+          <Link
+            href={socialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/social absolute inset-0 z-20 flex items-end justify-end p-4 outline-none sm:items-center sm:justify-center sm:p-0"
+            aria-label={`${name} ${getSocialPlatformLabel(socialPlatform)} profilini yeni sekmede aç`}
+          >
+            <span
+              className="absolute inset-0 bg-[linear-gradient(145deg,rgba(27,42,94,0.3),rgba(12,19,47,0.9)_62%,rgba(232,93,44,0.58))] opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-visible/social:opacity-100 motion-reduce:transition-none"
+              aria-hidden="true"
+            />
+            <span className="relative flex size-12 items-center justify-center rounded-2xl border border-white/30 bg-primary-950/85 text-white opacity-100 shadow-[0_18px_40px_-16px_rgba(232,93,44,0.9)] transition-[transform,opacity,background-color] duration-300 group-hover/social:scale-110 group-hover/social:bg-accent group-focus-visible/social:scale-110 group-focus-visible/social:bg-accent motion-reduce:transition-none sm:scale-75 sm:opacity-0 sm:group-hover:scale-100 sm:group-hover:opacity-100 sm:group-focus-visible/social:scale-100 sm:group-focus-visible/social:opacity-100"
+            >
+              <SocialPlatformIcon
+                platform={socialPlatform}
+                className="size-5"
+              />
+            </span>
+          </Link>
+        ) : null}
       </div>
       <div className="relative flex min-h-40 flex-col justify-center bg-primary-900 px-6 pb-6 pt-8 dark:bg-primary-950">
         <span

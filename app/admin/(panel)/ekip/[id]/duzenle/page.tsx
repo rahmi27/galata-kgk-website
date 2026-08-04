@@ -78,6 +78,8 @@ export default async function EditTeamMemberPage({
             categoryId: member.categoryId,
             photoUrl: member.photoUrl ?? "",
             photoAlt: member.photoAlt ?? "",
+            socialPlatform: member.socialPlatform ?? "",
+            socialUrl: member.socialUrl ?? "",
             order: member.order,
           }}
         />

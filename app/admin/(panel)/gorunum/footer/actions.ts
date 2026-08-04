@@ -8,19 +8,12 @@ import { prisma } from "@/lib/prisma";
 import { staticSiteContentDefinitions } from "@/lib/site-content-defaults";
 
 const footerDefinitions = staticSiteContentDefinitions.filter(
-  (definition) => definition.page === "footer",
+  (definition) =>
+    definition.page === "footer" &&
+    !definition.key.startsWith("footer.social."),
 );
-const optionalKeys = new Set([
-  "footer.social.instagram",
-  "footer.social.linkedin",
-  "footer.social.x",
-]);
-const urlKeys = new Set([
-  "footer.institutionHref",
-  "footer.social.instagram",
-  "footer.social.linkedin",
-  "footer.social.x",
-]);
+const optionalKeys = new Set<string>();
+const urlKeys = new Set(["footer.institutionHref"]);
 
 function isValidHttpUrl(value: string) {
   try {

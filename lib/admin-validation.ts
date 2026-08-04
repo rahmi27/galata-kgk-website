@@ -30,6 +30,8 @@ export type TeamMemberAdminInput = {
   categoryId: number | null;
   newCategoryName: string | null;
   photoAlt: string | null;
+  socialPlatform: "instagram" | "linkedin" | null;
+  socialUrl: string | null;
   order: number;
 };
 
@@ -175,6 +177,8 @@ export function validateTeamMemberForm(
   const newCategoryName = getFormString(formData, "newCategoryName");
   const orderValue = getFormString(formData, "order");
   const photoAlt = getFormString(formData, "photoAlt");
+  const socialPlatform = getFormString(formData, "socialPlatform");
+  const socialUrl = getFormString(formData, "socialUrl");
   const order = Number(orderValue);
 
   if (name.length < 2 || name.length > 100) {
@@ -202,6 +206,31 @@ export function validateTeamMemberForm(
     return {
       success: false,
       error: "Fotoğraf alt metni en fazla 180 karakter olabilir.",
+    };
+  }
+
+  if (
+    socialPlatform &&
+    socialPlatform !== "instagram" &&
+    socialPlatform !== "linkedin"
+  ) {
+    return {
+      success: false,
+      error: "Ekip üyesi bağlantısı için Instagram veya LinkedIn seçin.",
+    };
+  }
+
+  if ((socialPlatform && !socialUrl) || (!socialPlatform && socialUrl)) {
+    return {
+      success: false,
+      error: "Sosyal medya türü ve bağlantı adresini birlikte doldurun.",
+    };
+  }
+
+  if (socialUrl.length > 500 || !validateOptionalUrl(socialUrl)) {
+    return {
+      success: false,
+      error: "Sosyal medya bağlantısı geçerli bir http(s) adresi olmalıdır.",
     };
   }
 
@@ -243,6 +272,10 @@ export function validateTeamMemberForm(
       newCategoryName:
         categoryValue === "new" ? newCategoryName : null,
       photoAlt: photoAlt || null,
+      socialPlatform: socialPlatform
+        ? (socialPlatform as "instagram" | "linkedin")
+        : null,
+      socialUrl: socialUrl || null,
       order,
     },
   };

@@ -47,18 +47,32 @@ model Event {
 }
 
 model TeamMember {
-  id         Int          @id @default(autoincrement())
-  name       String
-  role       String
-  department String       @default("Belirtilmedi")
-  photoUrl   String?
-  photoAlt   String?
-  order      Int
-  createdAt  DateTime     @default(now())
-  categoryId Int
-  category   TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  id             Int          @id @default(autoincrement())
+  name           String
+  role           String
+  department     String       @default("Belirtilmedi")
+  photoUrl       String?
+  photoAlt       String?
+  socialPlatform String?
+  socialUrl      String?
+  order          Int
+  createdAt      DateTime     @default(now())
+  categoryId     Int
+  category       TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
   @@index([categoryId, order])
+}
+
+model ClubSocialLink {
+  id        Int      @id @default(autoincrement())
+  platform  String   @unique
+  label     String
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
 }
 
 model TeamCategory {

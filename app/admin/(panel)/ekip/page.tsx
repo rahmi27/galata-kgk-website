@@ -5,8 +5,10 @@ import { createTeamMemberAction } from "@/app/admin/(panel)/ekip/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { DeleteTeamMemberButton } from "@/components/admin/delete-team-member-button";
 import { TeamMemberAdminForm } from "@/components/admin/team-member-admin-form";
+import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+import { getSocialPlatformLabel } from "@/lib/social-platforms";
 
 export const dynamic = "force-dynamic";
 
@@ -120,6 +122,15 @@ export default async function AdminTeamPage({
                             <ListOrdered className="size-3.5" aria-hidden="true" />
                             Sıra {member.order}
                           </span>
+                          {member.socialPlatform && member.socialUrl ? (
+                            <span className="ml-2 mt-2 inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-1 text-xs font-semibold text-accent-800">
+                              <SocialPlatformIcon
+                                platform={member.socialPlatform}
+                                className="size-3.5"
+                              />
+                              {getSocialPlatformLabel(member.socialPlatform)}
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                       <div className="flex shrink-0 items-center gap-1">

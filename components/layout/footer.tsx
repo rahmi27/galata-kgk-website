@@ -1,25 +1,12 @@
 import Link from "next/link";
-import { BriefcaseBusiness, GraduationCap } from "lucide-react";
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaTiktok,
-  FaXTwitter,
-} from "react-icons/fa6";
+import { GraduationCap } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
+import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
 import { partnerLinks } from "@/lib/partner-links";
-
-const socialIcons = {
-  Instagram: FaInstagram,
-  LinkedIn: FaLinkedinIn,
-  X: FaXTwitter,
-  TikTok: FaTiktok,
-  Portfolyo: BriefcaseBusiness,
-} as const;
 
 export function Footer({ content }: { content: SiteChromeContent }) {
   const { brand, footer, navigation } = content;
@@ -51,10 +38,6 @@ export function Footer({ content }: { content: SiteChromeContent }) {
 
             <div className="mt-8 flex items-center gap-3">
               {footer.socials.map((social) => {
-                const Icon =
-                  socialIcons[
-                    social.platform as keyof typeof socialIcons
-                  ] ?? BriefcaseBusiness;
                 const isExternal = social.href.startsWith("http");
 
                 return (
@@ -64,9 +47,12 @@ export function Footer({ content }: { content: SiteChromeContent }) {
                     target={isExternal ? "_blank" : undefined}
                     rel={isExternal ? "noopener noreferrer" : undefined}
                     className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-primary-200 transition-all hover:-translate-y-0.5 hover:border-accent/70 hover:bg-accent hover:text-accent-foreground"
-                    aria-label={social.platform}
+                    aria-label={`${social.label} hesabını aç`}
                   >
-                    <Icon className="size-4" aria-hidden="true" />
+                    <SocialPlatformIcon
+                      platform={social.platform}
+                      className="size-4"
+                    />
                   </Link>
                 );
               })}

@@ -9,6 +9,7 @@ import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Input } from "@/components/ui/input";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { initialAdminActionState } from "@/lib/admin-action-state";
+import { teamSocialPlatformOptions } from "@/lib/social-platforms";
 
 type TeamMemberFormValues = {
   name: string;
@@ -17,6 +18,8 @@ type TeamMemberFormValues = {
   categoryId: number | "new" | "";
   photoUrl: string;
   photoAlt: string;
+  socialPlatform: string;
+  socialUrl: string;
   order: number;
 };
 
@@ -41,6 +44,8 @@ const emptyValues: TeamMemberFormValues = {
   categoryId: "",
   photoUrl: "",
   photoAlt: "",
+  socialPlatform: "",
+  socialUrl: "",
   order: 0,
 };
 
@@ -182,6 +187,42 @@ export function TeamMemberAdminForm({
           maxLength={180}
         />
       </FormField>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField
+          label="Profil bağlantısı türü"
+          htmlFor="member-social-platform"
+          hint="İsteğe bağlı: Instagram veya LinkedIn seçebilirsiniz."
+        >
+          <select
+            id="member-social-platform"
+            name="socialPlatform"
+            defaultValue={defaultValues.socialPlatform}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm outline-none transition-colors focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option value="">Bağlantı ekleme</option>
+            {teamSocialPlatformOptions.map((platform) => (
+              <option key={platform.value} value={platform.value}>
+                {platform.label}
+              </option>
+            ))}
+          </select>
+        </FormField>
+        <FormField
+          label="Profil bağlantısı"
+          htmlFor="member-social-url"
+          hint="Tür seçtiyseniz tam http(s) adresini yazın."
+        >
+          <Input
+            id="member-social-url"
+            name="socialUrl"
+            type="url"
+            defaultValue={defaultValues.socialUrl}
+            placeholder="https://www.linkedin.com/in/..."
+            maxLength={500}
+          />
+        </FormField>
+      </div>
 
       <div className="max-w-40">
         <FormField

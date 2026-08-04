@@ -110,6 +110,8 @@ export async function createTeamMemberAction(
       department: validation.data.department,
       categoryId: category.id,
       photoAlt: imageUpload.path ? validation.data.photoAlt : null,
+      socialPlatform: validation.data.socialPlatform,
+      socialUrl: validation.data.socialUrl,
       order: validation.data.order,
     };
 
@@ -204,6 +206,8 @@ export async function updateTeamMemberAction(
       department: validation.data.department,
       categoryId: category.id,
       photoAlt: nextPhotoUrl ? validation.data.photoAlt : null,
+      socialPlatform: validation.data.socialPlatform,
+      socialUrl: validation.data.socialUrl,
       order: validation.data.order,
     };
 
