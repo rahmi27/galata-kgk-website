@@ -2,9 +2,12 @@ import "server-only";
 
 import { getClientIp } from "@/lib/client-ip";
 import { prisma } from "@/lib/prisma";
+import {
+  ADMIN_LOGIN_IP_MAX_ATTEMPTS,
+  ADMIN_LOGIN_MAX_ATTEMPTS,
+  shouldBlockAdminLogin,
+} from "@/lib/rate-limit-policy";
 
-export const ADMIN_LOGIN_MAX_ATTEMPTS = 5;
-export const ADMIN_LOGIN_IP_MAX_ATTEMPTS = 20;
 export const ADMIN_LOGIN_WINDOW_MINUTES = 10;
 
 function windowStart() {
@@ -35,10 +38,7 @@ export async function isAdminLoginRateLimited(
     }),
   ]);
 
-  return (
-    usernameAttempts >= ADMIN_LOGIN_MAX_ATTEMPTS ||
-    ipAttempts >= ADMIN_LOGIN_IP_MAX_ATTEMPTS
-  );
+  return shouldBlockAdminLogin(usernameAttempts, ipAttempts);
 }
 
 export async function recordFailedAdminLogin(
@@ -73,3 +73,4 @@ export async function clearAdminLoginAttempts(
 }
 
 export { getClientIp };
+export { ADMIN_LOGIN_IP_MAX_ATTEMPTS, ADMIN_LOGIN_MAX_ATTEMPTS };
