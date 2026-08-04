@@ -76,7 +76,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           return null;
         }
 
-        await clearAdminLoginAttempts(rateLimitUsername, ipAddress);
+        await clearAdminLoginAttempts(rateLimitUsername);
 
         return {
           id: String(admin.id),

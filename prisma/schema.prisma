@@ -146,8 +146,10 @@ model ContactSubmission {
   isRead                Boolean   @default(false)
   privacyNoticeVersion  String?
   privacyAcknowledgedAt DateTime?
+  ipHash                String?
 
   @@index([email, createdAt])
+  @@index([ipHash, createdAt])
 }
 
 model MembershipApplication {
@@ -162,8 +164,10 @@ model MembershipApplication {
   status                String    @default("beklemede")
   privacyNoticeVersion  String?
   privacyAcknowledgedAt DateTime?
+  ipHash                String?
 
   @@index([email, createdAt])
+  @@index([ipHash, createdAt])
 }
 
 model SiteStat {
