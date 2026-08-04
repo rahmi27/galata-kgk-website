@@ -9,15 +9,7 @@ import {
   getSocialPlatformLabel,
   isSocialPlatform,
 } from "@/lib/social-platforms";
-
-function isValidHttpUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
+import { isSafeHttpUrl } from "@/lib/url-security";
 
 async function refreshSocialLinks() {
   updateTag("club-social-links");
@@ -41,7 +33,7 @@ export async function saveClubSocialLinkAction(
     return { success: false, message: "Geçerli bir platform seçin." };
   }
 
-  if (!isValidHttpUrl(url) || url.length > 500) {
+  if (!isSafeHttpUrl(url) || url.length > 500) {
     return {
       success: false,
       message: "Bağlantı geçerli bir http(s) adresi olmalıdır.",

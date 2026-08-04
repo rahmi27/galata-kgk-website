@@ -43,6 +43,7 @@ export function ContactForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          website: formData.get("website"),
           name: formData.get("name"),
           email: formData.get("email"),
           message: formData.get("message"),
@@ -85,6 +86,19 @@ export function ContactForm() {
       className="scroll-mt-28"
       onSubmit={handleSubmit}
     >
+      <div
+        className="absolute left-[-10000px] top-auto size-px overflow-hidden"
+        aria-hidden="true"
+      >
+        <label htmlFor="contact-website">Web sitesi</label>
+        <input
+          id="contact-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
         {form.eyebrow}
       </p>

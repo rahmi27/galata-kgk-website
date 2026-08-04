@@ -46,6 +46,7 @@ export function MembershipForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          website: formData.get("website"),
           fullName: formData.get("fullName"),
           email: formData.get("email"),
           studentNumber: formData.get("studentNumber"),
@@ -87,6 +88,19 @@ export function MembershipForm() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <div
+        className="absolute left-[-10000px] top-auto size-px overflow-hidden"
+        aria-hidden="true"
+      >
+        <label htmlFor="membership-website">Web sitesi</label>
+        <input
+          id="membership-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
         {form.eyebrow}
       </p>

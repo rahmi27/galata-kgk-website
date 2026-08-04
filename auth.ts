@@ -18,6 +18,9 @@ const shouldTrustHost =
   process.env.NODE_ENV === "development" ||
   Boolean(process.env.VERCEL) ||
   Boolean(process.env.VERCEL_URL);
+const useSecureCookies = process.env.NODE_ENV === "production";
+const DUMMY_ADMIN_PASSWORD_HASH =
+  "$2b$12$q0vPkHulAwvoO8hRQ72uqeZT.3R.6cnRxyosMNiAk.jCAPG7SswVW";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
@@ -25,6 +28,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 8 * 60 * 60,
+  },
+  useSecureCookies,
+  cookies: {
+    sessionToken: {
+      name: `${useSecureCookies ? "__Secure-" : ""}authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+      },
+    },
   },
   pages: {
     signIn: "/admin/giris",
@@ -70,13 +85,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             username,
           },
         });
+        const passwordMatches = await compare(
+          password,
+          admin?.passwordHash ?? DUMMY_ADMIN_PASSWORD_HASH,
+        );
 
-        if (!admin || !(await compare(password, admin.passwordHash))) {
+        if (!admin || !passwordMatches) {
           await recordFailedAdminLogin(rateLimitUsername, ipAddress);
           return null;
         }
 
-        await clearAdminLoginAttempts(rateLimitUsername, ipAddress);
+        await clearAdminLoginAttempts(rateLimitUsername);
 
         return {
           id: String(admin.id),

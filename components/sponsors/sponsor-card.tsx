@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Building2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { getSafeHttpUrl } from "@/lib/url-security";
 
 type SponsorCardProps = {
   name: string;
@@ -21,6 +22,7 @@ export function SponsorCard({
   description,
   featured = false,
 }: SponsorCardProps) {
+  const safeWebsiteUrl = getSafeHttpUrl(websiteUrl);
   const logo = (
     <div
       className={cn(
@@ -28,7 +30,7 @@ export function SponsorCard({
         featured
           ? "min-h-48 sm:min-h-56 sm:p-10"
           : "min-h-32 sm:min-h-36",
-        websiteUrl &&
+        safeWebsiteUrl &&
           "group-hover:-translate-y-1 group-hover:border-accent/35 group-hover:shadow-[0_24px_60px_-36px_rgba(27,42,94,0.55)]",
       )}
     >
@@ -55,9 +57,9 @@ export function SponsorCard({
 
   return (
     <article className="group" data-reveal="">
-      {websiteUrl ? (
+      {safeWebsiteUrl ? (
         <Link
-          href={websiteUrl}
+          href={safeWebsiteUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${name} web sitesini yeni sekmede aç`}
@@ -78,7 +80,7 @@ export function SponsorCard({
           >
             {name}
           </h3>
-          {websiteUrl ? (
+          {safeWebsiteUrl ? (
             <ArrowUpRight
               className="mt-0.5 size-4 shrink-0 text-accent transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               aria-hidden="true"
