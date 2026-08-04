@@ -30,7 +30,7 @@ export function TeamMemberCard({
   return (
     <article
       className={cn(
-        "group overflow-hidden rounded-[1.75rem] border border-primary/10 bg-primary-900 shadow-[0_24px_70px_-48px_rgba(27,42,94,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 dark:border-white/10 dark:bg-primary-950",
+        "card-gradient-edge group overflow-hidden rounded-[1.75rem] border border-primary/10 bg-primary-900 shadow-[0_24px_70px_-48px_rgba(27,42,94,0.5)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 dark:border-white/10 dark:bg-primary-950",
         className,
       )}
     >

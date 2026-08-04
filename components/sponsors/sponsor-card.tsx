@@ -24,7 +24,7 @@ export function SponsorCard({
   const logo = (
     <div
       className={cn(
-        "flex items-center justify-center rounded-2xl border border-primary/10 bg-white p-6 transition-all duration-300 dark:border-white/10 dark:bg-white/[0.06]",
+        "card-gradient-edge flex items-center justify-center overflow-hidden rounded-2xl border border-primary/10 bg-white p-6 transition-all duration-300 dark:border-white/10 dark:bg-white/[0.06]",
         featured
           ? "min-h-48 sm:min-h-56 sm:p-10"
           : "min-h-32 sm:min-h-36",

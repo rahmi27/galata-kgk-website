@@ -207,3 +207,34 @@
     will-change: transform;
   }
 }
+
+.card-gradient-edge {
+  position: relative;
+}
+
+.card-gradient-edge::before {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 20;
+  height: 2px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgb(27 42 94 / 0.82),
+    rgb(232 93 44 / 0.96) 58%,
+    rgb(245 132 91 / 0.72)
+  );
+  opacity: 0.78;
+  transform: scaleY(0.72);
+  transform-origin: top;
+  transition:
+    transform 180ms ease-out,
+    opacity 180ms ease-out;
+}
+
+.card-gradient-edge:hover::before,
+.card-gradient-edge:focus-within::before {
+  opacity: 1;
+  transform: scaleY(1.55);
+}
