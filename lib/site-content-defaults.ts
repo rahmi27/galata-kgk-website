@@ -1,4 +1,5 @@
 import aboutContent from "@/content/about.json";
+import contactContent from "@/content/contact.json";
 import homeContent from "@/content/home.json";
 import siteContent from "@/content/site.json";
 
@@ -8,7 +9,7 @@ export type SiteContentDefinition = {
   key: string;
   value: string;
   type: EditableContentType;
-  page: "header" | "footer" | "anasayfa" | "hakkimizda";
+  page: "header" | "footer" | "anasayfa" | "hakkimizda" | "iletisim";
   label: string;
 };
 
@@ -114,6 +115,13 @@ export const staticSiteContentDefinitions: SiteContentDefinition[] = [
     type: "text",
     page: "footer",
     label: "X adresi",
+  },
+  {
+    key: "contact.address.value",
+    value: contactContent.details.address.value,
+    type: "text",
+    page: "iletisim",
+    label: "İletişim adresi",
   },
   {
     key: "home.hero.eyebrow",

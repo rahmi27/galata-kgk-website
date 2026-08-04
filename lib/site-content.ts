@@ -2,6 +2,7 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
+import contactContent from "@/content/contact.json";
 import homeContent from "@/content/home.json";
 import siteContent from "@/content/site.json";
 import { prisma } from "@/lib/prisma";
@@ -226,6 +227,21 @@ export function getAboutContentFromRows(rows: SiteContentRow[]) {
       title: values["about.timeline.title"],
       description: values["about.timeline.description"],
       milestones,
+    },
+  };
+}
+
+export function getContactContentFromRows(rows: SiteContentRow[]) {
+  const values = mergeSiteContent(rows);
+
+  return {
+    ...contactContent,
+    details: {
+      ...contactContent.details,
+      address: {
+        ...contactContent.details.address,
+        value: values["contact.address.value"],
+      },
     },
   };
 }

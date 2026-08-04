@@ -14,8 +14,8 @@
     "description": "Sorunu veya fikrini paylaş; kulüp ekibimiz en kısa sürede seninle iletişime geçsin.",
     "address": {
       "label": "Adres",
-      "value": "İstanbul Galata Üniversitesi, Beyoğlu / İstanbul",
-      "href": "https://maps.google.com"
+      "value": "Evliya Çelebi Mahallesi, Meşrutiyet Caddesi, No:62, Tepebaşı/Beyoğlu/İstanbul",
+      "href": "https://www.google.com/maps/dir/?api=1&destination=Evliya%20%C3%87elebi%20Mahallesi%2C%20Me%C5%9Frutiyet%20Caddesi%2C%20No%3A62%2C%20Tepeba%C5%9F%C4%B1%2FBeyo%C4%9Flu%2F%C4%B0stanbul"
     },
     "socialLabel": "Sosyal medyada takip et",
     "socials": [

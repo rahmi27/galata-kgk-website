@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { FaInstagram } from "react-icons/fa6";
 
 import { ContactForm } from "@/components/contact/contact-form";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { Button } from "@/components/ui/button";
 import contactContent from "@/content/contact.json";
 import { createPageMetadata } from "@/lib/site-metadata";
+import {
+  getContactContentFromRows,
+  getPublicSiteContentRows,
+} from "@/lib/site-content";
 
 export const metadata = createPageMetadata({
   title: contactContent.meta.title,
@@ -18,8 +23,16 @@ const socialIcons = {
   Instagram: FaInstagram,
 } as const;
 
-export default function ContactPage() {
-  const { details, hero } = contactContent;
+export const revalidate = 300;
+
+export default async function ContactPage() {
+  const content = getContactContentFromRows(
+    await getPublicSiteContentRows(),
+  );
+  const { details, hero } = content;
+  const encodedAddress = encodeURIComponent(details.address.value);
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+  const mapEmbedUrl = `https://www.google.com/maps?q=${encodedAddress}&output=embed`;
 
   return (
     <div className="bg-background">
@@ -61,9 +74,9 @@ export default function ContactPage() {
 
                   <div className="mt-10 space-y-7">
                     <Link
-                      href={details.address.href}
+                      href={directionsUrl}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="group flex gap-4"
                     >
                       <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
@@ -115,6 +128,53 @@ export default function ContactPage() {
                 <ContactForm />
               </div>
             </div>
+
+            <section
+              className="mt-8 overflow-hidden rounded-[2rem] border border-primary/10 bg-card shadow-[0_28px_80px_-52px_rgba(27,42,94,0.7)] dark:border-white/10 dark:bg-white/[0.035]"
+              aria-labelledby="contact-map-title"
+              data-reveal=""
+            >
+              <div className="flex flex-col gap-5 border-b border-primary/10 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8 dark:border-white/10">
+                <div>
+                  <p className="font-heading text-xs font-bold uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
+                    Kampüs Konumu
+                  </p>
+                  <h2
+                    id="contact-map-title"
+                    className="mt-2 font-heading text-2xl font-bold tracking-[-0.035em] text-primary dark:text-white"
+                  >
+                    Bizi haritada bulun.
+                  </h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                    {details.address.value}
+                  </p>
+                </div>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="shrink-0 self-start sm:self-auto"
+                >
+                  <Link
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Yol Tarifi Al
+                    <ArrowUpRight aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="aspect-[4/3] w-full bg-primary-50 sm:aspect-[16/7] dark:bg-primary-900/40">
+                <iframe
+                  src={mapEmbedUrl}
+                  title="İstanbul Galata Üniversitesi konumu"
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            </section>
           </div>
         </section>
       </main>

@@ -13,6 +13,7 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
+  MapPin,
   Menu,
   Network,
   PanelBottom,
@@ -96,6 +97,11 @@ const appearanceNavigation = [
     label: "Hakkımızda",
     href: "/admin/gorunum/hakkimizda",
     icon: Info,
+  },
+  {
+    label: "İletişim",
+    href: "/admin/gorunum/iletisim",
+    icon: MapPin,
   },
 ] as const;
 
