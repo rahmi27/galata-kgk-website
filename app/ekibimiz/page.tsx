@@ -24,15 +24,20 @@ export default async function TeamPage() {
       },
     ],
     include: {
-      members: {
+      memberships: {
         orderBy: [
           {
             order: "asc",
           },
           {
-            name: "asc",
+              person: {
+                name: "asc",
+              },
           },
         ],
+        include: {
+          person: true,
+        },
       },
     },
   });
@@ -81,16 +86,16 @@ export default async function TeamPage() {
                   </div>
 
                   <div className="stagger-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                    {category.members.map((member) => (
+                    {category.memberships.map((membership) => (
                       <TeamMemberCard
-                        key={member.id}
-                        name={member.name}
-                        role={member.role}
-                        department={member.department}
-                        imageSrc={member.photoUrl ?? undefined}
-                        imageAlt={member.photoAlt ?? undefined}
-                        socialPlatform={member.socialPlatform ?? undefined}
-                        socialUrl={member.socialUrl ?? undefined}
+                        key={membership.id}
+                        name={membership.person.name}
+                        role={membership.role}
+                        department={membership.person.department}
+                        imageSrc={membership.person.photoUrl ?? undefined}
+                        imageAlt={membership.person.photoAlt ?? undefined}
+                        socialPlatform={membership.person.socialPlatform ?? undefined}
+                        socialUrl={membership.person.socialUrl ?? undefined}
                       />
                     ))}
                   </div>

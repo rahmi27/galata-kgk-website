@@ -41,8 +41,8 @@ const navigation = [
     icon: CalendarDays,
   },
   {
-    label: "Ekip",
-    href: "/admin/ekip",
+    label: "Üyeler",
+    href: "/admin/uyeler",
     icon: UsersRound,
   },
   {

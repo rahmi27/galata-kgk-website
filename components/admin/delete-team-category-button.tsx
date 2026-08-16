@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { LoaderCircle, Trash2 } from "lucide-react";
 
-import { deleteTeamCategoryAction } from "@/app/admin/(panel)/ekip/kategoriler/actions";
+import { deleteTeamCategoryAction } from "@/app/admin/(panel)/uyeler/kategoriler/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

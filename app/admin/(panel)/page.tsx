@@ -14,12 +14,12 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboardPage() {
   const [
     eventCount,
-    teamMemberCount,
+    personCount,
     unreadMessageCount,
     pendingApplicationCount,
   ] = await Promise.all([
     prisma.event.count(),
-    prisma.teamMember.count(),
+    prisma.person.count(),
     prisma.contactSubmission.count({
       where: {
         isRead: false,
@@ -41,8 +41,8 @@ export default async function AdminDashboardPage() {
     },
     {
       label: "Ekip üyesi",
-      value: teamMemberCount,
-      helper: "Departmanlarda listelenen aktif ekip üyeleri",
+      value: personCount,
+      helper: "Bir veya daha fazla ekip rolü atanabilen tekil kişiler",
       icon: UsersRound,
     },
     {

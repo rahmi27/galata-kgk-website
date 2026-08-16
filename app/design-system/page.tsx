@@ -34,11 +34,14 @@ export default async function DesignSystemPage() {
       },
       take: 3,
     }),
-    prisma.teamMember.findMany({
+    prisma.teamMembership.findMany({
       orderBy: {
         order: "asc",
       },
       take: 4,
+      include: {
+        person: true,
+      },
     }),
   ]);
 
@@ -131,12 +134,13 @@ export default async function DesignSystemPage() {
               {teamMembers.map((member) => (
                 <TeamMemberCard
                   key={member.id}
-                  name={member.name}
+                  name={member.person.name}
                   role={member.role}
-                  department={member.department}
-                  imageSrc={member.photoUrl ?? undefined}
-                  socialPlatform="linkedin"
-                  socialUrl="https://www.linkedin.com/"
+                  department={member.person.department}
+                  imageSrc={member.person.photoUrl ?? undefined}
+                  imageAlt={member.person.photoAlt ?? undefined}
+                  socialPlatform={member.person.socialPlatform ?? undefined}
+                  socialUrl={member.person.socialUrl ?? undefined}
                 />
               ))}
             </div>
