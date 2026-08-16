@@ -35,3 +35,17 @@ test("Ekibimiz ISR kalır ve admin değişiklikleri önbelleği yeniler", async 
   assert.doesNotMatch(publicPage, /force-dynamic/);
   assert.match(actions, /revalidatePath\("\/ekibimiz"\)/);
 });
+
+test("merge öncesi main sürümü yeni tekil veri kaynağına uyumlu kalır", async () => {
+  const compatibility = await read(
+    "prisma",
+    "migrations",
+    "20260816233000_legacy_team_member_compatibility",
+    "migration.sql",
+  );
+  assert.match(compatibility, /CREATE VIEW "TeamMember"/);
+  assert.match(compatibility, /JOIN "Person" person/);
+  assert.match(compatibility, /INSTEAD OF INSERT ON "TeamMember"/);
+  assert.match(compatibility, /INSTEAD OF UPDATE ON "TeamMember"/);
+  assert.match(compatibility, /INSTEAD OF DELETE ON "TeamMember"/);
+});
