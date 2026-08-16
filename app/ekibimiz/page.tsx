@@ -15,6 +15,11 @@ export const revalidate = 300;
 
 export default async function TeamPage() {
   const categories = await prisma.teamCategory.findMany({
+    where: {
+      memberships: {
+        some: {},
+      },
+    },
     orderBy: [
       {
         order: "asc",
@@ -30,9 +35,9 @@ export default async function TeamPage() {
             order: "asc",
           },
           {
-              person: {
-                name: "asc",
-              },
+            person: {
+              name: "asc",
+            },
           },
         ],
         include: {
@@ -63,7 +68,8 @@ export default async function TeamPage() {
 
         <section className="py-20 sm:py-28">
           <div className="mx-auto max-w-7xl space-y-20 px-5 sm:px-8 lg:px-10">
-            {categories.map((category, categoryIndex) => (
+            {categories.length ? (
+              categories.map((category, categoryIndex) => (
                 <section
                   key={category.id}
                   data-reveal=""
@@ -100,7 +106,18 @@ export default async function TeamPage() {
                     ))}
                   </div>
                 </section>
-              ))}
+              ))
+            ) : (
+              <div className="rounded-[1.75rem] border border-dashed border-primary/20 bg-primary-50/50 px-6 py-16 text-center dark:border-white/15 dark:bg-primary-900/30">
+                <h2 className="font-heading text-2xl font-bold text-primary dark:text-white">
+                  Ekip listesi hazırlanıyor
+                </h2>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-primary-700 dark:text-primary-200">
+                  Ekip üyeleri ve kategori görevleri yönetim panelinden
+                  eklendiğinde bu alanda yayınlanacak.
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>
