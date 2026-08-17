@@ -32,7 +32,7 @@ export default async function PersonDetailPage({ params, searchParams }: { param
 
   return (
     <>
-      <AdminPageHeader eyebrow="Üye Profili" title={person.name} description="Temel kişi bilgilerini ve kategori bazındaki rol/sıra atamalarını birbirinden bağımsız yönetin." actions={<Button asChild variant="outline" className="rounded-xl"><Link href="/admin/uyeler"><ArrowLeft />Üyelere dön</Link></Button>} />
+      <AdminPageHeader eyebrow="Üye Profili" title={person.name} description="Temel kişi bilgilerini ve kategori bazındaki rol/sıra atamalarını birbirinden bağımsız yönetin." actions={<Button asChild variant="outline" className="rounded-xl"><Link href="/admin/uyeler/kisiler"><ArrowLeft />Üyelere dön</Link></Button>} />
       {durum === "guncellendi" ? <p role="status" className="mt-6 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">Kişi bilgileri güncellendi.</p> : null}
       <div className="mt-9 grid gap-7 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
         <section className="h-fit rounded-[1.5rem] border border-primary-100 bg-white p-5 dark:border-white/10 dark:bg-primary-950 sm:p-7">
