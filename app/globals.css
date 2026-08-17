@@ -302,7 +302,7 @@
 }
 
 .ambient-particles--global {
-  z-index: 18;
+  z-index: 0;
   opacity: 0.64;
   transform: translate3d(0, 0, 0);
   transition:

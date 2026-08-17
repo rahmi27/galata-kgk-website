@@ -19,7 +19,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
     getSafeHttpUrl(footer.institutionHref) ?? "https://www.galata.edu.tr/";
 
   return (
-    <footer className="relative isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
+    <footer className="relative z-10 isolate overflow-hidden bg-primary-900 text-primary-100 dark:bg-[#080d20]">
       <BrandMountainEcho
         className="-bottom-40 -right-28 w-[32rem] rotate-[-8deg] opacity-30 sm:-right-20 sm:w-[38rem]"
       />

@@ -55,7 +55,7 @@ export function SiteShell({ children, content }: SiteShellProps) {
   }
 
   return (
-    <div className="site-public-shell grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
+    <div className="site-public-shell isolate grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <AmbientParticles
         variant={particleVariant}
         className="ambient-particles--global"
