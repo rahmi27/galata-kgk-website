@@ -19,10 +19,10 @@ WHERE membership."personId" = person."id"
     'dis-hekimligi-koordinatorlugu',
     'hemsirelik-koordinatorlugu'
   )
-  AND person."normalizedName" = 'eklenecekuye';
+  AND person."normalizedName" IN ('eklenecekuye', 'ekleneceküye');
 
 DELETE FROM "Person" AS person
-WHERE person."normalizedName" = 'eklenecekuye'
+WHERE person."normalizedName" IN ('eklenecekuye', 'ekleneceküye')
   AND NOT EXISTS (
     SELECT 1
     FROM "TeamMembership" AS membership

@@ -62,7 +62,7 @@ test("sağlık koordinatörlükleri boş hazırlanır ve public sayfada gizlenir
 
   assert.match(migration, /Diş Hekimliği Koordinatörlüğü/);
   assert.match(migration, /Hemşirelik Koordinatörlüğü/);
-  assert.match(migration, /normalizedName" = 'eklenecekuye'/);
+  assert.match(migration, /normalizedName" IN \('eklenecekuye', 'ekleneceküye'\)/);
   assert.match(migration, /migration stopped to prevent data loss/);
   assert.match(seed, /slug: "dis-hekimligi-koordinatorlugu"/);
   assert.match(seed, /slug: "hemsirelik-koordinatorlugu"/);
