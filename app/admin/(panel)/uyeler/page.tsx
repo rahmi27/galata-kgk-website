@@ -14,12 +14,13 @@ import { MembershipAssignmentForm } from "@/components/admin/membership-assignme
 import { PersonAvatar } from "@/components/admin/person-avatar";
 import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { Button } from "@/components/ui/button";
+import { sortPeopleByMembershipPriority } from "@/lib/person-priority";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTeamPage() {
-  const [categories, people] = await Promise.all([
+  const [categories, peopleWithMemberships] = await Promise.all([
     prisma.teamCategory.findMany({
       orderBy: [{ order: "asc" }, { name: "asc" }],
       include: {
@@ -31,9 +32,22 @@ export default async function AdminTeamPage() {
     }),
     prisma.person.findMany({
       orderBy: { name: "asc" },
-      select: { id: true, name: true, department: true },
+      select: {
+        id: true,
+        name: true,
+        department: true,
+        memberships: {
+          select: {
+            order: true,
+            category: { select: { order: true } },
+          },
+        },
+      },
     }),
   ]);
+  const people = sortPeopleByMembershipPriority(peopleWithMemberships).map(
+    ({ id, name, department }) => ({ id, name, department }),
+  );
   const membershipCount = categories.reduce(
     (total, category) => total + category.memberships.length,
     0,

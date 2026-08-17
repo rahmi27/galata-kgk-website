@@ -13,6 +13,7 @@ import { PersonAvatar } from "@/components/admin/person-avatar";
 import { PersonMembershipDialog } from "@/components/admin/person-membership-dialog";
 import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { Button } from "@/components/ui/button";
+import { sortPeopleByMembershipPriority } from "@/lib/person-priority";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +34,7 @@ export default async function PeopleManagementPage() {
       include: { _count: { select: { memberships: true } } },
     }),
   ]);
+  const orderedPeople = sortPeopleByMembershipPriority(people);
   const categoryOptions = categories.map((category) => ({
     id: category.id,
     name: category.name,
@@ -44,7 +46,7 @@ export default async function PeopleManagementPage() {
       <AdminPageHeader
         eyebrow="Tekil Kişi Kayıtları"
         title="Üyeleri Yönet"
-        description={`${people.length} kişinin fotoğraf, bölüm ve kategori görevlerini merkezi olarak yönetin.`}
+        description={`${orderedPeople.length} kişinin fotoğraf, bölüm ve kategori görevlerini merkezi olarak yönetin.`}
         actions={
           <Button asChild variant="outline" className="rounded-xl">
             <Link href="/admin/uyeler">
@@ -57,8 +59,8 @@ export default async function PeopleManagementPage() {
 
       <div className="mt-9 grid gap-7 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.55fr)]">
         <section className="min-w-0 space-y-4">
-          {people.length ? (
-            people.map((person) => (
+          {orderedPeople.length ? (
+            orderedPeople.map((person) => (
               <article
                 key={person.id}
                 className="rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-[0_18px_50px_-38px_rgba(27,42,94,0.45)] dark:border-white/10 dark:bg-primary-950 sm:p-6"
