@@ -6,6 +6,7 @@ import { PrismaClient } from "../lib/generated/prisma/client";
 import eventsContent from "../content/events.json";
 import homeContent from "../content/home.json";
 import teamContent from "../content/team.json";
+import { normalizePersonName } from "../lib/person-name";
 import { siteContentDefinitions } from "../lib/site-content-defaults";
 import { createNormalizedSlug } from "../lib/slug";
 
@@ -51,7 +52,8 @@ async function main() {
 
   await prisma.$transaction([
     prisma.event.deleteMany(),
-    prisma.teamMember.deleteMany(),
+    prisma.teamMembership.deleteMany(),
+    prisma.person.deleteMany(),
     prisma.teamCategory.deleteMany(),
     prisma.siteStat.deleteMany(),
   ]);
@@ -86,16 +88,82 @@ async function main() {
     categoryIdByName.set(name, category.id);
   }
 
-  await prisma.teamMember.createMany({
-    data: teamContent.members.map((member) => ({
-      name: member.name,
-      role: member.role,
-      department: "Belirtilmedi",
-      categoryId: categoryIdByName.get(member.department)!,
-      photoUrl: member.photoUrl,
-      photoAlt: member.photoUrl ? `${member.name} portresi` : null,
-      order: member.order,
-    })),
+  await prisma.teamCategory.createMany({
+    data: [
+      {
+        name: "Diş Hekimliği Koordinatörlüğü",
+        slug: "dis-hekimligi-koordinatorlugu",
+        order: 11,
+      },
+      {
+        name: "Hemşirelik Koordinatörlüğü",
+        slug: "hemsirelik-koordinatorlugu",
+        order: 12,
+      },
+    ],
+  });
+
+  const personIdByNormalizedName = new Map<string, number>();
+
+  for (const member of teamContent.members) {
+    const normalizedName = normalizePersonName(member.name);
+
+    if (personIdByNormalizedName.has(normalizedName)) {
+      continue;
+    }
+
+    const person = await prisma.person.create({
+      data: {
+        name: member.name,
+        normalizedName,
+        department: "Belirtilmedi",
+        photoUrl: member.photoUrl,
+        photoAlt: member.photoUrl ? `${member.name} portresi` : null,
+      },
+    });
+    personIdByNormalizedName.set(normalizedName, person.id);
+  }
+
+  const membershipsByPersonAndCategory = new Map<
+    string,
+    {
+      personId: number;
+      categoryId: number;
+      roles: string[];
+      order: number;
+    }
+  >();
+
+  for (const member of teamContent.members) {
+    const personId = personIdByNormalizedName.get(
+      normalizePersonName(member.name),
+    )!;
+    const categoryId = categoryIdByName.get(member.department)!;
+    const membershipKey = `${personId}:${categoryId}`;
+    const existingMembership = membershipsByPersonAndCategory.get(membershipKey);
+
+    if (existingMembership) {
+      existingMembership.roles.push(member.role);
+      existingMembership.order = Math.min(existingMembership.order, member.order);
+    } else {
+      membershipsByPersonAndCategory.set(membershipKey, {
+        personId,
+        categoryId,
+        roles: [member.role],
+        order: member.order,
+      });
+    }
+  }
+
+  await prisma.teamMembership.createMany({
+    data: Array.from(membershipsByPersonAndCategory.values()).map(
+      (membership) => ({
+        personId: membership.personId,
+        categoryId: membership.categoryId,
+        role: membership.roles.join(" / "),
+        order: membership.order,
+      }),
+    ),
   });
 
   await prisma.siteStat.createMany({
@@ -209,7 +277,8 @@ async function main() {
 
   const [
     eventCount,
-    teamMemberCount,
+    personCount,
+    membershipCount,
     categoryCount,
     siteStatCount,
     siteContentCount,
@@ -217,7 +286,8 @@ async function main() {
     collaborationCount,
   ] = await Promise.all([
     prisma.event.count(),
-    prisma.teamMember.count(),
+    prisma.person.count(),
+    prisma.teamMembership.count(),
     prisma.teamCategory.count(),
     prisma.siteStat.count(),
     prisma.siteContent.count(),
@@ -226,7 +296,7 @@ async function main() {
   ]);
 
   console.log(
-    `Seed tamamlandı: ${eventCount} etkinlik, ${teamMemberCount} ekip üyesi, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik, ${siteContentCount} düzenlenebilir içerik, ${partnerClubCount} partner kulüp, ${collaborationCount} iş birliği maddesi.`,
+    `Seed tamamlandı: ${eventCount} etkinlik, ${personCount} kişi, ${membershipCount} ekip üyeliği, ${categoryCount} ekip kategorisi, ${siteStatCount} istatistik, ${siteContentCount} düzenlenebilir içerik, ${partnerClubCount} partner kulüp, ${collaborationCount} iş birliği maddesi.`,
   );
   console.log(`Admin kullanıcı adı: ${adminUsername}`);
   console.log(`Admin geçici şifre: ${adminPassword}`);

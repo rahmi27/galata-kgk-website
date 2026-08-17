@@ -46,21 +46,34 @@ model Event {
   @@index([date])
 }
 
-model TeamMember {
-  id             Int          @id @default(autoincrement())
+model Person {
+  id             Int              @id @default(autoincrement())
   name           String
-  role           String
-  department     String       @default("Belirtilmedi")
+  normalizedName String           @unique
   photoUrl       String?
   photoAlt       String?
+  department     String           @default("Belirtilmedi")
   socialPlatform String?
   socialUrl      String?
-  order          Int
-  createdAt      DateTime     @default(now())
-  categoryId     Int
-  category       TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt      DateTime         @default(now())
+  memberships    TeamMembership[]
 
+  @@index([name])
+}
+
+model TeamMembership {
+  id         Int          @id @default(autoincrement())
+  personId   Int
+  categoryId Int
+  role       String
+  order      Int
+  createdAt  DateTime     @default(now())
+  person     Person       @relation(fields: [personId], references: [id], onDelete: Cascade)
+  category   TeamCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@unique([personId, categoryId])
   @@index([categoryId, order])
+  @@index([personId])
 }
 
 model ClubSocialLink {
@@ -76,11 +89,11 @@ model ClubSocialLink {
 }
 
 model TeamCategory {
-  id      Int          @id @default(autoincrement())
-  name    String       @unique
-  slug    String       @unique
-  order   Int
-  members TeamMember[]
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  slug        String           @unique
+  order       Int
+  memberships TeamMembership[]
 
   @@index([order])
 }

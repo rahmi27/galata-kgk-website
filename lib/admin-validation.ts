@@ -25,18 +25,6 @@ export type EventAdminInput = {
   category: string;
 };
 
-export type TeamMemberAdminInput = {
-  name: string;
-  role: string;
-  department: string;
-  categoryId: number | null;
-  newCategoryName: string | null;
-  photoAlt: string | null;
-  socialPlatform: "instagram" | "linkedin" | null;
-  socialUrl: string | null;
-  order: number;
-};
-
 export type SiteStatAdminInput = {
   label: string;
   value: string;
@@ -156,120 +144,6 @@ export function validateEventForm(
       category,
       imageUrl: imageUrl || null,
       imageAlt: imageAlt || null,
-    },
-  };
-}
-
-export function validateTeamMemberForm(
-  formData: FormData,
-): ValidationResult<TeamMemberAdminInput> {
-  const name = getFormString(formData, "name");
-  const role = getFormString(formData, "role");
-  const department = getFormString(formData, "department");
-  const categoryValue = getFormString(formData, "categoryId");
-  const newCategoryName = getFormString(formData, "newCategoryName");
-  const orderValue = getFormString(formData, "order");
-  const photoAlt = getFormString(formData, "photoAlt");
-  const socialPlatform = getFormString(formData, "socialPlatform");
-  const socialUrl = getFormString(formData, "socialUrl");
-  const order = Number(orderValue);
-
-  if (name.length < 2 || name.length > 100) {
-    return {
-      success: false,
-      error: "Ad soyad 2–100 karakter arasında olmalıdır.",
-    };
-  }
-
-  if (role.length < 2 || role.length > 100) {
-    return {
-      success: false,
-      error: "Görev 2–100 karakter arasında olmalıdır.",
-    };
-  }
-
-  if (department.length < 2 || department.length > 120) {
-    return {
-      success: false,
-      error: "Bölüm bilgisi 2–120 karakter arasında olmalıdır.",
-    };
-  }
-
-  if (photoAlt.length > 180) {
-    return {
-      success: false,
-      error: "Fotoğraf alt metni en fazla 180 karakter olabilir.",
-    };
-  }
-
-  if (
-    socialPlatform &&
-    socialPlatform !== "instagram" &&
-    socialPlatform !== "linkedin"
-  ) {
-    return {
-      success: false,
-      error: "Ekip üyesi bağlantısı için Instagram veya LinkedIn seçin.",
-    };
-  }
-
-  if ((socialPlatform && !socialUrl) || (!socialPlatform && socialUrl)) {
-    return {
-      success: false,
-      error: "Sosyal medya türü ve bağlantı adresini birlikte doldurun.",
-    };
-  }
-
-  if (socialUrl.length > 500 || !validateOptionalUrl(socialUrl)) {
-    return {
-      success: false,
-      error: "Sosyal medya bağlantısı geçerli bir http(s) adresi olmalıdır.",
-    };
-  }
-
-  if (!Number.isInteger(order) || order < 0 || order > 9999) {
-    return {
-      success: false,
-      error: "Sıralama 0–9999 arasında tam sayı olmalıdır.",
-    };
-  }
-
-  const categoryId =
-    categoryValue === "new" ? null : Number(categoryValue);
-
-  if (categoryValue === "new") {
-    if (newCategoryName.length < 2 || newCategoryName.length > 80) {
-      return {
-        success: false,
-        error: "Yeni kategori adı 2–80 karakter arasında olmalıdır.",
-      };
-    }
-  } else if (
-    categoryId === null ||
-    !Number.isInteger(categoryId) ||
-    categoryId <= 0
-  ) {
-    return {
-      success: false,
-      error: "Geçerli bir ekip kategorisi seçin.",
-    };
-  }
-
-  return {
-    success: true,
-    data: {
-      name,
-      role,
-      department,
-      categoryId,
-      newCategoryName:
-        categoryValue === "new" ? newCategoryName : null,
-      photoAlt: photoAlt || null,
-      socialPlatform: socialPlatform
-        ? (socialPlatform as "instagram" | "linkedin")
-        : null,
-      socialUrl: socialUrl || null,
-      order,
     },
   };
 }

@@ -1,0 +1,28 @@
+id,name,role,department,photoUrl,photoAlt,socialPlatform,socialUrl,order,createdAt,categoryId,categoryName,categorySlug,categoryOrder
+1,Özden Topuz,Yönetim Kurulu Başkanı,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/iclal_ozden/,0,2026-07-23T16:39:25.596Z,1,Yönetim Kurulu,yonetim-kurulu,1
+2,Rabia Naz Polatcan,Yönetim Kurulu Başkan Yardımcısı,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/polatcan_rabia/,1,2026-07-23T16:39:25.596Z,1,Yönetim Kurulu,yonetim-kurulu,1
+18,Yaren Çakır,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/yarencakir17/,2,2026-07-31T20:54:03.271Z,1,Yönetim Kurulu,yonetim-kurulu,1
+19,Özge Savaş,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/_zogee/,3,2026-07-31T20:54:52.591Z,1,Yönetim Kurulu,yonetim-kurulu,1
+20,Yeşim Cantekin,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/yesimcantkn/,4,2026-07-31T20:55:34.671Z,1,Yönetim Kurulu,yonetim-kurulu,1
+21,Nisanur Külcü,Yönetim Kurulu Sayman Üyesi,İç Mimarlık ve Çevre Tasarımı,,,,,5,2026-07-31T20:56:23.081Z,1,Yönetim Kurulu,yonetim-kurulu,1
+22,Ferman Uçar,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/fermanucr/,6,2026-07-31T20:57:24.648Z,1,Yönetim Kurulu,yonetim-kurulu,1
+23,Batuhan Şahin,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/btusahin0/,7,2026-07-31T20:57:53.805Z,1,Yönetim Kurulu,yonetim-kurulu,1
+31,Ebrar Yardım,Yönetim Kurulu Üyesi,İç Mimarlık ve Çevre Tasarımı,,,,,8,2026-08-16T20:11:39.698Z,1,Yönetim Kurulu,yonetim-kurulu,1
+15,Rabia Naz Polatcan,Sponsor ve İş Birlikleri Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/polatcan_rabia/,0,2026-07-23T16:39:25.596Z,7,Sponsor ve İş Birlikleri Koordinatörlüğü,sponsor-ve-is-birlikleri-koordinatorlugu,2
+13,Yeşim Cantekin,Sponsor ve İş Birlikleri Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/yesimcantkn/,1,2026-07-23T16:39:25.596Z,7,Sponsor ve İş Birlikleri Koordinatörlüğü,sponsor-ve-is-birlikleri-koordinatorlugu,2
+32,Ebrar Yardım,Sponsor ve İş Birlikleri Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,,,2,2026-08-16T20:12:37.830Z,7,Sponsor ve İş Birlikleri Koordinatörlüğü,sponsor-ve-is-birlikleri-koordinatorlugu,2
+4,Özden Topuz,Etkinlik Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/iclal_ozden/,1,2026-07-23T16:39:25.596Z,2,Etkinlik Koordinatörlüğü,etkinlik-koordinatorlugu,3
+5,Ahmet Emiroğlu,Etkinlik Koordinatörü Yardımcısı,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/ahmet.t.e/,2,2026-07-23T16:39:25.596Z,2,Etkinlik Koordinatörlüğü,etkinlik-koordinatorlugu,3
+6,Ferman Uçar,IT Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/fermanucr/,1,2026-07-23T16:39:25.596Z,3,IT Koordinatörlüğü,it-koordinatorlugu,4
+7,Rahmi Atilla Avcı,IT Koordinatörü Yardımcısı,Bilgisayar Mühendisliği,,,instagram,https://www.instagram.com/rahmiatillaavci/,2,2026-07-23T16:39:25.596Z,3,IT Koordinatörlüğü,it-koordinatorlugu,4
+8,Özge Savaş,Tasarım Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/_zogee/,1,2026-07-23T16:39:25.596Z,4,Tasarım Koordinatörlüğü,tasarim-koordinatorlugu,5
+9,İlyas Bayram İnam,Tasarım Koordinatörü Yardımcısı,İletişim ve Tasarım,,,instagram,https://www.instagram.com/ilyas.inam/,2,2026-07-23T16:39:25.596Z,4,Tasarım Koordinatörlüğü,tasarim-koordinatorlugu,5
+10,Batuhan Şahin,Sosyal Medya Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,instagram,https://www.instagram.com/btusahin0/,1,2026-07-23T16:39:25.596Z,5,Sosyal Medya Koordinatörlüğü,sosyal-medya-koordinatorlugu,6
+11,Edanaz Doluca,Sosyal Medya Koordinatörü Yardımcısı,İç Mimarlık,,,instagram,https://www.instagram.com/ed4nazz/,2,2026-07-23T16:39:25.596Z,5,Sosyal Medya Koordinatörlüğü,sosyal-medya-koordinatorlugu,6
+16,Eylül Başer,Gastronomi Koordinatörü,Gastronomi ve Mutfak Sanatları,,,instagram,https://www.instagram.com/eylulbsr1881/,1,2026-07-23T16:39:25.596Z,8,Gastronomi Koordinatörlüğü,gastronomi-koordinatorlugu,7
+25,Yaren Çakır,Üye Koordinatörü,İç Mimarlık ve Çevre Tasarımı,,,,,0,2026-08-16T20:04:50.721Z,9,Üye Koordinatörlüğü,uye-koordinatorlugu,9
+26,Nisanur Külcü,Sayman,İç Mimarlık ve Çevre Tasarımı,,,,,0,2026-08-16T20:05:36.864Z,10,Sayman,sayman,10
+27,Eklenecek Üye,Diş Hekimliği Koordinatörü,Diş Hekimliği,,,,,0,2026-08-16T20:07:50.900Z,11,Diş Hekimliği Koordinatörlüğü,dis-hekimligi-koordinatorlugu,11
+28,Eklenecek Üye,Diş Hekimliği Koordinatör Yardımcısı,Diş Hekimliği,,,,,1,2026-08-16T20:08:26.437Z,11,Diş Hekimliği Koordinatörlüğü,dis-hekimligi-koordinatorlugu,11
+29,Eklenecek Üye,Hemşirelik Koordinatörü,Hemşirelik,,,,,0,2026-08-16T20:09:02.996Z,12,Hemşirelik Koordinatörlüğü,hemsirelik-koordinatorlugu,12
+30,Eklenecek Üye,Hemşirelik Koordinatör Yardımcısı,Hemşirelik,,,,,1,2026-08-16T20:09:30.798Z,12,Hemşirelik Koordinatörlüğü,hemsirelik-koordinatorlugu,12
