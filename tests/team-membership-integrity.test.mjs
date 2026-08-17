@@ -49,3 +49,22 @@ test("merge öncesi main sürümü yeni tekil veri kaynağına uyumlu kalır", a
   assert.match(compatibility, /INSTEAD OF UPDATE ON "TeamMember"/);
   assert.match(compatibility, /INSTEAD OF DELETE ON "TeamMember"/);
 });
+
+test("sağlık koordinatörlükleri boş hazırlanır ve public sayfada gizlenir", async () => {
+  const migration = await read(
+    "prisma",
+    "migrations",
+    "20260817093000_prepare_empty_health_categories",
+    "migration.sql",
+  );
+  const seed = await read("prisma", "seed.ts");
+  const publicPage = await read("app", "ekibimiz", "page.tsx");
+
+  assert.match(migration, /Diş Hekimliği Koordinatörlüğü/);
+  assert.match(migration, /Hemşirelik Koordinatörlüğü/);
+  assert.match(migration, /normalizedName" = 'eklenecekuye'/);
+  assert.match(migration, /migration stopped to prevent data loss/);
+  assert.match(seed, /slug: "dis-hekimligi-koordinatorlugu"/);
+  assert.match(seed, /slug: "hemsirelik-koordinatorlugu"/);
+  assert.match(publicPage, /memberships:\s*\{\s*some: \{\}/);
+});

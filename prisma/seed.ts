@@ -88,6 +88,21 @@ async function main() {
     categoryIdByName.set(name, category.id);
   }
 
+  await prisma.teamCategory.createMany({
+    data: [
+      {
+        name: "Diş Hekimliği Koordinatörlüğü",
+        slug: "dis-hekimligi-koordinatorlugu",
+        order: 11,
+      },
+      {
+        name: "Hemşirelik Koordinatörlüğü",
+        slug: "hemsirelik-koordinatorlugu",
+        order: 12,
+      },
+    ],
+  });
+
   const personIdByNormalizedName = new Map<string, number>();
 
   for (const member of teamContent.members) {
