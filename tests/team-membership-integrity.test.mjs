@@ -10,7 +10,27 @@ test("kişi ve kategori üyeliği şeması tekrar kaydı engeller", async () => 
   const schema = await read("prisma", "schema.prisma");
   assert.match(schema, /model Person[\s\S]*normalizedName\s+String\s+@unique/);
   assert.match(schema, /model TeamMembership[\s\S]*@@unique\(\[personId, categoryId\]\)/);
+  assert.match(schema, /person\s+Person[\s\S]*onDelete: Cascade/);
   assert.doesNotMatch(schema, /model TeamMember\s*\{/);
+});
+
+test("üye action'ları IDOR ve eşzamanlı tekrar kayıtlarını kontrollü karşılar", async () => {
+  const actions = await read("app", "admin", "(panel)", "uyeler", "actions.ts");
+
+  assert.match(actions, /export async function deletePersonAction/);
+  assert.match(actions, /Silmek istediğiniz kişi bulunamadı/);
+  assert.match(actions, /Atamak istediğiniz kişi bulunamadı/);
+  assert.match(actions, /Seçilen ekip kategorisi bulunamadı/);
+  assert.match(actions, /hasPrismaErrorCode\(error, "P2002"\)/);
+  assert.match(actions, /zaten “\$\{category\.name\}” kategorisinde/);
+});
+
+test("kişi araması istemcide filtrelenir ve yeni bir sorgu endpoint'i açmaz", async () => {
+  const form = await read("components", "admin", "membership-assignment-form.tsx");
+
+  assert.match(form, /useMemo/);
+  assert.match(form, /\.includes\(query\)/);
+  assert.doesNotMatch(form, /fetch\(/);
 });
 
 test("veri migration'ı doğrulamadan eski tabloyu kaldırmaz", async () => {

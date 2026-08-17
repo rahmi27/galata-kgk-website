@@ -6,6 +6,7 @@ import {
   createPersonAction,
 } from "@/app/admin/(panel)/uyeler/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
+import { DeletePersonButton } from "@/components/admin/delete-person-button";
 import { DeleteTeamMembershipButton } from "@/components/admin/delete-team-membership-button";
 import { PersonAdminForm } from "@/components/admin/person-admin-form";
 import { PersonAvatar } from "@/components/admin/person-avatar";
@@ -102,6 +103,11 @@ export default async function PeopleManagementPage() {
                         Temel bilgileri düzenle
                       </Link>
                     </Button>
+                    <DeletePersonButton
+                      personId={person.id}
+                      personName={person.name}
+                      membershipCount={person.memberships.length}
+                    />
                   </div>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2 border-t border-primary-50 pt-4 dark:border-white/10">

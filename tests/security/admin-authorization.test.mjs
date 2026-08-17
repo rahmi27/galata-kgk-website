@@ -63,7 +63,7 @@ test("tüm admin Server Action'ları veri erişiminden önce requireAdmin çağ�
     }
   }
 
-  assert.equal(actionCount, 39, "Beklenen admin action envanteri değişti");
+  assert.equal(actionCount, 40, "Beklenen admin action envanteri değişti");
 });
 
 test("admin panel layout'u doğrudan URL erişiminde de oturum ister", async () => {
