@@ -49,8 +49,42 @@ export function ScrollMotionRuntime({ routeKey }: ScrollMotionRuntimeProps) {
       return;
     }
 
-    document.documentElement.classList.add("motion-runtime-ready");
     const animationFrames = new Set<number>();
+    const pendingRevealElements = new Set<Element>();
+    const pendingRevealAnimations = new Map<Element, Animation>();
+    const revealAnimations = new Set<Animation>();
+    const revealDelays = new WeakMap<Element, number>();
+    let revealCheckFrame: number | null = null;
+
+    const isInsideInitialViewport = (element: Element) => {
+      const bounds = element.getBoundingClientRect();
+
+      return bounds.top < window.innerHeight && bounds.bottom > 0;
+    };
+
+    const applyStaggerDelays = (grid: Element) => {
+      const items = Array.from(grid.children).filter((child) =>
+        child.matches("[data-reveal]"),
+      ) as HTMLElement[];
+
+      if (items.length < 2) {
+        return;
+      }
+
+      const maximumDelay = 200;
+      const delayStep = Math.min(45, maximumDelay / (items.length - 1));
+
+      items.forEach((item, index) => {
+        revealDelays.set(item, Math.round(delayStep * index));
+      });
+    };
+
+    const revealElement = (element: Element) => {
+      pendingRevealAnimations.get(element)?.play();
+      pendingRevealAnimations.delete(element);
+      pendingRevealElements.delete(element);
+      revealObserver.unobserve(element);
+    };
 
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -59,11 +93,10 @@ export function ScrollMotionRuntime({ routeKey }: ScrollMotionRuntimeProps) {
             return;
           }
 
-          entry.target.classList.add("is-revealed");
-          revealObserver.unobserve(entry.target);
+          revealElement(entry.target);
         });
       },
-      { rootMargin: "0px 0px -7% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px 160px 0px", threshold: 0.1 },
     );
 
     const animateCounter = (element: HTMLElement) => {
@@ -116,9 +149,69 @@ export function ScrollMotionRuntime({ routeKey }: ScrollMotionRuntimeProps) {
       { threshold: 0.35 },
     );
 
+    const registerReveal = (element: Element) => {
+      if (
+        isInsideInitialViewport(element) ||
+        pendingRevealAnimations.has(element) ||
+        !(element instanceof HTMLElement)
+      ) {
+        return;
+      }
+
+      const animation = element.animate(
+        [
+          { opacity: 0, transform: "translate3d(0, 16px, 0)" },
+          { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ],
+        {
+          duration: 280,
+          delay: revealDelays.get(element) ?? 0,
+          easing: "ease-out",
+          fill: "both",
+        },
+      );
+
+      animation.pause();
+      pendingRevealElements.add(element);
+      pendingRevealAnimations.set(element, animation);
+      revealAnimations.add(animation);
+      revealObserver.observe(element);
+    };
+
+    const revealApproachingElements = () => {
+      pendingRevealElements.forEach((element) => {
+        const bounds = element.getBoundingClientRect();
+
+        if (bounds.top >= window.innerHeight + 160 || bounds.bottom <= -160) {
+          return;
+        }
+
+        revealElement(element);
+      });
+    };
+
+    const scheduleRevealCheck = () => {
+      if (revealCheckFrame !== null) {
+        return;
+      }
+
+      revealCheckFrame = window.requestAnimationFrame(() => {
+        revealCheckFrame = null;
+        revealApproachingElements();
+      });
+    };
+
     const registerElement = (element: Element) => {
+      if (element.matches(".stagger-grid")) {
+        applyStaggerDelays(element);
+      }
+
+      element
+        .querySelectorAll(".stagger-grid")
+        .forEach(applyStaggerDelays);
+
       if (element.matches("[data-reveal]")) {
-        revealObserver.observe(element);
+        registerReveal(element);
       }
 
       if (element.matches("[data-count-up]")) {
@@ -127,30 +220,66 @@ export function ScrollMotionRuntime({ routeKey }: ScrollMotionRuntimeProps) {
 
       element
         .querySelectorAll("[data-reveal]")
-        .forEach((candidate) => revealObserver.observe(candidate));
+        .forEach(registerReveal);
       element
         .querySelectorAll("[data-count-up]")
         .forEach((candidate) => counterObserver.observe(candidate));
     };
 
-    registerElement(contentRoot);
+    let mutationObserver: MutationObserver | null = null;
+    let initializationFrame: number | null = null;
 
-    const mutationObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof Element) {
-            registerElement(node);
-          }
+    const initializeRuntime = () => {
+      initializationFrame = window.requestAnimationFrame(() => {
+        initializationFrame = null;
+
+        if (!contentRoot.isConnected) {
+          return;
+        }
+
+        registerElement(contentRoot);
+        mutationObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node instanceof Element) {
+                registerElement(node);
+              }
+            });
+          });
         });
-      });
-    });
 
-    mutationObserver.observe(contentRoot, { childList: true, subtree: true });
+        mutationObserver.observe(contentRoot, {
+          childList: true,
+          subtree: true,
+        });
+
+        window.addEventListener("scroll", scheduleRevealCheck, {
+          passive: true,
+        });
+        window.addEventListener("resize", scheduleRevealCheck);
+      });
+    };
+
+    if (document.readyState === "complete") {
+      initializeRuntime();
+    } else {
+      window.addEventListener("load", initializeRuntime, { once: true });
+    }
 
     return () => {
+      window.removeEventListener("load", initializeRuntime);
+      window.removeEventListener("scroll", scheduleRevealCheck);
+      window.removeEventListener("resize", scheduleRevealCheck);
+      if (initializationFrame !== null) {
+        window.cancelAnimationFrame(initializationFrame);
+      }
+      if (revealCheckFrame !== null) {
+        window.cancelAnimationFrame(revealCheckFrame);
+      }
       revealObserver.disconnect();
       counterObserver.disconnect();
-      mutationObserver.disconnect();
+      mutationObserver?.disconnect();
+      revealAnimations.forEach((animation) => animation.cancel());
       animationFrames.forEach((frameId) =>
         window.cancelAnimationFrame(frameId),
       );

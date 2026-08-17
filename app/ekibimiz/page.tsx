@@ -72,10 +72,12 @@ export default async function TeamPage() {
               categories.map((category, categoryIndex) => (
                 <section
                   key={category.id}
-                  data-reveal=""
                   aria-labelledby={`category-${category.slug}`}
                 >
-                  <div className="flex items-center gap-5">
+                  <div
+                    className="flex items-center gap-5"
+                    data-reveal={categoryIndex === 0 ? undefined : ""}
+                  >
                     <span className="font-heading text-xs font-bold tracking-[0.16em] text-accent-700 dark:text-accent-300">
                       {String(categoryIndex + 1).padStart(2, "0")}
                     </span>
@@ -102,6 +104,7 @@ export default async function TeamPage() {
                         imageAlt={membership.person.photoAlt ?? undefined}
                         socialPlatform={membership.person.socialPlatform ?? undefined}
                         socialUrl={membership.person.socialUrl ?? undefined}
+                        reveal={categoryIndex !== 0}
                       />
                     ))}
                   </div>

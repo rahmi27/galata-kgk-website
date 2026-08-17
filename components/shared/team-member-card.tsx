@@ -15,6 +15,7 @@ type TeamMemberCardProps = {
   socialPlatform?: string;
   socialUrl?: string;
   className?: string;
+  reveal?: boolean;
 };
 
 export function TeamMemberCard({
@@ -26,6 +27,7 @@ export function TeamMemberCard({
   socialPlatform,
   socialUrl,
   className,
+  reveal = true,
 }: TeamMemberCardProps) {
   const nameParts = name.trim().split(/\s+/).filter(Boolean);
   const initials = [nameParts[0], nameParts.at(-1)]
@@ -38,7 +40,7 @@ export function TeamMemberCard({
 
   return (
     <article
-      data-reveal=""
+      data-reveal={reveal ? "" : undefined}
       className={cn(
         "card-gradient-edge group overflow-hidden rounded-[1.75rem] border border-primary/10 bg-primary-900 shadow-[0_24px_70px_-48px_rgba(27,42,94,0.5)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-[0_32px_82px_-48px_rgba(27,42,94,0.82)] dark:border-white/10 dark:bg-primary-950",
         className,
