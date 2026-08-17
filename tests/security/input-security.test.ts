@@ -8,6 +8,10 @@ import {
   validateContactSubmission,
   validateMembershipApplication,
 } from "../../lib/form-validation";
+import {
+  validateMembershipForm,
+  validatePersonForm,
+} from "../../lib/person-admin-validation";
 import { shouldBlockAdminLogin } from "../../lib/rate-limit-policy";
 import {
   buildGoogleMapsUrls,
@@ -57,6 +61,41 @@ test("katılım validasyonu hatalı tipleri ve aşırı uzun girdileri reddeder"
   });
 
   assert.equal(result.success, false);
+});
+
+test("kişi ve ekip üyeliği alanları sunucuda sınırlandırılır", () => {
+  const invalidPerson = new FormData();
+  invalidPerson.set("name", "A");
+  invalidPerson.set("department", "B".repeat(121));
+  assert.equal(validatePersonForm(invalidPerson).success, false);
+
+  const validPerson = new FormData();
+  validPerson.set("name", `<script>alert("xss")</script> Test`);
+  validPerson.set("department", "Bilgisayar Mühendisliği");
+  const personResult = validatePersonForm(validPerson);
+  assert.equal(personResult.success, true);
+  if (personResult.success) {
+    assert.equal(personResult.data.name, `<script>alert("xss")</script> Test`);
+  }
+
+  const invalidMembership = new FormData();
+  invalidMembership.set("categoryId", "1");
+  invalidMembership.set("role", "R".repeat(141));
+  invalidMembership.set("order", "1");
+  assert.equal(validateMembershipForm(invalidMembership).success, false);
+
+  const validMembership = new FormData();
+  validMembership.set("categoryId", "1");
+  validMembership.set("role", `'; DROP TABLE "TeamMembership"; --`);
+  validMembership.set("order", "2");
+  const membershipResult = validateMembershipForm(validMembership);
+  assert.equal(membershipResult.success, true);
+  if (membershipResult.success) {
+    assert.equal(
+      membershipResult.data.role,
+      `'; DROP TABLE "TeamMembership"; --`,
+    );
+  }
 });
 
 test("honeypot yalnızca gizli alan doldurulduğunda tetiklenir", () => {
