@@ -21,6 +21,7 @@ async function refreshPeoplePages() {
   revalidatePath("/ekibimiz");
   revalidatePath("/admin");
   revalidatePath("/admin/uyeler");
+  revalidatePath("/admin/uyeler/kisiler");
   revalidatePath("/admin/uyeler/kategoriler");
   await notifyIndexNow(["/ekibimiz"]);
 }
@@ -168,102 +169,166 @@ export async function createMembershipAction(
     return { success: false, message: membershipValidation.error };
   }
 
-  const personMode = fixedPersonId ? "existing" : String(formData.get("personMode") ?? "existing");
-  let personId = fixedPersonId;
-  let newlyCreatedPersonId: number | null = null;
-
-  if (!personId && personMode === "existing") {
-    const parsedPersonId = Number(formData.get("personId"));
-    if (!Number.isInteger(parsedPersonId) || parsedPersonId <= 0) {
-      return { success: false, message: "Var olan kişilerden geçerli bir seçim yapın." };
-    }
-    personId = parsedPersonId;
+  const category = await resolveCategory(
+    membershipValidation.data.categoryId,
+    membershipValidation.data.newCategoryName,
+  );
+  if (!category) {
+    return { success: false, message: "Seçilen ekip kategorisi bulunamadı." };
   }
+  const order = membershipValidation.data.order ??
+    (await prisma.teamMembership.count({ where: { categoryId: category.id } })) + 1;
+  const personMode = fixedPersonId
+    ? "existing"
+    : String(formData.get("personMode") ?? "new");
 
-  if (!personId && personMode === "new") {
+  if (!fixedPersonId && personMode === "new") {
     const personValidation = validatePersonForm(formData);
     if (!personValidation.success) {
       return { success: false, message: personValidation.error };
     }
     const duplicate = await prisma.person.findUnique({
       where: { normalizedName: personValidation.data.normalizedName },
-      select: { id: true, name: true },
+      select: { name: true },
     });
     if (duplicate) {
       return {
         success: false,
-        message: `“${duplicate.name}” zaten kayıtlı. “Var olan kişiyi seç” seçeneğini kullanın.`,
+        message: `“${duplicate.name}” zaten kayıtlı. “Var olan kişiyi ekle” seçeneğini kullanın.`,
       };
     }
 
+    const imageUpload = await saveImageUpload(
+      formData.get("memberPhoto"),
+      "team",
+    );
+    if (!imageUpload.success) {
+      return { success: false, message: imageUpload.error };
+    }
+
     try {
-      const person = await prisma.person.create({ data: personValidation.data });
-      personId = person.id;
-      newlyCreatedPersonId = person.id;
+      const person = await prisma.$transaction(async (transaction) => {
+        const createdPerson = await transaction.person.create({
+          data: {
+            ...personValidation.data,
+            photoUrl: imageUpload.path,
+            photoAlt: imageUpload.path ? personValidation.data.photoAlt : null,
+          },
+        });
+        await transaction.teamMembership.create({
+          data: {
+            personId: createdPerson.id,
+            categoryId: category.id,
+            role: membershipValidation.data.role,
+            order,
+          },
+        });
+        return createdPerson;
+      });
+      await refreshPeoplePages();
+      return {
+        success: true,
+        message: `${person.name} oluşturuldu ve ${category.name} kategorisine eklendi.`,
+      };
     } catch (error) {
-      console.error("Atama sırasında kişi oluşturulamadı.", error);
-      return { success: false, message: "Yeni kişi oluşturulamadı." };
+      await deleteUploadedImage(imageUpload.path);
+      console.error("Yeni kişi ve kategori üyeliği oluşturulamadı.", error);
+      return {
+        success: false,
+        message: "Yeni kişi ve kategori ataması kaydedilemedi.",
+      };
     }
   }
 
-  if (!personId) {
-    return { success: false, message: "Kişi seçimi yapılamadı." };
+  const personId = fixedPersonId ?? Number(formData.get("personId"));
+  if (!Number.isInteger(personId) || personId <= 0) {
+    return {
+      success: false,
+      message: "Var olan kişilerden geçerli bir seçim yapın.",
+    };
   }
 
   const person = await prisma.person.findUnique({
     where: { id: personId },
-    select: { id: true, name: true },
+    select: { id: true, name: true, photoUrl: true, photoAlt: true },
   });
   if (!person) {
     return { success: false, message: "Atamak istediğiniz kişi bulunamadı." };
   }
 
-  const category = await resolveCategory(
-    membershipValidation.data.categoryId,
-    membershipValidation.data.newCategoryName,
-  );
-  if (!category) {
-    if (newlyCreatedPersonId) {
-      await prisma.person.delete({ where: { id: newlyCreatedPersonId } });
-    }
-    return { success: false, message: "Seçilen ekip kategorisi bulunamadı." };
-  }
-
   const duplicateMembership = await prisma.teamMembership.findUnique({
-    where: { personId_categoryId: { personId, categoryId: category.id } },
+    where: {
+      personId_categoryId: { personId, categoryId: category.id },
+    },
   });
   if (duplicateMembership) {
-    if (newlyCreatedPersonId) {
-      await prisma.person.delete({ where: { id: newlyCreatedPersonId } });
-    }
     return {
       success: false,
       message: `“${person.name}” zaten “${category.name}” kategorisinde. Mevcut rolü düzenleyin.`,
     };
   }
 
-  const order = membershipValidation.data.order ??
-    (await prisma.teamMembership.count({ where: { categoryId: category.id } })) + 1;
+  const department = String(formData.get("existingDepartment") ?? "")
+    .trim()
+    .replace(/\s+/g, " ");
+  const photoAlt = String(formData.get("existingPhotoAlt") ?? "").trim();
+  if (department && (department.length < 2 || department.length > 120)) {
+    return {
+      success: false,
+      message: "Bölüm güncellemesi 2–120 karakter olmalıdır.",
+    };
+  }
+  if (photoAlt.length > 180) {
+    return {
+      success: false,
+      message: "Fotoğraf alt metni en fazla 180 karakter olabilir.",
+    };
+  }
+
+  const imageUpload = await saveImageUpload(
+    formData.get("memberPhoto"),
+    "team",
+  );
+  if (!imageUpload.success) {
+    return { success: false, message: imageUpload.error };
+  }
 
   try {
-    await prisma.teamMembership.create({
-      data: {
-        personId,
-        categoryId: category.id,
-        role: membershipValidation.data.role,
-        order,
-      },
+    await prisma.$transaction(async (transaction) => {
+      if (department || imageUpload.path) {
+        await transaction.person.update({
+          where: { id: personId },
+          data: {
+            ...(department ? { department } : {}),
+            ...(imageUpload.path
+              ? {
+                  photoUrl: imageUpload.path,
+                  photoAlt: photoAlt || person.photoAlt,
+                }
+              : {}),
+          },
+        });
+      }
+      await transaction.teamMembership.create({
+        data: {
+          personId,
+          categoryId: category.id,
+          role: membershipValidation.data.role,
+          order,
+        },
+      });
     });
+    if (imageUpload.path && person.photoUrl !== imageUpload.path) {
+      await deleteUploadedImage(person.photoUrl);
+    }
     await refreshPeoplePages();
     return {
       success: true,
       message: `${person.name}, ${category.name} kategorisine eklendi.`,
     };
   } catch (error) {
-    if (newlyCreatedPersonId) {
-      await prisma.person.delete({ where: { id: newlyCreatedPersonId } }).catch(() => undefined);
-    }
-    console.error("Kategori üyeliği oluşturulamadı.", error);
+    await deleteUploadedImage(imageUpload.path);
+    console.error("Var olan kişi kategoriye eklenemedi.", error);
     return { success: false, message: "Kategori ataması kaydedilemedi." };
   }
 }

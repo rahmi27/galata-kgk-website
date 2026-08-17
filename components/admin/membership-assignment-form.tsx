@@ -1,8 +1,10 @@
 "use client";
 
 import { useActionState, useMemo, useState } from "react";
+import Link from "next/link";
 import { LoaderCircle, Search, UserPlus } from "lucide-react";
 
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { ActionMessage, FormField } from "@/components/admin/person-admin-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +25,7 @@ export function MembershipAssignmentForm({
   categories: CategoryOption[];
   fixedPerson?: PersonOption;
 }) {
-  const [mode, setMode] = useState<"existing" | "new">("existing");
+  const [mode, setMode] = useState<"existing" | "new">("new");
   const [search, setSearch] = useState("");
   const [categorySelection, setCategorySelection] = useState("");
   const [order, setOrder] = useState(1);
@@ -46,8 +48,8 @@ export function MembershipAssignmentForm({
       {!fixedPerson ? (
         <>
           <div className="grid grid-cols-2 gap-2 rounded-xl bg-primary-50 p-1 dark:bg-primary-800">
-            <button type="button" onClick={() => setMode("existing")} className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${mode === "existing" ? "bg-white text-primary-950 shadow-sm dark:bg-primary-950 dark:text-white" : "text-primary-600 dark:text-primary-200"}`}>Var olan kişiyi seç</button>
             <button type="button" onClick={() => setMode("new")} className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${mode === "new" ? "bg-white text-primary-950 shadow-sm dark:bg-primary-950 dark:text-white" : "text-primary-600 dark:text-primary-200"}`}>Yeni kişi oluştur</button>
+            <button type="button" onClick={() => setMode("existing")} className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${mode === "existing" ? "bg-white text-primary-950 shadow-sm dark:bg-primary-950 dark:text-white" : "text-primary-600 dark:text-primary-200"}`}>Var olan kişiyi ekle</button>
           </div>
           <input type="hidden" name="personMode" value={mode} />
           {mode === "existing" ? (
@@ -64,15 +66,30 @@ export function MembershipAssignmentForm({
                   {filteredPeople.map((person) => <option key={person.id} value={person.id}>{person.name} — {person.department}</option>)}
                 </select>
               </FormField>
+              <FormField
+                label="Bölümü güncelle (isteğe bağlı)"
+                htmlFor="membership-existing-department"
+                hint="Boş bırakırsanız kişinin mevcut bölüm bilgisi korunur."
+              >
+                <Input
+                  id="membership-existing-department"
+                  name="existingDepartment"
+                  minLength={2}
+                  maxLength={120}
+                  placeholder="Yalnızca değiştirmek istiyorsanız doldurun"
+                />
+              </FormField>
             </div>
           ) : (
-            <div className="grid gap-5 sm:grid-cols-2">
-              <FormField label="Yeni kişinin adı" htmlFor="membership-new-name">
-                <Input id="membership-new-name" name="name" minLength={2} maxLength={100} required={mode === "new"} />
-              </FormField>
-              <FormField label="Bölümü" htmlFor="membership-new-department">
-                <Input id="membership-new-department" name="department" minLength={2} maxLength={120} required={mode === "new"} />
-              </FormField>
+            <div className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <FormField label="Yeni kişinin adı" htmlFor="membership-new-name">
+                  <Input id="membership-new-name" name="name" minLength={2} maxLength={100} required={mode === "new"} />
+                </FormField>
+                <FormField label="Bölümü" htmlFor="membership-new-department">
+                  <Input id="membership-new-department" name="department" minLength={2} maxLength={120} required={mode === "new"} />
+                </FormField>
+              </div>
             </div>
           )}
         </>
@@ -94,6 +111,34 @@ export function MembershipAssignmentForm({
         <FormField label="Yeni kategori adı" htmlFor="membership-new-category" hint="Aynı ad farklı harf biçimiyle varsa mevcut kategori kullanılır.">
           <Input id="membership-new-category" name="newCategoryName" minLength={2} maxLength={80} required />
         </FormField>
+      ) : null}
+      <Link
+        href="/admin/uyeler/kategoriler"
+        className="inline-flex text-xs font-semibold text-primary-700 underline-offset-4 hover:text-accent-700 hover:underline dark:text-primary-100"
+      >
+        Kategorileri ayrı ekranda yönet
+      </Link>
+
+      {!fixedPerson ? (
+        <>
+          <ImageUploadField
+            id="membership-photo"
+            name="memberPhoto"
+            label={mode === "new" ? "Üye fotoğrafı" : "Yeni fotoğraf (isteğe bağlı)"}
+          />
+          <FormField
+            label="Fotoğraf alt metni"
+            htmlFor={mode === "new" ? "membership-photo-alt" : "membership-existing-photo-alt"}
+            hint={mode === "new" ? "Fotoğraf varsa kısa bir erişilebilirlik açıklaması yazın." : "Yeni fotoğraf seçerseniz kullanılacaktır."}
+          >
+            <Input
+              id={mode === "new" ? "membership-photo-alt" : "membership-existing-photo-alt"}
+              name={mode === "new" ? "photoAlt" : "existingPhotoAlt"}
+              maxLength={180}
+              placeholder="Örn. Üye portresi"
+            />
+          </FormField>
+        </>
       ) : null}
       <div className="grid gap-5 sm:grid-cols-[1fr_8rem]">
         <FormField label="Bu kategorideki rolü" htmlFor="membership-role">
