@@ -1,21 +1,19 @@
 import { Flag, Target } from "lucide-react";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Timeline } from "@/components/shared/timeline";
-import aboutContent from "@/content/about.json";
 import { createPageMetadata } from "@/lib/site-metadata";
 import {
   getAboutContentFromRows,
   getPublicSiteContentRows,
 } from "@/lib/site-content";
 
-export const metadata = createPageMetadata({
-  title: aboutContent.meta.title,
-  description: aboutContent.meta.description,
-  path: "/hakkimizda",
-  keywords: ["Galata KGK vizyon", "Galata KGK misyon"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "about" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/hakkimizda", locale, keywords: locale === "en" ? ["Galata KGK vision", "Galata KGK mission"] : ["Galata KGK vizyon", "Galata KGK misyon"] });
+}
 
 export const revalidate = 300;
 

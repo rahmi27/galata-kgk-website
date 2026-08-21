@@ -3,6 +3,13 @@ import { BarChart3, Cookie, LockKeyhole, ShieldCheck } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { SectionHeading } from "@/components/shared/section-heading";
+import { createPageMetadata } from "@/lib/site-metadata";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "privacy" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/cerez-politikasi", locale });
+}
 export default async function CookiePolicyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

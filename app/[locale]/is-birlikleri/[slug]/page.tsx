@@ -37,22 +37,25 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: CollaborationDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "collaborations" });
   const partnerClub = await getPartnerClub(slug);
 
   if (!partnerClub) {
     return createPageMetadata({
-      title: "Partner Kulüp Bulunamadı | Galata KGK",
-      description: "Aradığınız partner kulüp kaydı bulunamadı.",
+      title: t("notFoundTitle"),
+      description: t("notFoundDescription"),
       path: "/is-birlikleri",
+      locale,
     });
   }
 
   return createPageMetadata({
-    title: `${partnerClub.name} İş Birlikleri | Galata KGK`,
-    description: partnerClub.shortDescription,
+    title: t("detailTitle", { name: localizedValue(locale, partnerClub.name, partnerClub.nameEn) }),
+    description: localizedValue(locale, partnerClub.shortDescription, partnerClub.shortDescriptionEn),
     path: `/is-birlikleri/${partnerClub.slug}`,
-    keywords: [partnerClub.name, "kulüp iş birliği", "Galata KGK partnerleri"],
+    locale,
+    keywords: [localizedValue(locale, partnerClub.name, partnerClub.nameEn), locale === "en" ? "student club collaboration" : "kulüp iş birliği", locale === "en" ? "Galata KGK partners" : "Galata KGK partnerleri"],
   });
 }
 

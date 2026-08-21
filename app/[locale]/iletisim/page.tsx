@@ -16,6 +16,12 @@ import { buildGoogleMapsUrls } from "@/lib/url-security";
 
 export const revalidate = 300;
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "contact" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/iletisim", locale });
+}
+
 export default async function ContactPage({
   params,
 }: {

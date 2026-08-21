@@ -5,6 +5,12 @@ import { MembershipForm } from "@/components/membership/membership-form";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { createPageMetadata } from "@/lib/site-metadata";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "join" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/katilim", locale });
+}
+
 export default async function MembershipPage({
   params,
 }: {

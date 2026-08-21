@@ -27,8 +27,15 @@ import {
   getPublicSiteContentRows,
 } from "@/lib/site-content";
 import { getSafeHttpUrl } from "@/lib/url-security";
+import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/", locale });
+}
 
 const whyUsIcons = {
   compass: Compass,
@@ -96,7 +103,7 @@ export default async function HomePage({
 
   return (
     <div className="bg-background">
-      <OrganizationJsonLd />
+      <OrganizationJsonLd locale={locale} slogan={heroContent.eyebrow} description={t("metaDescription")} />
 
       <main>
         <section className="relative isolate overflow-hidden border-b border-primary/10 dark:border-white/10">

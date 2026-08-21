@@ -45,22 +45,25 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: EventDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "events" });
   const event = await getEventBySlug(slug);
 
   if (!event) {
     return createPageMetadata({
-      title: "Etkinlik Bulunamadı | Galata KGK",
-      description: "Aradığınız Galata KGK etkinliği bulunamadı.",
+      title: t("notFoundTitle"),
+      description: t("notFoundDescription"),
       path: "/etkinliklerimiz",
+      locale,
     });
   }
 
   return createPageMetadata({
-    title: `${event.title} | Galata KGK — İstanbul Galata Üniversitesi`,
-    description: `${event.description} İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü etkinliği.`,
+    title: t("detailTitle", { title: localizedValue(locale, event.title, event.titleEn) }),
+    description: t("detailDescription", { description: localizedValue(locale, event.description, event.descriptionEn) }),
     path: `/etkinliklerimiz/${event.slug}`,
-    keywords: [event.title, event.category, "Galata KGK etkinliği"],
+    locale,
+    keywords: [localizedValue(locale, event.title, event.titleEn), localizedValue(locale, event.category, event.categoryEn), locale === "en" ? "Galata KGK event" : "Galata KGK etkinliği"],
   });
 }
 

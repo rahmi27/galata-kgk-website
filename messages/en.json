@@ -148,7 +148,11 @@
     "about": "About This Event",
     "previousYear": "Previous year",
     "nextYear": "Next year",
-    "multipleEvents": "{count} events"
+    "multipleEvents": "{count} events",
+    "notFoundTitle": "Event Not Found | Galata KGK",
+    "notFoundDescription": "We could not find the Galata KGK event you were looking for.",
+    "detailTitle": "{title} | Galata KGK — Istanbul Galata University",
+    "detailDescription": "{description} An event by Istanbul Galata University Career and Entrepreneurship Club."
   },
   "team": {
     "metaTitle": "Our Team | Galata KGK — Istanbul Galata University",
@@ -189,7 +193,10 @@
     "back": "Back to all collaborations",
     "datedTitle": "What we have created together",
     "ongoingTitle": "Ongoing Collaborations",
-    "emptyItems": "Updates from this collaboration will be added soon."
+    "emptyItems": "Updates from this collaboration will be added soon.",
+    "notFoundTitle": "Partner Club Not Found | Galata KGK",
+    "notFoundDescription": "We could not find the partner club you were looking for.",
+    "detailTitle": "{name} Collaborations | Galata KGK"
   },
   "contact": {
     "metaTitle": "Contact | Galata KGK — Istanbul Galata University",
@@ -257,6 +264,7 @@
   },
   "privacy": {
     "metaTitle": "Cookie and Analytics Notice | Galata KGK",
+    "metaDescription": "Learn how Galata KGK uses essential cookies, privacy-conscious analytics and performance measurement on this website.",
     "eyebrow": "Privacy",
     "title": "Cookie and analytics notice",
     "description": "A transparent overview of the technical tools used to run the site and understand its performance.",

@@ -137,7 +137,11 @@
     "about": "Etkinlik Hakkında",
     "previousYear": "Önceki yıl",
     "nextYear": "Sonraki yıl",
-    "multipleEvents": "{count} etkinlik"
+    "multipleEvents": "{count} etkinlik",
+    "notFoundTitle": "Etkinlik Bulunamadı | Galata KGK",
+    "notFoundDescription": "Aradığınız Galata KGK etkinliği bulunamadı.",
+    "detailTitle": "{title} | Galata KGK — İstanbul Galata Üniversitesi",
+    "detailDescription": "{description} İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü etkinliği."
   },
   "team": {
     "metaTitle": "Ekibimiz | Galata KGK — İstanbul Galata Üniversitesi",
@@ -178,7 +182,10 @@
     "back": "Tüm iş birliklerine dön",
     "datedTitle": "Birlikte gerçekleştirdiklerimiz",
     "ongoingTitle": "Devam eden iş birlikleri",
-    "emptyItems": "Bu partner kulüple yürütülen çalışmalar yakında eklenecek."
+    "emptyItems": "Bu partner kulüple yürütülen çalışmalar yakında eklenecek.",
+    "notFoundTitle": "Partner Kulüp Bulunamadı | Galata KGK",
+    "notFoundDescription": "Aradığınız partner kulüp kaydı bulunamadı.",
+    "detailTitle": "{name} İş Birlikleri | Galata KGK"
   },
   "contact": {
     "metaTitle": "İletişim | Galata KGK — İstanbul Galata Üniversitesi",
@@ -246,6 +253,7 @@
   },
   "privacy": {
     "metaTitle": "Çerez ve Analitik Bilgilendirmesi | Galata KGK",
+    "metaDescription": "Galata KGK web sitesinde kullanılan zorunlu çerezler, anonim analizler ve gizlilik tercihleri hakkında bilgi alın.",
     "eyebrow": "Gizlilik",
     "title": "Çerez ve analitik bilgilendirmesi",
     "description": "Sitenin çalışması ve performansının ölçülmesi sırasında kullanılan teknik araçları şeffaf biçimde açıklıyoruz.",

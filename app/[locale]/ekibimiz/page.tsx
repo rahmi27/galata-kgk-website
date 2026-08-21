@@ -7,6 +7,12 @@ import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "team" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/ekibimiz", locale });
+}
+
 export default async function TeamPage({
   params,
 }: {
