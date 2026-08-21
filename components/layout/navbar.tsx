@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { ArrowUpRight, ChevronDown, Handshake, Menu, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -185,6 +186,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          <LanguageSwitcher />
           <ThemeToggle />
           <Button
             asChild
