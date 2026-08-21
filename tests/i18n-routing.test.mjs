@@ -96,6 +96,7 @@ test("SEO yardımcıları canonical ve tr/en/x-default hreflang üretir", async 
   assert.match(metadata, /"\/etkinliklerimiz": "\/en\/events"/);
   assert.match(metadata, /"x-default": turkishPath/);
   assert.match(metadata, /https:\/\/galatakariyervegirisimcilik\.com/);
+  assert.match(metadata, /metadataBase: siteUrl/);
   assert.match(sitemap, /alternates:\s*\{\s*languages/);
   assert.match(sitemap, /localizedPublicPath\(path, "en"\)/);
 });

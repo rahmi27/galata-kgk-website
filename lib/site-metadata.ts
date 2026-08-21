@@ -83,6 +83,7 @@ export function createPageMetadata({
     ? ["Istanbul Galata University", "Career and Entrepreneurship Club", "student community", "career events", "entrepreneurship"]
     : defaultKeywords;
   return {
+    metadataBase: siteUrl,
     title: {
       absolute: title,
     },
