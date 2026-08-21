@@ -53,6 +53,27 @@ test("dil değiştirici aynı iç rotayı hedef locale ile değiştirir", async 
   assert.match(switcher, /\{ locale: nextLocale \}/);
 });
 
+test("form API hata kodları kullanıcıya aktif dilin mesajlarıyla gösterilir", async () => {
+  const [contactForm, membershipForm, contactRoute, membershipRoute] = await Promise.all([
+    read("components", "contact", "contact-form.tsx"),
+    read("components", "membership", "membership-form.tsx"),
+    read("app", "api", "iletisim", "route.ts"),
+    read("app", "api", "katilim", "route.ts"),
+  ]);
+
+  for (const form of [contactForm, membershipForm]) {
+    assert.match(form, /INVALID_SUBMISSION: t\("invalidError"\)/);
+    assert.match(form, /EMAIL_RATE_LIMITED: t\("emailRateLimitError"\)/);
+    assert.match(form, /IP_RATE_LIMITED: t\("ipRateLimitError"\)/);
+  }
+  for (const route of [contactRoute, membershipRoute]) {
+    assert.match(route, /code: "INVALID_SUBMISSION"/);
+    assert.match(route, /code: "EMAIL_RATE_LIMITED"/);
+    assert.match(route, /code: "IP_RATE_LIMITED"/);
+    assert.match(route, /code: "INTERNAL_ERROR"/);
+  }
+});
+
 test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", async () => {
   const [proxy, localeLayout, rootDocument, revalidation] = await Promise.all([
     read("proxy.ts"),

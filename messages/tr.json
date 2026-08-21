@@ -239,7 +239,10 @@
     "submit": "Mesajı Gönder",
     "submitting": "Gönderiliyor...",
     "success": "Teşekkürler! Mesajın başarıyla alındı.",
-    "error": "Mesajın gönderilemedi. Lütfen biraz sonra tekrar dene."
+    "error": "Mesajın gönderilemedi. Lütfen biraz sonra tekrar dene.",
+    "invalidError": "Formdaki bilgileri kontrol edip tekrar dene.",
+    "emailRateLimitError": "Bu e-posta adresiyle kısa süre önce mesaj gönderildi. Lütfen daha sonra tekrar dene.",
+    "ipRateLimitError": "Bu bağlantıdan kısa sürede çok sayıda mesaj gönderildi. Lütfen daha sonra tekrar dene."
   },
   "join": {
     "metaTitle": "Kulübe Katıl | Galata KGK — İstanbul Galata Üniversitesi",
@@ -274,7 +277,10 @@
     "submit": "Başvuruyu Gönder",
     "submitting": "Gönderiliyor...",
     "success": "Başvurun başarıyla alındı. En kısa sürede seninle iletişime geçeceğiz.",
-    "error": "Başvurun gönderilemedi. Lütfen biraz sonra tekrar dene."
+    "error": "Başvurun gönderilemedi. Lütfen biraz sonra tekrar dene.",
+    "invalidError": "Formdaki bilgileri kontrol edip tekrar dene.",
+    "emailRateLimitError": "Bu e-posta adresiyle kısa süre önce başvuru gönderildi. Lütfen daha sonra tekrar dene.",
+    "ipRateLimitError": "Bu bağlantıdan kısa sürede çok sayıda başvuru gönderildi. Lütfen daha sonra tekrar dene."
   },
   "privacy": {
     "metaTitle": "Çerez ve Analitik Bilgilendirmesi | Galata KGK",

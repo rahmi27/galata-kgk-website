@@ -21,6 +21,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
+        code: "INVALID_SUBMISSION",
         error: "Form verileri okunamadı. Lütfen tekrar deneyin.",
       },
       {
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
   if (!validation.success) {
     return NextResponse.json(
       {
+        code: "INVALID_SUBMISSION",
         error: validation.error,
       },
       {
@@ -62,6 +64,7 @@ export async function POST(request: Request) {
     if (isEmailRateLimited) {
       return NextResponse.json(
         {
+          code: "EMAIL_RATE_LIMITED",
           error: `Bu e-posta adresiyle kısa süre önce bir mesaj gönderildi. Lütfen ${SUBMISSION_RATE_LIMIT_MINUTES} dakika sonra tekrar deneyin.`,
         },
         {
@@ -73,6 +76,7 @@ export async function POST(request: Request) {
     if (isIpRateLimited) {
       return NextResponse.json(
         {
+          code: "IP_RATE_LIMITED",
           error:
             "Bu bağlantıdan kısa sürede çok sayıda mesaj gönderildi. Lütfen daha sonra tekrar deneyin.",
         },
@@ -103,6 +107,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
+        code: "INTERNAL_ERROR",
         error:
           "Mesajınız şu anda kaydedilemedi. Lütfen biraz sonra tekrar deneyin.",
       },

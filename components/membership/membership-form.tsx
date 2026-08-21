@@ -61,12 +61,17 @@ export function MembershipForm() {
       const result = (await response.json().catch(() => ({}))) as {
         message?: string;
         error?: string;
+        code?: string;
       };
 
       if (!response.ok) {
-        throw new FormSubmissionError(
-          result.error ?? t("error"),
-        );
+        const errorMessages: Record<string, string> = {
+          INVALID_SUBMISSION: t("invalidError"),
+          EMAIL_RATE_LIMITED: t("emailRateLimitError"),
+          IP_RATE_LIMITED: t("ipRateLimitError"),
+          INTERNAL_ERROR: t("error"),
+        };
+        throw new FormSubmissionError(errorMessages[result.code ?? ""] ?? t("error"));
       }
 
       formElement.reset();
