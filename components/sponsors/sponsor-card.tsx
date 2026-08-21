@@ -26,7 +26,7 @@ export function SponsorCard({
   const logo = (
     <div
       className={cn(
-        "card-gradient-edge flex items-center justify-center overflow-hidden rounded-2xl border border-primary/10 bg-white p-6 transition-[transform,border-color] duration-300 dark:border-white/10 dark:bg-white/[0.06]",
+        "sponsor-logo-surface card-gradient-edge flex items-center justify-center overflow-hidden rounded-2xl border p-6 transition-[transform,border-color,box-shadow] duration-300",
         featured
           ? "min-h-48 sm:min-h-56 sm:p-10"
           : "min-h-32 sm:min-h-36",
@@ -47,7 +47,7 @@ export function SponsorCard({
           )}
         />
       ) : (
-        <div className="flex flex-col items-center gap-2 text-center text-primary-500 dark:text-primary-200">
+        <div className="flex flex-col items-center gap-2 text-center text-primary-100">
           <Building2 className="size-8" aria-hidden="true" />
           <span className="font-heading text-sm font-bold">{name}</span>
         </div>

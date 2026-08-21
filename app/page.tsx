@@ -230,7 +230,7 @@ export default async function HomePage() {
               <div className="stagger-grid mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
                 {sponsors.map((sponsor) => {
                   const logo = (
-                    <div className="flex h-24 items-center justify-center rounded-2xl border border-primary/10 bg-white p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/30 dark:border-white/10 dark:bg-white/[0.06]">
+                    <div className="sponsor-logo-surface flex h-24 items-center justify-center rounded-2xl border p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/45 group-hover:shadow-[0_18px_40px_-28px_rgba(232,93,44,0.75)]">
                       {sponsor.logoUrl ? (
                         <Image
                           src={sponsor.logoUrl}
@@ -241,7 +241,7 @@ export default async function HomePage() {
                           className="h-auto max-h-12 w-auto max-w-full object-contain"
                         />
                       ) : (
-                        <div className="flex flex-col items-center gap-1.5 text-center text-primary-500 dark:text-primary-200">
+                        <div className="flex flex-col items-center gap-1.5 text-center text-primary-100">
                           <Building2 className="size-6" aria-hidden="true" />
                           <span className="line-clamp-2 font-heading text-xs font-bold">
                             {sponsor.name}
