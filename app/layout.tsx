@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import {getLocale} from "next-intl/server";
 
 import { BrandMountainBackdrop } from "@/components/effects/brand-mountain-motif";
 import { SiteTelemetry } from "@/components/site-telemetry";
-import { SiteShell } from "@/components/layout/site-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 import siteContent from "@/content/site.json";
 import {
@@ -12,7 +12,6 @@ import {
   SITE_SHORT_NAME,
   siteUrl,
 } from "@/lib/site-metadata";
-import { getSiteChromeContent } from "@/lib/site-content";
 
 import "./globals.css";
 
@@ -71,10 +70,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const chromeContent = await getSiteChromeContent();
+  const locale = await getLocale();
 
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} font-body antialiased`}
       >
@@ -85,7 +84,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <BrandMountainBackdrop />
-          <SiteShell content={chromeContent}>{children}</SiteShell>
+          {children}
         </ThemeProvider>
         <SiteTelemetry />
       </body>

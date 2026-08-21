@@ -1,6 +1,8 @@
 import { createRequire } from "node:module";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const require = createRequire(import.meta.url);
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const isDevelopment = process.env.NODE_ENV === "development";
 const nextLegacyPolyfills = require.resolve(
   "next/dist/build/polyfills/polyfill-module",
@@ -130,4 +132,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
