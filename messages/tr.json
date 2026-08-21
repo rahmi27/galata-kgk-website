@@ -107,13 +107,24 @@
     "heroDescription": "Galata KGK; kariyerini bilinçli biçimde tasarlamak ve girişimci düşünceyi deneyimlemek isteyen öğrencilerin buluşma noktasıdır.",
     "introEyebrow": "Biz Kimiz?",
     "introTitle": "Öğrenciler tarafından, öğrencilerin geleceği için.",
+    "introParagraphs": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü olarak öğrencilerin iş dünyasını henüz üniversite yıllarında tanımasını, kariyer seçeneklerini bilinçli biçimde değerlendirmesini ve profesyonel hayata güvenle hazırlanmasını destekliyoruz.\n\nDiş hekimliği, gastronomi, hemşirelik, işletme, iletişim, tasarım, bilgisayar mühendisliği ve halkla ilişkiler gibi farklı disiplinlerden öğrencileri aynı toplulukta buluşturuyoruz. Her alanın deneyimini ortak üretime taşıyarak daha kapsayıcı ve güçlü bir öğrenme ortamı kuruyoruz.",
     "principleLabel": "Temel yaklaşımımız",
+    "principleText": "Farklı disiplinlerin bilgisi ve bakış açısı bir araya geldiğinde her öğrencinin kariyer yolculuğu zenginleşir.",
     "visionEyebrow": "Vizyonumuz",
     "visionTitle": "Disiplinler arasında bağ kuran, sürdürülebilir bir kariyer topluluğu.",
+    "visionDescription": "Farklı bölümlerden öğrencilerin birbirinden öğrendiği, iş dünyasıyla nitelikli ilişkiler kurduğu ve her dönem düzenli biçimde büyüyen; kampüs genelinde güven duyulan öncü bir öğrenci topluluğu olmak.",
     "missionEyebrow": "Misyonumuz",
     "missionTitle": "Kariyer bilincini deneyim, rehberlik ve güçlü bağlarla geliştirmek.",
+    "missionDescription": "Mesleki buluşmalar, zirveler, atölyeler ve iş birlikleri aracılığıyla öğrencilerin sektörleri yakından tanımasına, yetkinliklerini geliştirmesine ve kendi alanlarında doğru profesyonellerle buluşmasına imkân sağlamak.",
     "timelineEyebrow": "Yolculuğumuz",
-    "timelineTitle": "Sağlam adımlarla büyüyen bir topluluk modeli."
+    "timelineTitle": "Sağlam adımlarla büyüyen bir topluluk modeli.",
+    "timelineDescription": "Kısa vadeli kalabalıklar yerine düzenli faaliyet, güçlü ekip yapısı ve kalıcı iş birlikleriyle ilerleyen gelişim planımız.",
+    "milestones": [
+      {"year": "Başlangıç", "title": "Çekirdek ekibin kurulması", "description": "Koordinatörlüklerin görevlerini netleştiren, ortak hedefler etrafında çalışan disiplinler arası bir ekip yapısı oluşturuyoruz."},
+      {"year": "Dönem başı", "title": "Tanışma ve oryantasyon", "description": "Yeni üyelerin kulübün vizyonunu tanıdığı, birbirleriyle bağ kurduğu ve çalışma alanlarını keşfettiği güçlü bir başlangıç tasarlıyoruz."},
+      {"year": "Dönem ortası", "title": "Düzenli etkinlik ve iş birlikleri", "description": "Mesleki buluşmalar, atölyeler ve paydaş iş birlikleriyle kulübün kampüsteki bilinirliğini ve aktif katılımı istikrarlı biçimde artırmayı hedefliyoruz."},
+      {"year": "Yıl sonu", "title": "Kampüs genelinde kalıcı etki", "description": "Farklı bölümlerden öğrencilerin sorumluluk aldığı, düzenli büyüyen ve sonraki dönemlere güçlü bir yapı bırakan sürdürülebilir bir topluluğa ulaşmayı amaçlıyoruz."}
+    ]
   },
   "events": {
     "metaTitle": "Etkinliklerimiz | Galata KGK — İstanbul Galata Üniversitesi",

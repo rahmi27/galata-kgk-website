@@ -6,6 +6,11 @@ import {SiteShell} from "@/components/layout/site-shell";
 import {routing} from "@/i18n/routing";
 import {getSiteChromeContent} from "@/lib/site-content";
 
+// Locale params are finite and known. Force the public tree to remain static/ISR
+// even though unknown dynamic slugs can still be generated on first request.
+export const dynamic = "force-static";
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));
 }

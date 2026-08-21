@@ -12,6 +12,8 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import type { SiteChromeContent } from "@/lib/site-content";
 import { cn } from "@/lib/utils";
 
+const partnerRouteHrefs = ["/sponsorlar", "/is-birlikleri"] as const;
+
 export function Navbar({ content }: { content: SiteChromeContent }) {
   const t = useTranslations("nav");
   const partnerLinks = [
@@ -39,7 +41,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
       ...navigation.items
         .filter((item) => item.id !== "ortaklarimiz")
         .map((item) => item.href),
-      ...partnerLinks.map((item) => item.href),
+      ...partnerRouteHrefs,
       navigation.joinCta.href,
     ].filter((href) => href !== currentPathname);
     const prefetchRoutes = () => {
