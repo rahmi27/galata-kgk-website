@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const eventSkeletons = Array.from({ length: 6 }, (_, index) => index);
 
@@ -27,9 +28,10 @@ function EventCardSkeleton() {
 }
 
 export default function EventsLoading() {
+  const t = useTranslations("common");
   return (
     <div className="bg-background">
-      <main aria-busy="true" aria-label="Etkinlikler yükleniyor">
+      <main aria-busy="true" aria-label={t("loading")}>
         <section className="relative overflow-hidden border-b border-primary/10 bg-primary-50/65 py-20 dark:border-white/10 dark:bg-primary-900/30 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <Skeleton className="h-4 w-36" />

@@ -1,4 +1,5 @@
 import { Flag, Target } from "lucide-react";
+import { setRequestLocale } from "next-intl/server";
 
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Timeline } from "@/components/shared/timeline";
@@ -18,7 +19,13 @@ export const metadata = createPageMetadata({
 
 export const revalidate = 300;
 
-export default async function AboutPage() {
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const content = getAboutContentFromRows(await getPublicSiteContentRows());
 
   return (

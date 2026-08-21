@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, ChevronDown, Handshake, Menu, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import type { SiteChromeContent } from "@/lib/site-content";
-import { partnerLinks } from "@/lib/partner-links";
 import { cn } from "@/lib/utils";
 
 export function Navbar({ content }: { content: SiteChromeContent }) {
+  const t = useTranslations("nav");
+  const partnerLinks = [
+    { label: t("sponsors"), href: "/sponsorlar" as const, description: t("sponsorsDescription") },
+    { label: t("collaborations"), href: "/is-birlikleri" as const, description: t("collaborationsDescription") },
+  ];
   const pathname = usePathname();
   const currentPathname = pathname?.replace(/\/+$/, "") || "/";
   const router = useRouter();
@@ -38,7 +42,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
       navigation.joinCta.href,
     ].filter((href) => href !== currentPathname);
     const prefetchRoutes = () => {
-      routes.forEach((href) => router.prefetch(href));
+      routes.forEach((href) => router.prefetch(href as never));
     };
 
     if ("requestIdleCallback" in window) {
@@ -167,7 +171,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+              href={item.href as never}
                 className={cn(
                   "relative py-2 text-sm font-medium text-primary-700 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-accent after:transition-transform hover:text-primary hover:after:scale-x-100 dark:text-primary-200 dark:hover:text-white",
                   isActive ? "text-primary after:scale-x-100 dark:text-white" : "after:scale-x-0",
@@ -187,7 +191,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             variant="secondary"
             className="hidden md:inline-flex"
           >
-            <Link href={navigation.joinCta.href}>
+            <Link href={navigation.joinCta.href as never}>
               {navigation.joinCta.label}
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </Link>
@@ -285,7 +289,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={item.href as never}
                   className={cn(
                     "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
                     currentPathname === item.href &&
@@ -306,7 +310,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
               className="mt-3"
             >
               <Link
-                href={navigation.joinCta.href}
+                href={navigation.joinCta.href as never}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {navigation.joinCta.label}

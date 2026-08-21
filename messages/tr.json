@@ -6,7 +6,15 @@
     "locationTba": "Konum yakında duyurulacak",
     "logoAlt": "{name} logosu",
     "externalWebsite": "{name} web sitesini yeni sekmede aç",
-    "socialAccount": "{label} hesabını{external, select, true { yeni sekmede} other {}} aç"
+    "socialAccount": "{label} hesabını{external, select, true { yeni sekmede} other {}} aç",
+    "websiteHoneypot": "Web sitesi",
+    "privacyPrefix": "İstanbul Galata Üniversitesi ",
+    "privacyLink": "KVKK Aydınlatma Metni’ni",
+    "privacySuffix": " okudum ve kişisel verilerimin işlenmesi hakkında bilgi edindim."
+    ,"themeToggle": "Renk temasını değiştir",
+    "scrollDown": "Sayfada aşağı kaydır",
+    "scrollTop": "Sayfanın başına dön",
+    "loading": "İçerik yükleniyor"
   },
   "nav": {
     "brand": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
@@ -152,7 +160,9 @@
     "whyTitle": "Kampüsün enerjisini anlamlı bir etkiye dönüştürün.",
     "whyDescription": "Galata KGK ile iş birliği; markanızı meraklı, üretken ve geleceğini şekillendiren öğrencilerle buluşturur.",
     "brandTitle": "Marka Sponsorlukları",
+    "brandDescription": "Sektörün önde gelen markalarıyla kurduğumuz iş birlikleri, etkinliklerimize profesyonel değer ve öğrencilere gerçek dünya bağlantıları katar.",
     "communityTitle": "Halk Sponsorlukları",
+    "communityDescription": "Bireysel ve aile destekleriyle büyüyen topluluk modelimiz, dayanışma kültürünü güçlendirir ve daha fazla öğrenciye ulaşmamızı sağlar.",
     "closing": "Etkinliklerden içerik ortaklıklarına uzanan esnek iş birliği modellerini birlikte tasarlayabiliriz.",
     "cta": "İş birliğini konuşalım"
   },
@@ -241,6 +251,16 @@
     "description": "Sitenin çalışması ve performansının ölçülmesi sırasında kullanılan teknik araçları şeffaf biçimde açıklıyoruz.",
     "updated": "Son güncelleme: 23 Temmuz 2026",
     "more": "Daha fazla bilgi",
+    "sessionTitle": "Zorunlu oturum teknolojileri",
+    "sessionDescription": "Halka açık sayfalarda kullanıcı hesabı veya kalıcı tercih çerezi kullanılmaz. Yalnızca yetkili yöneticilerin giriş yaptığı admin panelinde, güvenli oturumun sürdürülebilmesi için teknik olarak zorunlu Auth.js oturum çerezi kullanılır.",
+    "analyticsTitle": "Anonim web analitiği",
+    "analyticsDescription": "Vercel Web Analytics; sayfa görüntüleme, genel cihaz ve yönlendiren kaynak gibi toplu kullanım verilerini anonimleştirilmiş biçimde ölçer.",
+    "performanceTitle": "Performans ölçümü",
+    "performanceDescription": "Vercel Speed Insights; sitenin açılış hızı ve Core Web Vitals metriklerini ölçerek teknik iyileştirmelere yardımcı olur. Bu betikler admin panelinde yüklenmez.",
+    "marketingTitle": "Reklam ve pazarlama çerezleri",
+    "marketingDescription": "Bu sitede reklam ağı, sosyal medya takip pikseli, kişiselleştirilmiş reklam veya davranışsal profilleme amacıyla çerez kullanılmaz.",
+    "contactPrefix": "Kişisel verilerin işlenmesine ilişkin talepler için ",
+    "contactSuffix": " adresinden İstanbul Galata Üniversitesi’ne ulaşabilirsiniz.",
     "analyticsPolicy": "Vercel Analytics gizlilik açıklaması",
     "cookieGuide": "KVKK Çerez Uygulamaları Rehberi"
   }

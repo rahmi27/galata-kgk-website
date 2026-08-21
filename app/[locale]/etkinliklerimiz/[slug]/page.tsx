@@ -1,8 +1,8 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ArrowLeft,
   CalendarDays,
@@ -11,13 +11,14 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import eventDetailContent from "@/content/event-detail.json";
+import { Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 type EventDetailPageProps = {
   params: Promise<{
+    locale: string;
     slug: string;
   }>;
 };
@@ -65,7 +66,9 @@ export async function generateMetadata({
 export default async function EventDetailPage({
   params,
 }: EventDetailPageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "events" });
   const event = await getEventBySlug(slug);
 
   if (!event) {
@@ -85,7 +88,7 @@ export default async function EventDetailPage({
             <Button asChild variant="ghost" className="-ml-4 w-fit">
               <Link href="/etkinliklerimiz">
                 <ArrowLeft aria-hidden="true" />
-                {eventDetailContent.backLabel}
+                {t("back")}
               </Link>
             </Button>
             <p className="mt-9 inline-flex rounded-full bg-accent-50 px-3.5 py-2 font-heading text-xs font-bold uppercase tracking-[0.15em] text-accent-800 dark:bg-accent/15 dark:text-accent-300">
@@ -130,7 +133,7 @@ export default async function EventDetailPage({
 
               <article className="mt-10">
                 <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                  {eventDetailContent.aboutLabel}
+                  {t("about")}
                 </p>
                 <div className="mt-6 space-y-5 text-base leading-8 text-muted-foreground sm:text-lg">
                   {longDescriptionParagraphs.map((paragraph) => (
@@ -142,7 +145,7 @@ export default async function EventDetailPage({
               <Button asChild variant="outline" className="mt-10">
                 <Link href="/etkinliklerimiz">
                   <ArrowLeft aria-hidden="true" />
-                  {eventDetailContent.backLabel}
+                  {t("back")}
                 </Link>
               </Button>
             </div>
@@ -152,16 +155,16 @@ export default async function EventDetailPage({
                 <div>
                   <dt className="flex items-center gap-2 font-heading text-xs font-bold uppercase tracking-[0.14em] text-accent-700 dark:text-accent-300">
                     <CalendarDays className="size-4" aria-hidden="true" />
-                    {eventDetailContent.dateLabel}
+                    {t("date")}
                   </dt>
                   <dd className="mt-2 text-sm font-medium leading-6 text-primary dark:text-primary-100">
-                    {formatEventDateLong(event.date)}
+                    {formatEventDateLong(event.date, locale)}
                   </dd>
                 </div>
                 <div className="border-t border-primary/10 pt-6 dark:border-white/10">
                   <dt className="flex items-center gap-2 font-heading text-xs font-bold uppercase tracking-[0.14em] text-accent-700 dark:text-accent-300">
                     <MapPin className="size-4" aria-hidden="true" />
-                    {eventDetailContent.locationLabel}
+                    {t("location")}
                   </dt>
                   <dd className="mt-2 text-sm font-medium leading-6 text-primary dark:text-primary-100">
                     {event.location}
@@ -170,7 +173,7 @@ export default async function EventDetailPage({
                 <div className="border-t border-primary/10 pt-6 dark:border-white/10">
                   <dt className="flex items-center gap-2 font-heading text-xs font-bold uppercase tracking-[0.14em] text-accent-700 dark:text-accent-300">
                     <Tag className="size-4" aria-hidden="true" />
-                    {eventDetailContent.categoryLabel}
+                    {t("category")}
                   </dt>
                   <dd className="mt-2 text-sm font-medium leading-6 text-primary dark:text-primary-100">
                     {event.category}

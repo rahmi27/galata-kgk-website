@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ContactForm } from "@/components/contact/contact-form";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
 import { Button } from "@/components/ui/button";
-import contactContent from "@/content/contact.json";
 import { getPublicClubSocialLinks } from "@/lib/club-social-links";
 import { createPageMetadata } from "@/lib/site-metadata";
 import {
@@ -14,22 +14,23 @@ import {
 } from "@/lib/site-content";
 import { buildGoogleMapsUrls } from "@/lib/url-security";
 
-export const metadata = createPageMetadata({
-  title: contactContent.meta.title,
-  description: contactContent.meta.description,
-  path: "/iletisim",
-  keywords: ["Galata KGK iletişim", "İstanbul Galata Üniversitesi kulüp iletişim"],
-});
-
 export const revalidate = 300;
 
-export default async function ContactPage() {
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "contact" });
+  const common = await getTranslations({ locale, namespace: "common" });
   const [siteContentRows, socialLinks] = await Promise.all([
     getPublicSiteContentRows(),
     getPublicClubSocialLinks(),
   ]);
   const content = getContactContentFromRows(siteContentRows, socialLinks);
-  const { details, hero } = content;
+  const { details } = content;
   const { directionsUrl, embedUrl: mapEmbedUrl } = buildGoogleMapsUrls(
     details.address.value,
   );
@@ -46,9 +47,9 @@ export default async function ContactPage() {
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow={hero.eyebrow}
-              title={hero.title}
-              description={hero.description}
+              eyebrow={t("heroEyebrow")}
+              title={t("heroTitle")}
+              description={t("heroDescription")}
             />
           </div>
         </section>
@@ -63,13 +64,13 @@ export default async function ContactPage() {
                 />
                 <div className="relative">
                   <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                    {details.eyebrow}
+                    {t("detailsEyebrow")}
                   </p>
                   <h2 className="mt-5 font-heading text-3xl font-bold tracking-[-0.04em]">
-                    {details.title}
+                    {t("detailsTitle")}
                   </h2>
                   <p className="mt-4 leading-7 text-primary-200">
-                    {details.description}
+                    {t("detailsDescription")}
                   </p>
 
                   <div className="mt-10 space-y-7">
@@ -84,7 +85,7 @@ export default async function ContactPage() {
                       </span>
                       <span>
                         <span className="block font-heading text-xs font-bold uppercase tracking-[0.14em] text-primary-300">
-                          {details.address.label}
+                          {t("address")}
                         </span>
                         <span className="mt-1.5 block text-sm leading-6 text-primary-100">
                           {details.address.value}
@@ -96,7 +97,7 @@ export default async function ContactPage() {
                   {details.socials.length ? (
                   <div className="mt-12 border-t border-white/10 pt-8">
                     <p className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-primary-300">
-                      {details.socialLabel}
+                      {t("socials")}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3">
                       {details.socials.map((social) => {
@@ -109,7 +110,7 @@ export default async function ContactPage() {
                             target={isExternal ? "_blank" : undefined}
                             rel={isExternal ? "noopener noreferrer" : undefined}
                             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-xs font-semibold text-primary-100 transition-colors hover:border-accent/70 hover:bg-accent"
-                            aria-label={`${social.label} hesabını${isExternal ? " yeni sekmede" : ""} aç`}
+                            aria-label={common("socialAccount", { label: social.label, external: String(isExternal) })}
                           >
                             <SocialPlatformIcon
                               platform={social.platform}
@@ -138,13 +139,13 @@ export default async function ContactPage() {
               <div className="flex flex-col gap-5 border-b border-primary/10 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8 dark:border-white/10">
                 <div>
                   <p className="font-heading text-xs font-bold uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
-                    Kampüs Konumu
+                    {t("mapEyebrow")}
                   </p>
                   <h2
                     id="contact-map-title"
                     className="mt-2 font-heading text-2xl font-bold tracking-[-0.035em] text-primary dark:text-white"
                   >
-                    Bizi haritada bulun.
+                    {t("mapTitle")}
                   </h2>
                   <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
                     {details.address.value}
@@ -160,7 +161,7 @@ export default async function ContactPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Yol Tarifi Al
+                    {t("directions")}
                     <ArrowUpRight aria-hidden="true" />
                   </Link>
                 </Button>
@@ -168,7 +169,7 @@ export default async function ContactPage() {
               <div className="aspect-[4/3] w-full bg-primary-50 sm:aspect-[16/7] dark:bg-primary-900/40">
                 <iframe
                   src={mapEmbedUrl}
-                  title="İstanbul Galata Üniversitesi konumu"
+                  title={t("mapFrameTitle")}
                   className="h-full w-full border-0"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"

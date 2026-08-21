@@ -1,23 +1,23 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, Handshake, Sparkles } from "lucide-react";
 
 import { SectionHeading } from "@/components/shared/section-heading";
 import { SponsorCard } from "@/components/sponsors/sponsor-card";
 import { Button } from "@/components/ui/button";
-import sponsorContent from "@/content/sponsors.json";
+import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = createPageMetadata({
-  title: sponsorContent.meta.title,
-  description: sponsorContent.meta.description,
-  path: "/sponsorlar",
-  keywords: ["üniversite sponsorluk", "öğrenci kulübü iş ortaklığı"],
-});
-
 export const revalidate = 300;
 
-export default async function SponsorsPage() {
+export default async function SponsorsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "partners" });
   const [tiers, stats] = await Promise.all([
     prisma.sponsorTier.findMany({
       where: {
@@ -50,9 +50,9 @@ export default async function SponsorsPage() {
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow={sponsorContent.hero.eyebrow}
-              title={sponsorContent.hero.title}
-              description={sponsorContent.hero.description}
+              eyebrow={t("eyebrow")}
+              title={t("title")}
+              description={t("description")}
             />
           </div>
         </section>
@@ -119,14 +119,14 @@ export default async function SponsorsPage() {
                   <Handshake className="size-6" aria-hidden="true" />
                 </div>
                 <h2 className="relative mt-6 font-heading text-3xl font-bold tracking-[-0.04em] text-white">
-                  {sponsorContent.emptyState.title}
+                  {t("emptyTitle")}
                 </h2>
                 <p className="relative mx-auto mt-4 max-w-xl leading-7 text-primary-200">
-                  {sponsorContent.emptyState.description}
+                  {t("emptyDescription")}
                 </p>
                 <Button asChild variant="secondary" className="relative mt-8">
                   <Link href="/iletisim">
-                    {sponsorContent.emptyState.cta}
+                    {t("emptyCta")}
                     <ArrowRight aria-hidden="true" />
                   </Link>
                 </Button>
@@ -140,17 +140,20 @@ export default async function SponsorsPage() {
             <div>
               <p className="flex items-center gap-3 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
                 <Sparkles className="size-4" aria-hidden="true" />
-                {sponsorContent.whyPartner.eyebrow}
+                {t("whyEyebrow")}
               </p>
               <h2 className="mt-5 max-w-2xl font-heading text-4xl font-bold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
-                {sponsorContent.whyPartner.title}
+                {t("whyTitle")}
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-primary-200">
-                {sponsorContent.whyPartner.description}
+                {t("whyDescription")}
               </p>
 
               <div className="mt-9 grid gap-4 sm:grid-cols-2">
-                {sponsorContent.whyPartner.models.map((model, index) => (
+                {([
+                  { title: t("brandTitle"), description: t("brandDescription") },
+                  { title: t("communityTitle"), description: t("communityDescription") },
+                ]).map((model, index) => (
                   <article
                     key={model.title}
                     className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 sm:p-6"
@@ -169,11 +172,11 @@ export default async function SponsorsPage() {
               </div>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-primary-300">
-                {sponsorContent.whyPartner.closing}
+                {t("closing")}
               </p>
               <Button asChild variant="secondary" className="mt-8">
                 <Link href="/iletisim">
-                  {sponsorContent.whyPartner.cta}
+                  {t("cta")}
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>

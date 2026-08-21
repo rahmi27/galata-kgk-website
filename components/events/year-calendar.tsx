@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 
 export type CalendarEvent = {
   id: number;
@@ -18,31 +19,6 @@ type YearCalendarProps = {
   currentDate: string;
   className?: string;
 };
-
-const months = [
-  "Ocak",
-  "Şubat",
-  "Mart",
-  "Nisan",
-  "Mayıs",
-  "Haziran",
-  "Temmuz",
-  "Ağustos",
-  "Eylül",
-  "Ekim",
-  "Kasım",
-  "Aralık",
-] as const;
-
-const weekdays = [
-  { short: "P", long: "Pazartesi" },
-  { short: "S", long: "Salı" },
-  { short: "Ç", long: "Çarşamba" },
-  { short: "P", long: "Perşembe" },
-  { short: "C", long: "Cuma" },
-  { short: "C", long: "Cumartesi" },
-  { short: "P", long: "Pazar" },
-] as const;
 
 const istanbulDateFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Europe/Istanbul",
@@ -78,6 +54,26 @@ export function YearCalendar({
   currentDate,
   className,
 }: YearCalendarProps) {
+  const locale = useLocale();
+  const t = useTranslations("events");
+  const common = useTranslations("common");
+  const languageTag = locale === "en" ? "en-GB" : "tr-TR";
+  const months = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, month) =>
+        new Intl.DateTimeFormat(languageTag, { month: "long" }).format(
+          new Date(Date.UTC(2024, month, 1)),
+        ),
+      ),
+    [languageTag],
+  );
+  const weekdays = useMemo(() => {
+    const formatter = new Intl.DateTimeFormat(languageTag, { weekday: "long" });
+    return Array.from({ length: 7 }, (_, index) => {
+      const long = formatter.format(new Date(Date.UTC(2024, 0, index + 1)));
+      return { short: long.slice(0, 1).toLocaleUpperCase(languageTag), long };
+    });
+  }, [languageTag]);
   const calendarEvents = useMemo(
     () =>
       events.map((event) => ({
@@ -131,11 +127,11 @@ export function YearCalendar({
   }
 
   return (
-    <section className={cn("space-y-9", className)} aria-label="Yıllık etkinlik takvimi">
+    <section className={cn("space-y-9", className)} aria-label={t("calendar")}>
       <div className="flex items-end justify-between gap-5 border-b border-primary/10 pb-6 dark:border-white/10">
         <div>
           <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-            Etkinlik takvimi
+            {t("calendar")}
           </p>
           <p
             className="mt-1 font-heading text-6xl font-black leading-none tracking-[-0.075em] text-primary sm:text-7xl dark:text-white"
@@ -145,13 +141,13 @@ export function YearCalendar({
           </p>
         </div>
 
-        <div className="flex items-center gap-2" aria-label="Takvim yılı seçimi">
+        <div className="flex items-center gap-2" aria-label={t("calendar")}>
           <button
             type="button"
             onClick={showPreviousYear}
             disabled={activeYearIndex <= 0}
             className="inline-flex size-11 items-center justify-center rounded-full border border-primary/15 bg-background text-primary transition-all hover:-translate-x-0.5 hover:border-accent/50 hover:text-accent-700 disabled:pointer-events-none disabled:opacity-30 dark:border-white/15 dark:text-primary-100 dark:hover:text-accent-300"
-            aria-label="Etkinlik bulunan önceki yılı göster"
+            aria-label={t("previousYear")}
           >
             <ChevronLeft className="size-5" aria-hidden="true" />
           </button>
@@ -160,7 +156,7 @@ export function YearCalendar({
             onClick={showNextYear}
             disabled={activeYearIndex >= availableYears.length - 1}
             className="inline-flex size-11 items-center justify-center rounded-full border border-primary/15 bg-background text-primary transition-all hover:translate-x-0.5 hover:border-accent/50 hover:text-accent-700 disabled:pointer-events-none disabled:opacity-30 dark:border-white/15 dark:text-primary-100 dark:hover:text-accent-300"
-            aria-label="Etkinlik bulunan sonraki yılı göster"
+            aria-label={t("nextYear")}
           >
             <ChevronRight className="size-5" aria-hidden="true" />
           </button>
@@ -175,6 +171,8 @@ export function YearCalendar({
             month={month}
             monthIndex={monthIndex}
             eventsByDay={eventsByDay}
+            detailsLabel={common("details")}
+            weekdays={weekdays}
           />
         ))}
       </div>
@@ -183,7 +181,7 @@ export function YearCalendar({
         (event) => event.calendarDate.year === activeYear,
       ) ? (
         <p className="rounded-2xl border border-dashed border-primary/20 bg-primary-50/50 px-5 py-4 text-center text-sm text-muted-foreground dark:border-white/15 dark:bg-white/[0.025]">
-          Bu yıl için tarihi kesinleşmiş bir etkinlik bulunmuyor.
+          {t("emptyTitle")}
         </p>
       ) : null}
     </section>
@@ -195,6 +193,8 @@ function MonthCard({
   month,
   monthIndex,
   eventsByDay,
+  detailsLabel,
+  weekdays,
 }: {
   year: number;
   month: string;
@@ -203,6 +203,8 @@ function MonthCard({
     string,
     Array<CalendarEvent & { calendarDate: ReturnType<typeof getDateParts> }>
   >;
+  detailsLabel: string;
+  weekdays: Array<{ short: string; long: string }>;
 }) {
   const firstWeekday = (new Date(Date.UTC(year, monthIndex, 1)).getUTCDay() + 6) % 7;
   const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
@@ -249,9 +251,12 @@ function MonthCard({
           return (
             <Link
               key={day}
-              href={`/etkinliklerimiz/${dayEvents[0].slug}`}
+              href={{
+                pathname: "/etkinliklerimiz/[slug]",
+                params: { slug: dayEvents[0].slug },
+              }}
               className="group relative z-0 flex aspect-square items-center justify-center rounded-full text-xs font-bold text-primary-900 outline-none transition-transform hover:z-20 hover:scale-105 focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:text-white dark:focus-visible:ring-offset-background"
-              aria-label={`${day} ${month} ${year}: ${eventTitles}. Etkinlik detayını aç.`}
+              aria-label={`${day} ${month} ${year}: ${eventTitles}. ${detailsLabel}.`}
             >
               <HandDrawnCircle isMultiple={dayEvents.length > 1} />
               <time dateTime={`${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`}>

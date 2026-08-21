@@ -1,15 +1,21 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { useTranslations } from "next-intl";
 import { GraduationCap } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
 import { SocialPlatformIcon } from "@/components/shared/social-platform-icon";
+import { Link } from "@/i18n/navigation";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 import type { SiteChromeContent } from "@/lib/site-content";
-import { partnerLinks } from "@/lib/partner-links";
 import { getSafeHttpUrl } from "@/lib/url-security";
 
 export function Footer({ content }: { content: SiteChromeContent }) {
+  const t = useTranslations();
+  const partnerLinks = [
+    { label: t("nav.sponsors"), href: "/sponsorlar" as const },
+    { label: t("nav.collaborations"), href: "/is-birlikleri" as const },
+  ];
   const { brand, footer, navigation } = content;
   const copyright = footer.copyright.replace(
     "{year}",
@@ -44,19 +50,19 @@ export function Footer({ content }: { content: SiteChromeContent }) {
                 const isExternal = social.href.startsWith("http");
 
                 return (
-                  <Link
+                  <NextLink
                     key={social.platform}
                     href={social.href}
                     target={isExternal ? "_blank" : undefined}
                     rel={isExternal ? "noopener noreferrer" : undefined}
                     className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 text-primary-200 transition-all hover:-translate-y-0.5 hover:border-accent/70 hover:bg-accent hover:text-accent-foreground"
-                    aria-label={`${social.label} hesabını aç`}
+                    aria-label={t("common.socialAccount", { label: social.label, external: String(isExternal) })}
                   >
                     <SocialPlatformIcon
                       platform={social.platform}
                       className="size-4"
                     />
-                  </Link>
+                  </NextLink>
                 );
               })}
             </div>
@@ -68,14 +74,14 @@ export function Footer({ content }: { content: SiteChromeContent }) {
             </p>
             <nav
               className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4"
-              aria-label="Alt menü"
+              aria-label={t("footer.subnavAriaLabel")}
             >
               {navigation.items
                 .filter((item) => item.id !== "ortaklarimiz")
                 .map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={item.href as never}
                   className="w-fit text-sm text-primary-200 transition-colors hover:text-white"
                 >
                   {item.label}
@@ -86,7 +92,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
             <div className="mt-8 border-t border-white/10 pt-6">
               <p className="font-heading text-sm font-semibold text-white">
                 {navigation.items.find((item) => item.id === "ortaklarimiz")
-                  ?.label ?? "Ortaklarımız"}
+                  ?.label ?? t("footer.partners")}
               </p>
               <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
                 {partnerLinks.map((item) => (
@@ -105,23 +111,23 @@ export function Footer({ content }: { content: SiteChromeContent }) {
 
         <div className="flex flex-col items-center gap-3 pt-7 text-xs leading-5 text-primary-300 sm:grid sm:grid-cols-[1fr_auto_1fr]">
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 sm:col-start-1 sm:justify-self-start">
-            <Link
+            <NextLink
               href={OFFICIAL_PRIVACY_NOTICE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="w-fit transition-colors hover:text-white"
             >
-              KVKK Aydınlatma Metni
-            </Link>
+                {t("common.privacyLink")}
+            </NextLink>
             <Link
               href="/cerez-politikasi"
               className="w-fit transition-colors hover:text-white"
             >
-              Çerez ve Analitik
+              {t("footer.privacy")}
             </Link>
           </div>
           <p className="text-center sm:col-start-2">{copyright}</p>
-          <Link
+          <NextLink
             href={institutionHref}
             target="_blank"
             rel="noopener noreferrer"
@@ -129,7 +135,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
           >
             <GraduationCap className="size-4" aria-hidden="true" />
             {footer.institution}
-          </Link>
+          </NextLink>
         </div>
       </div>
     </footer>

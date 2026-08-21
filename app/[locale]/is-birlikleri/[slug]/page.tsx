@@ -1,25 +1,18 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, CalendarDays, Handshake } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import collaborationContent from "@/content/collaborations.json";
+import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 type CollaborationDetailPageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 };
-
-const dateFormatter = new Intl.DateTimeFormat("tr-TR", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-  timeZone: "Europe/Istanbul",
-});
 
 const getPartnerClub = cache((slug: string) =>
   prisma.partnerClub.findUnique({
@@ -65,7 +58,9 @@ export async function generateMetadata({
 export default async function CollaborationDetailPage({
   params,
 }: CollaborationDetailPageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "collaborations" });
   const partnerClub = await getPartnerClub(slug);
 
   if (!partnerClub) {
@@ -90,7 +85,7 @@ export default async function CollaborationDetailPage({
           <Button asChild variant="ghost" className="-ml-4 w-fit">
             <Link href="/is-birlikleri">
               <ArrowLeft aria-hidden="true" />
-              {collaborationContent.detail.backLabel}
+              {t("back")}
             </Link>
           </Button>
 
@@ -98,7 +93,7 @@ export default async function CollaborationDetailPage({
             <div className="flex aspect-square items-center justify-center overflow-hidden rounded-[1.75rem] border border-primary/10 bg-white p-5 shadow-[0_22px_60px_-42px_rgba(27,42,94,0.6)] dark:border-white/10">
               <Image
                 src={partnerClub.logoUrl}
-                alt={partnerClub.logoAlt ?? `${partnerClub.name} logosu`}
+                alt={partnerClub.logoAlt ?? partnerClub.name}
                 width={240}
                 height={240}
                 priority
@@ -108,7 +103,7 @@ export default async function CollaborationDetailPage({
             </div>
             <div>
               <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                Partner kulüp
+                {t("eyebrow")}
               </p>
               <h1 className="mt-3 font-heading text-4xl font-bold leading-[1.06] tracking-[-0.05em] text-primary sm:text-5xl dark:text-white">
                 {partnerClub.name}
@@ -127,14 +122,16 @@ export default async function CollaborationDetailPage({
             <>
               {datedCollaborations.length ? (
                 <CollaborationGroup
-                  title={collaborationContent.detail.datedTitle}
+                  title={t("datedTitle")}
                   items={datedCollaborations}
+                  locale={locale}
                 />
               ) : null}
               {ongoingCollaborations.length ? (
                 <CollaborationGroup
-                  title={collaborationContent.detail.ongoingTitle}
+                  title={t("ongoingTitle")}
                   items={ongoingCollaborations}
+                  locale={locale}
                 />
               ) : null}
             </>
@@ -145,7 +142,7 @@ export default async function CollaborationDetailPage({
                 aria-hidden="true"
               />
               <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground">
-                {collaborationContent.detail.emptyItems}
+                {t("emptyItems")}
               </p>
             </div>
           )}
@@ -153,7 +150,7 @@ export default async function CollaborationDetailPage({
           <Button asChild variant="outline">
             <Link href="/is-birlikleri">
               <ArrowLeft aria-hidden="true" />
-              {collaborationContent.detail.backLabel}
+              {t("back")}
             </Link>
           </Button>
         </div>
@@ -165,6 +162,7 @@ export default async function CollaborationDetailPage({
 function CollaborationGroup({
   title,
   items,
+  locale,
 }: {
   title: string;
   items: Array<{
@@ -173,7 +171,14 @@ function CollaborationGroup({
     description: string;
     date: Date | null;
   }>;
+  locale: string;
 }) {
+  const dateFormatter = new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "tr-TR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Istanbul",
+  });
   return (
     <section aria-labelledby={`collaboration-group-${items[0]?.id}`}>
       <div className="flex items-center gap-4">

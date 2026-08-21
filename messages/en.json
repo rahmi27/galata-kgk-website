@@ -6,7 +6,15 @@
     "locationTba": "Location to be announced",
     "logoAlt": "{name} logo",
     "externalWebsite": "Open {name}'s website in a new tab",
-    "socialAccount": "Open {label}{external, select, true { in a new tab} other {}}"
+    "socialAccount": "Open {label}{external, select, true { in a new tab} other {}}",
+    "websiteHoneypot": "Website",
+    "privacyPrefix": "I have read Istanbul Galata University's ",
+    "privacyLink": "Privacy Notice",
+    "privacySuffix": " and understand how my personal data will be processed."
+    ,"themeToggle": "Change colour theme",
+    "scrollDown": "Scroll down the page",
+    "scrollTop": "Return to the top of the page",
+    "loading": "Loading content"
   },
   "nav": {
     "brand": "Istanbul Galata University Career and Entrepreneurship Club",
@@ -152,7 +160,9 @@
     "whyTitle": "Turn campus energy into meaningful impact.",
     "whyDescription": "A partnership with Galata KGK brings your organisation closer to curious, proactive students who are shaping what comes next.",
     "brandTitle": "Brand Sponsorships",
+    "brandDescription": "Partnerships with leading organisations bring professional depth to our events and give students meaningful connections to the world of work.",
     "communityTitle": "Community Sponsorships",
+    "communityDescription": "Support from individuals and families helps our community grow through solidarity and opens more opportunities to more students.",
     "closing": "Together, we can design flexible partnerships ranging from signature events to thoughtful content collaborations.",
     "cta": "Start a conversation"
   },
@@ -241,6 +251,16 @@
     "description": "A transparent overview of the technical tools used to run the site and understand its performance.",
     "updated": "Last updated: 23 July 2026",
     "more": "More information",
+    "sessionTitle": "Essential session technologies",
+    "sessionDescription": "Public pages do not use visitor accounts or persistent preference cookies. The protected admin panel uses only the technically essential Auth.js session cookie required to maintain a secure administrator session.",
+    "analyticsTitle": "Privacy-friendly web analytics",
+    "analyticsDescription": "Vercel Web Analytics measures aggregate information such as page views, general device categories and referral sources in an anonymised form.",
+    "performanceTitle": "Performance measurement",
+    "performanceDescription": "Vercel Speed Insights measures loading performance and Core Web Vitals so we can improve the site. These scripts are not loaded inside the admin panel.",
+    "marketingTitle": "Advertising and marketing cookies",
+    "marketingDescription": "This site does not use advertising networks, social-media tracking pixels, personalised advertising or behavioural profiling cookies.",
+    "contactPrefix": "For requests concerning the processing of personal data, contact Istanbul Galata University at ",
+    "contactSuffix": ".",
     "analyticsPolicy": "Vercel Analytics privacy information",
     "cookieGuide": "Turkish Data Protection Authority cookie guide"
   }

@@ -1,19 +1,22 @@
 import { CheckCircle2 } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { MembershipForm } from "@/components/membership/membership-form";
 import { SectionHeading } from "@/components/shared/section-heading";
-import membershipContent from "@/content/membership.json";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = createPageMetadata({
-  title: membershipContent.meta.title,
-  description: membershipContent.meta.description,
-  path: "/katilim",
-  keywords: ["Galata KGK üyelik", "öğrenci kulübüne katıl"],
-});
-
-export default function MembershipPage() {
-  const { hero, process } = membershipContent;
+export default async function MembershipPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "join" });
+  const steps = [1, 2, 3].map((number) => ({
+    title: t(`step${number}Title`),
+    description: t(`step${number}Description`),
+  }));
 
   return (
     <div className="bg-background">
@@ -27,9 +30,9 @@ export default function MembershipPage() {
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow={hero.eyebrow}
-              title={hero.title}
-              description={hero.description}
+              eyebrow={t("heroEyebrow")}
+              title={t("heroTitle")}
+              description={t("heroDescription")}
             />
           </div>
         </section>
@@ -43,17 +46,17 @@ export default function MembershipPage() {
               />
               <div className="relative">
                 <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                  {process.eyebrow}
+                  {t("processEyebrow")}
                 </p>
                 <h2 className="mt-5 font-heading text-3xl font-bold leading-tight tracking-[-0.04em]">
-                  {process.title}
+                  {t("processTitle")}
                 </h2>
                 <p className="mt-4 leading-7 text-primary-200">
-                  {process.description}
+                  {t("processDescription")}
                 </p>
 
                 <ol className="mt-10 space-y-7">
-                  {process.steps.map((step, index) => (
+                  {steps.map((step, index) => (
                     <li key={step.title} className="flex gap-4">
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/10 font-heading text-xs font-bold text-accent-300">
                         {String(index + 1).padStart(2, "0")}
@@ -75,7 +78,7 @@ export default function MembershipPage() {
                     className="size-5 shrink-0 text-accent-300"
                     aria-hidden="true"
                   />
-                  <span>{hero.eyebrow}</span>
+                  <span>{t("heroEyebrow")}</span>
                 </div>
               </div>
             </aside>

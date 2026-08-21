@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ArrowRight,
   Building2,
@@ -17,22 +18,14 @@ import { EventCard } from "@/components/shared/event-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
-import homeContent from "@/content/home.json";
+import { Link } from "@/i18n/navigation";
 import { formatEventDate } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
-import { createPageMetadata } from "@/lib/site-metadata";
 import {
   getHomeHeroContentFromRows,
   getPublicSiteContentRows,
 } from "@/lib/site-content";
 import { getSafeHttpUrl } from "@/lib/url-security";
-
-export const metadata = createPageMetadata({
-  title: homeContent.meta.title,
-  description: homeContent.meta.description,
-  path: "/",
-  keywords: ["öğrenci etkinlikleri", "networking", "kariyer gelişimi"],
-});
 
 export const revalidate = 300;
 
@@ -42,7 +35,15 @@ const whyUsIcons = {
   network: Network,
 } as const;
 
-export default async function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "home" });
+  const common = await getTranslations({ locale, namespace: "common" });
   const [stats, featuredEvents, sponsors, siteContentRows] = await Promise.all([
     prisma.siteStat.findMany({
       orderBy: {
@@ -127,7 +128,7 @@ export default async function HomePage() {
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <MagneticTarget className="self-start">
                   <Button asChild size="lg" variant="primary">
-                    <Link href={heroContent.primaryCta.href}>
+                    <Link href="/etkinliklerimiz">
                       {heroContent.primaryCta.label}
                       <ArrowRight aria-hidden="true" />
                     </Link>
@@ -135,7 +136,7 @@ export default async function HomePage() {
                 </MagneticTarget>
                 <MagneticTarget className="self-start">
                   <Button asChild size="lg" variant="outline">
-                    <Link href={heroContent.secondaryCta.href}>
+                    <Link href="/katilim">
                       {heroContent.secondaryCta.label}
                     </Link>
                   </Button>
@@ -154,7 +155,10 @@ export default async function HomePage() {
                   aria-hidden="true"
                 />
                 <Link
-                  href={heroContent.spotlight.calendarCta.href}
+                  href={{
+                    pathname: "/etkinliklerimiz",
+                    query: { view: locale === "en" ? "calendar" : "takvim" },
+                  }}
                   className="group/calendar relative z-10 -m-2 inline-flex size-12 cursor-pointer items-center justify-center rounded-2xl text-accent-300 outline-none transition-all hover:scale-105 hover:bg-white/[0.08] hover:text-accent-200 focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900"
                   aria-label={heroContent.spotlight.calendarCta.label}
                 >
@@ -193,11 +197,11 @@ export default async function HomePage() {
 
         <section id="istatistikler" className="scroll-mt-24 py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <SectionHeading
+              <SectionHeading
               reveal
-              eyebrow={homeContent.statsSection.eyebrow}
-              title={homeContent.statsSection.title}
-              description={homeContent.statsSection.description}
+              eyebrow={t("stats.eyebrow")}
+              title={t("stats.title")}
+              description={t("stats.description")}
             />
             <div className="stagger-grid mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
               {stats.map((stat) => (
@@ -213,15 +217,15 @@ export default async function HomePage() {
               <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between" data-reveal="">
                 <div>
                   <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                    Birlikte değer üretiyoruz
+                    {t("sponsors.eyebrow")}
                   </p>
                   <h2 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white">
-                    Sponsorlarımız
+                    {t("sponsors.title")}
                   </h2>
                 </div>
                 <Button asChild variant="link" className="w-fit">
                   <Link href="/sponsorlar">
-                    Tüm sponsorları gör
+                    {t("sponsors.all")}
                     <ArrowRight aria-hidden="true" />
                   </Link>
                 </Button>
@@ -234,7 +238,7 @@ export default async function HomePage() {
                       {sponsor.logoUrl ? (
                         <Image
                           src={sponsor.logoUrl}
-                          alt={sponsor.logoAlt ?? `${sponsor.name} logosu`}
+                          alt={sponsor.logoAlt ?? sponsor.name}
                           width={180}
                           height={64}
                           sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
@@ -254,17 +258,17 @@ export default async function HomePage() {
                   const safeWebsiteUrl = getSafeHttpUrl(sponsor.websiteUrl);
 
                   return safeWebsiteUrl ? (
-                    <Link
+                    <NextLink
                       key={sponsor.id}
                       data-reveal=""
                       href={safeWebsiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group"
-                      aria-label={`${sponsor.name} web sitesini yeni sekmede aç`}
+                      aria-label={common("externalWebsite", { name: sponsor.name })}
                     >
                       {logo}
-                    </Link>
+                    </NextLink>
                   ) : (
                     <div key={sponsor.id} className="group" data-reveal="">
                       {logo}
@@ -283,13 +287,13 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between" data-reveal="">
               <SectionHeading
-                eyebrow={homeContent.eventsSection.eyebrow}
-                title={homeContent.eventsSection.title}
-                description={homeContent.eventsSection.description}
+                eyebrow={t("events.eyebrow")}
+                title={t("events.title")}
+                description={t("events.description")}
               />
               <Button asChild variant="link" className="w-fit">
-                <Link href={homeContent.eventsSection.allEventsCta.href}>
-                  {homeContent.eventsSection.allEventsCta.label}
+                <Link href="/etkinliklerimiz">
+                  {t("events.all")}
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>
@@ -298,7 +302,7 @@ export default async function HomePage() {
               {featuredEvents.map((event) => (
                 <EventCard
                   key={event.id}
-                  date={formatEventDate(event.date)}
+                  date={formatEventDate(event.date, locale)}
                   title={event.title}
                   description={event.description}
                   imageSrc={event.imageUrl ?? undefined}
@@ -315,14 +319,18 @@ export default async function HomePage() {
           <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-20 lg:px-10">
             <SectionHeading
               reveal
-              eyebrow={homeContent.whyUsSection.eyebrow}
-              title={homeContent.whyUsSection.title}
-              description={homeContent.whyUsSection.description}
+              eyebrow={t("whyUs.eyebrow")}
+              title={t("whyUs.title")}
+              description={t("whyUs.description")}
             />
             <div className="stagger-grid grid gap-5">
-              {homeContent.whyUsSection.items.map((item, index) => {
-                const Icon =
-                  whyUsIcons[item.icon as keyof typeof whyUsIcons] ?? Compass;
+              {(["compass", "lightbulb", "network"] as const).map((icon, index) => {
+                const itemNumber = index + 1;
+                const item = {
+                  title: t(`whyUs.item${itemNumber}Title`),
+                  description: t(`whyUs.item${itemNumber}Description`),
+                };
+                const Icon = whyUsIcons[icon] ?? Compass;
 
                 return (
                   <article
@@ -362,19 +370,19 @@ export default async function HomePage() {
             />
             <div className="relative max-w-3xl">
               <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
-                {homeContent.closingCta.eyebrow}
+                {t("closing.eyebrow")}
               </p>
               <h2 className="mt-5 font-heading text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">
-                {homeContent.closingCta.title}
+                {t("closing.title")}
               </h2>
               <p className="mt-4 max-w-2xl leading-7 text-primary-200">
-                {homeContent.closingCta.description}
+                {t("closing.description")}
               </p>
             </div>
             <MagneticTarget className="relative mt-8 shrink-0 lg:mt-0">
               <Button asChild size="lg" variant="secondary">
-                <Link href={homeContent.closingCta.button.href}>
-                  {homeContent.closingCta.button.label}
+                <Link href="/katilim">
+                  {t("closing.button")}
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>

@@ -1,7 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type EventCardProps = {
@@ -25,6 +26,8 @@ export function EventCard({
   category,
   className,
 }: EventCardProps) {
+  const t = useTranslations("common");
+
   return (
     <article
       data-reveal=""
@@ -46,7 +49,7 @@ export function EventCard({
           <div
             className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_78%_22%,rgba(232,93,44,0.55),transparent_26%),linear-gradient(135deg,#1B2A5E_0%,#283B74_50%,#131D41_100%)]"
             role="img"
-            aria-label={`${title} için görsel alanı`}
+            aria-label={imageAlt ?? title}
           >
             <CalendarDays
               className="size-12 text-white/70"
@@ -76,10 +79,10 @@ export function EventCard({
         </p>
         {href ? (
           <Link
-            href={href}
+            href={href as never}
             className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-accent-700 dark:text-primary-100 dark:hover:text-accent-300"
           >
-            Detayları gör
+            {t("details")}
             <ArrowUpRight
               className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden="true"

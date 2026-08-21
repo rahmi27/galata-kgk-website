@@ -1,45 +1,18 @@
 import Link from "next/link";
 import { BarChart3, Cookie, LockKeyhole, ShieldCheck } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { SectionHeading } from "@/components/shared/section-heading";
-import { createPageMetadata } from "@/lib/site-metadata";
-
-export const metadata = createPageMetadata({
-  title: "Çerez ve Analitik Bilgilendirmesi | Galata KGK",
-  description:
-    "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü web sitesinde kullanılan zorunlu oturum teknolojileri ve anonim performans ölçümleri hakkında bilgi.",
-  path: "/cerez-politikasi",
-  keywords: ["çerez politikası", "Vercel Analytics", "Galata KGK gizlilik"],
-});
-
-const sections = [
-  {
-    icon: LockKeyhole,
-    title: "Zorunlu oturum teknolojileri",
-    description:
-      "Halka açık sayfalarda kullanıcı hesabı veya kalıcı tercih çerezi kullanılmaz. Yalnızca yetkili yöneticilerin giriş yaptığı admin panelinde, güvenli oturumun sürdürülebilmesi için teknik olarak zorunlu Auth.js oturum çerezi kullanılır.",
-  },
-  {
-    icon: BarChart3,
-    title: "Anonim web analitiği",
-    description:
-      "Vercel Web Analytics; sayfa görüntüleme, genel cihaz ve yönlendiren kaynak gibi toplu kullanım verilerini ölçer. Vercel'in açıklamasına göre bu hizmet ziyaretçileri farklı günler veya siteler arasında takip eden çerezler kullanmaz ve verileri anonimleştirilmiş biçimde işler.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Performans ölçümü",
-    description:
-      "Vercel Speed Insights; sitenin açılış hızı ve Core Web Vitals metriklerini ölçerek teknik iyileştirmelere yardımcı olur. Analitik ve performans betikleri admin paneli ile tasarım kontrol sayfasında yüklenmez.",
-  },
-  {
-    icon: Cookie,
-    title: "Reklam ve pazarlama çerezleri",
-    description:
-      "Bu sitede reklam ağı, sosyal medya takip pikseli, kişiselleştirilmiş reklam veya davranışsal profilleme amacıyla çerez kullanılmaz. İleride bu durum değişirse bilgilendirme güncellenir ve gerekli tercih mekanizması ayrıca sunulur.",
-  },
-] as const;
-
-export default function CookiePolicyPage() {
+export default async function CookiePolicyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "privacy" });
+  const sections = [
+    { icon: LockKeyhole, title: t("sessionTitle"), description: t("sessionDescription") },
+    { icon: BarChart3, title: t("analyticsTitle"), description: t("analyticsDescription") },
+    { icon: ShieldCheck, title: t("performanceTitle"), description: t("performanceDescription") },
+    { icon: Cookie, title: t("marketingTitle"), description: t("marketingDescription") },
+  ];
   return (
     <div className="bg-background">
       <main>
@@ -47,9 +20,9 @@ export default function CookiePolicyPage() {
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow="Gizlilik"
-              title="Çerez ve analitik bilgilendirmesi"
-              description="Sitenin çalışması ve performansının ölçülmesi sırasında kullanılan teknik araçları şeffaf biçimde açıklıyoruz."
+              eyebrow={t("eyebrow")}
+              title={t("title")}
+              description={t("description")}
             />
           </div>
         </section>
@@ -57,7 +30,7 @@ export default function CookiePolicyPage() {
         <section className="py-20 sm:py-28">
           <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
             <p className="text-sm font-medium text-muted-foreground">
-              Son güncelleme: 23 Temmuz 2026
+              {t("updated")}
             </p>
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
@@ -85,17 +58,17 @@ export default function CookiePolicyPage() {
 
             <div className="mt-8 rounded-[1.5rem] border border-primary/10 bg-primary-900 p-6 text-primary-100 sm:p-8">
               <h2 className="font-heading text-xl font-bold text-white">
-                Daha fazla bilgi
+                {t("more")}
               </h2>
               <p className="mt-3 leading-7 text-primary-200">
-                Kişisel verilerin işlenmesine ilişkin talepler için{" "}
+                {t("contactPrefix")}
                 <Link
                   href="mailto:dataprivacy@galatauni.edu.tr"
                   className="font-semibold text-accent-300 underline underline-offset-4"
                 >
                   dataprivacy@galatauni.edu.tr
                 </Link>{" "}
-                adresinden İstanbul Galata Üniversitesi’ne ulaşabilirsiniz.
+                {t("contactSuffix")}
               </p>
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
                 <Link
@@ -104,7 +77,7 @@ export default function CookiePolicyPage() {
                   rel="noopener noreferrer"
                   className="text-accent-300 underline underline-offset-4"
                 >
-                  Vercel Analytics gizlilik açıklaması
+                  {t("analyticsPolicy")}
                 </Link>
                 <Link
                   href="https://www.kvkk.gov.tr/Icerik/7353/Cerez-Uygulamalari-Hakkinda-Rehber"
@@ -112,7 +85,7 @@ export default function CookiePolicyPage() {
                   rel="noopener noreferrer"
                   className="text-accent-300 underline underline-offset-4"
                 >
-                  KVKK Çerez Uygulamaları Rehberi
+                  {t("cookieGuide")}
                 </Link>
               </div>
             </div>

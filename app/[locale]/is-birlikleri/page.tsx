@@ -1,27 +1,23 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, Handshake } from "lucide-react";
 
 import { PartnerClubCard } from "@/components/collaborations/partner-club-card";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
-import collaborationContent from "@/content/collaborations.json";
+import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = createPageMetadata({
-  title: collaborationContent.meta.title,
-  description: collaborationContent.meta.description,
-  path: "/is-birlikleri",
-  keywords: [
-    "Galata KGK iş birlikleri",
-    "üniversite kulüpleri",
-    "öğrenci kulübü ortaklıkları",
-  ],
-});
-
 export const revalidate = 300;
 
-export default async function CollaborationsPage() {
+export default async function CollaborationsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "collaborations" });
   const partnerClubs = await prisma.partnerClub.findMany({
     orderBy: [{ order: "asc" }, { name: "asc" }],
   });
@@ -36,9 +32,9 @@ export default async function CollaborationsPage() {
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <SectionHeading
             as="h1"
-            eyebrow={collaborationContent.hero.eyebrow}
-            title={collaborationContent.hero.title}
-            description={collaborationContent.hero.description}
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            description={t("description")}
           />
         </div>
       </section>
@@ -64,14 +60,14 @@ export default async function CollaborationsPage() {
                 <Handshake className="size-6" aria-hidden="true" />
               </span>
               <h2 className="mt-6 font-heading text-3xl font-bold tracking-[-0.04em] text-primary dark:text-white">
-                {collaborationContent.emptyState.title}
+                {t("emptyTitle")}
               </h2>
               <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground">
-                {collaborationContent.emptyState.description}
+                {t("emptyDescription")}
               </p>
               <Button asChild variant="secondary" className="mt-8">
                 <Link href="/iletisim">
-                  {collaborationContent.emptyState.cta}
+                  {t("emptyCta")}
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>

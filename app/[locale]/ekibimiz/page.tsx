@@ -1,19 +1,19 @@
 import { SectionHeading } from "@/components/shared/section-heading";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
-import teamContent from "@/content/team.json";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = createPageMetadata({
-  title: teamContent.meta.title,
-  description: teamContent.meta.description,
-  path: "/ekibimiz",
-  keywords: ["Galata KGK ekibi", "öğrenci kulübü yönetimi"],
-});
-
 export const revalidate = 300;
 
-export default async function TeamPage() {
+export default async function TeamPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "team" });
   const categories = await prisma.teamCategory.findMany({
     where: {
       memberships: {
@@ -59,9 +59,9 @@ export default async function TeamPage() {
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading
               as="h1"
-              eyebrow={teamContent.section.eyebrow}
-              title={teamContent.section.title}
-              description={teamContent.section.description}
+              eyebrow={t("eyebrow")}
+              title={t("title")}
+              description={t("description")}
             />
           </div>
         </section>
@@ -113,11 +113,10 @@ export default async function TeamPage() {
             ) : (
               <div className="rounded-[1.75rem] border border-dashed border-primary/20 bg-primary-50/50 px-6 py-16 text-center dark:border-white/15 dark:bg-primary-900/30">
                 <h2 className="font-heading text-2xl font-bold text-primary dark:text-white">
-                  Ekip listesi hazırlanıyor
+                  {t("title")}
                 </h2>
                 <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-primary-700 dark:text-primary-200">
-                  Ekip üyeleri ve kategori görevleri yönetim panelinden
-                  eklendiğinde bu alanda yayınlanacak.
+                  {t("description")}
                 </p>
               </div>
             )}

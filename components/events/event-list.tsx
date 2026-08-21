@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { CalendarRange, CalendarSearch, List } from "lucide-react";
 
 import { YearCalendar } from "@/components/events/year-calendar";
 import { EventCard } from "@/components/shared/event-card";
 import { Button } from "@/components/ui/button";
-import eventsPageContent from "@/content/events-page.json";
 import { formatEventDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +40,8 @@ export function EventList({
   currentDate,
   initialView = "list",
 }: EventListProps) {
+  const locale = useLocale();
+  const t = useTranslations("events");
   const [activeFilter, setActiveFilter] =
     useState<EventFilter>("upcoming");
   const [activeView, setActiveView] = useState<EventView>(initialView);
@@ -49,7 +51,7 @@ export function EventList({
       "view",
     );
 
-    if (requestedView === "takvim") {
+    if (requestedView === "takvim" || requestedView === "calendar") {
       const frameId = window.requestAnimationFrame(() => {
         setActiveView("calendar");
       });
@@ -81,7 +83,7 @@ export function EventList({
       })
       .sort((firstEvent, secondEvent) => {
         if (!firstEvent.date && !secondEvent.date) {
-          return firstEvent.title.localeCompare(secondEvent.title, "tr");
+          return firstEvent.title.localeCompare(secondEvent.title, locale);
         }
 
         if (!firstEvent.date) {
@@ -99,12 +101,9 @@ export function EventList({
           ? firstTime - secondTime
           : secondTime - firstTime;
       });
-  }, [activeFilter, currentDate, events]);
+  }, [activeFilter, currentDate, events, locale]);
 
-  const resultLabel = eventsPageContent.resultLabel.replace(
-    "{count}",
-    filteredEvents.length.toString(),
-  );
+  const resultLabel = t("result", { count: filteredEvents.length });
   const calendarEvents = useMemo(
     () =>
       events.flatMap((event) =>
@@ -121,10 +120,7 @@ export function EventList({
       ),
     [events],
   );
-  const calendarResultLabel = eventsPageContent.calendarResultLabel.replace(
-    "{count}",
-    calendarEvents.length.toString(),
-  );
+  const calendarResultLabel = t("calendarResult", { count: calendarEvents.length });
 
   function changeView(view: EventView) {
     setActiveView(view);
@@ -132,7 +128,7 @@ export function EventList({
     const url = new URL(window.location.href);
 
     if (view === "calendar") {
-      url.searchParams.set("view", "takvim");
+      url.searchParams.set("view", locale === "en" ? "calendar" : "takvim");
     } else {
       url.searchParams.delete("view");
     }
@@ -147,9 +143,10 @@ export function EventList({
           <div
             className="flex flex-wrap gap-2.5"
             role="group"
-            aria-label="Etkinlik listesi filtresi"
+            aria-label={t("title")}
           >
-            {eventsPageContent.filters.map((filter) => {
+            {(["upcoming", "past", "all"] as const).map((filterValue) => {
+              const filter = { value: filterValue, label: t(filterValue) };
               const isActive = activeFilter === filter.value;
 
               return (
@@ -173,10 +170,9 @@ export function EventList({
           <div
             className="flex w-fit items-center rounded-full border border-primary/15 bg-primary-50/70 p-1 dark:border-white/15 dark:bg-white/[0.06]"
             role="group"
-            aria-label="Etkinlik görünümü"
+            aria-label={t("calendar")}
           >
-            {eventsPageContent.viewModes.map((viewMode) => {
-              const view = viewMode.value as EventView;
+            {(["list", "calendar"] as const).map((view) => {
               const isActive = activeView === view;
               const Icon = viewIcons[view];
 
@@ -194,7 +190,7 @@ export function EventList({
                   aria-pressed={isActive}
                 >
                   <Icon className="size-3.5" aria-hidden="true" />
-                  {viewMode.label}
+                  {t(view)}
                 </button>
               );
             })}
@@ -223,7 +219,7 @@ export function EventList({
           {filteredEvents.map((event) => (
             <EventCard
               key={event.id}
-              date={formatEventDate(event.date)}
+              date={formatEventDate(event.date, locale)}
               title={event.title}
               description={event.description}
               imageSrc={event.imageUrl ?? undefined}
@@ -241,10 +237,10 @@ export function EventList({
             aria-hidden="true"
           />
           <h2 className="mt-5 font-heading text-xl font-bold text-primary dark:text-white">
-            {eventsPageContent.emptyState.title}
+            {t("emptyTitle")}
           </h2>
           <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
-            {eventsPageContent.emptyState.description}
+            {t("emptyDescription")}
           </p>
         </div>
       )}
