@@ -12,6 +12,7 @@ import {
 } from "@/lib/image-upload";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function createSlug(value: string) {
   return value
@@ -55,14 +56,14 @@ async function findAvailableSlug(title: string, currentEventId?: number) {
 
 async function refreshEventPages(slugs: string[] = []) {
   updateTag("events");
-  revalidatePath("/");
-  revalidatePath("/etkinliklerimiz");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/etkinliklerimiz");
   revalidatePath("/sitemap.xml");
   revalidatePath("/admin");
   revalidatePath("/admin/etkinlikler");
 
   for (const slug of new Set(slugs)) {
-    revalidatePath(`/etkinliklerimiz/${slug}`);
+    revalidatePublicPath(`/etkinliklerimiz/${slug}`);
   }
 
   await notifyIndexNow([

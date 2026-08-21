@@ -10,6 +10,7 @@ import {
   staticSiteContentDefinitions,
 } from "@/lib/site-content-defaults";
 import { navigationRoutes } from "@/lib/site-content";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 const headerDefinitions = staticSiteContentDefinitions.filter(
   (definition) => definition.page === "header",
@@ -100,7 +101,7 @@ export async function updateHeaderContentAction(
     );
 
     updateTag("site-content");
-    revalidatePath("/", "layout");
+    revalidatePublicPath("/", "layout");
     revalidatePath("/admin/gorunum/header");
 
     return {

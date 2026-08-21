@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 import {
   repeatableSiteContentDefinitions,
   staticSiteContentDefinitions,
@@ -152,7 +153,7 @@ export async function updateAboutContentAction(
     ]);
 
     updateTag("site-content");
-    revalidatePath("/hakkimizda");
+    revalidatePublicPath("/hakkimizda");
     revalidatePath("/admin/gorunum/hakkimizda");
 
     return {

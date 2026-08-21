@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { staticSiteContentDefinitions } from "@/lib/site-content-defaults";
 import { isSafeHttpUrl } from "@/lib/url-security";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 const footerDefinitions = staticSiteContentDefinitions.filter(
   (definition) =>
@@ -66,7 +67,7 @@ export async function updateFooterContentAction(
     );
 
     updateTag("site-content");
-    revalidatePath("/", "layout");
+    revalidatePublicPath("/", "layout");
     revalidatePath("/admin/gorunum/footer");
 
     return {

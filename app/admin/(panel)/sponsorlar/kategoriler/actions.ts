@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateSponsorTierName } from "@/lib/sponsor-tier";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function parseOrder(formData: FormData) {
   const order = Number(formData.get("order"));
@@ -21,8 +22,8 @@ function parseEnglishName(formData: FormData) {
 }
 
 async function refreshTierPages() {
-  revalidatePath("/");
-  revalidatePath("/sponsorlar");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/sponsorlar");
   revalidatePath("/admin/sponsorlar");
   revalidatePath("/admin/sponsorlar/kategoriler");
   await notifyIndexNow(["/", "/sponsorlar"]);

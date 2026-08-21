@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateTeamCategoryName } from "@/lib/team-category";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function parseOrder(formData: FormData) {
   const order = Number(formData.get("order"));
@@ -20,7 +21,7 @@ function parseEnglishName(formData: FormData) {
 }
 
 async function refreshCategoryPages() {
-  revalidatePath("/ekibimiz");
+  revalidatePublicPath("/ekibimiz");
   revalidatePath("/admin/uyeler");
   revalidatePath("/admin/uyeler/kategoriler");
   await notifyIndexNow(["/ekibimiz"]);

@@ -6,6 +6,7 @@ import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { staticSiteContentDefinitions } from "@/lib/site-content-defaults";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 const contactAddressDefinition = staticSiteContentDefinitions.find(
   (definition) => definition.key === "contact.address.value",
@@ -52,7 +53,7 @@ export async function updateContactContentAction(
     });
 
     updateTag("site-content");
-    revalidatePath("/iletisim");
+    revalidatePublicPath("/iletisim");
     revalidatePath("/admin/gorunum/iletisim");
 
     return {

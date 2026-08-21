@@ -15,15 +15,16 @@ import {
 } from "@/lib/image-upload";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 import { createNormalizedSlug } from "@/lib/slug";
 
 async function refreshCollaborationPages(slugs: string[] = []) {
-  revalidatePath("/is-birlikleri");
+  revalidatePublicPath("/is-birlikleri");
   revalidatePath("/admin/is-birlikleri");
   revalidatePath("/sitemap.xml");
 
   for (const slug of new Set(slugs.filter(Boolean))) {
-    revalidatePath(`/is-birlikleri/${slug}`);
+    revalidatePublicPath(`/is-birlikleri/${slug}`);
   }
 
   await notifyIndexNow([

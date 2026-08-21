@@ -13,10 +13,11 @@ import {
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateSponsorTierName } from "@/lib/sponsor-tier";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 async function refreshSponsorPages() {
-  revalidatePath("/");
-  revalidatePath("/sponsorlar");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/sponsorlar");
   revalidatePath("/admin/sponsorlar");
   revalidatePath("/admin/sponsorlar/kategoriler");
   await notifyIndexNow(["/", "/sponsorlar"]);

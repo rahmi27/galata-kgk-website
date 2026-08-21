@@ -18,6 +18,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { validateTeamCategoryName } from "@/lib/team-category";
 import { Prisma } from "@/lib/generated/prisma/client";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function hasPrismaErrorCode(error: unknown, code: string) {
   return (
@@ -26,7 +27,7 @@ function hasPrismaErrorCode(error: unknown, code: string) {
 }
 
 async function refreshPeoplePages() {
-  revalidatePath("/ekibimiz");
+  revalidatePublicPath("/ekibimiz");
   revalidatePath("/admin");
   revalidatePath("/admin/uyeler");
   revalidatePath("/admin/uyeler/kisiler");
