@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
 export const SITE_NAME_EN =
   "Istanbul Galata University Career and Entrepreneurship Club";
 
-const fallbackSiteUrl = "http://localhost:3000";
+const fallbackSiteUrl = "https://galatakariyervegirisimcilik.com";
 
 export const siteUrl = (() => {
   const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();

@@ -82,6 +82,7 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: process.cwd(),
   images: {
     remotePatterns: [
       {
@@ -96,6 +97,7 @@ const nextConfig = {
       }
     : {}),
   experimental: {
+    globalNotFound: true,
     inlineCss: true,
     serverActions: {
       bodySizeLimit: "6mb",

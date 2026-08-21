@@ -47,6 +47,20 @@
     "subnavAriaLabel": "Alt menü",
     "privacy": "Çerez ve Analitik Bilgilendirmesi"
   },
+  "notFound": {
+    "title": "Aradığın sayfa burada değil.",
+    "description": "Bağlantı değişmiş veya sayfa kaldırılmış olabilir. Ana sayfaya dönebilir ya da yaklaşan etkinlikleri keşfedebilirsin.",
+    "home": "Ana sayfaya dön",
+    "events": "Etkinlikleri gör"
+  },
+  "errorPage": {
+    "eyebrow": "Beklenmeyen bir durum",
+    "title": "Bu sayfa şu anda açılmıyor.",
+    "description": "Sorun geçici olabilir. Yeniden deneyebilir veya ana sayfaya dönebilirsin.",
+    "retry": "Yeniden dene",
+    "home": "Ana sayfa",
+    "logMessage": "Sayfa oluşturulurken beklenmeyen bir hata oluştu."
+  },
   "home": {
     "metaTitle": "Galata KGK | İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
     "metaDescription": "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü; öğrencileri deneyim, bağlantı ve üretim odağında bir araya getirir.",

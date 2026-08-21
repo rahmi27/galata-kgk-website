@@ -44,10 +44,20 @@ test("locale yönlendirmesi varsayılan Türkçe ve anlamlı İngilizce path'ler
   for (const fragment of expected) assert.ok(routing.includes(fragment), fragment);
 });
 
+test("dil değiştirici aynı iç rotayı hedef locale ile değiştirir", async () => {
+  const switcher = await read("components", "language-switcher.tsx");
+
+  assert.match(switcher, /usePathname\(\)/);
+  assert.match(switcher, /useRouter\(\)/);
+  assert.match(switcher, /router\.replace\(\{ pathname, params, query \}/);
+  assert.match(switcher, /\{ locale: nextLocale \}/);
+});
+
 test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", async () => {
-  const [proxy, localeLayout, revalidation] = await Promise.all([
+  const [proxy, localeLayout, rootDocument, revalidation] = await Promise.all([
     read("proxy.ts"),
     read("app", "[locale]", "layout.tsx"),
+    read("components", "root-document.tsx"),
     read("lib", "revalidate-public.ts"),
   ]);
 
@@ -55,8 +65,27 @@ test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", 
   assert.match(proxy, /return NextResponse\.next\(\)/);
   assert.match(localeLayout, /export const dynamic = "force-static"/);
   assert.match(localeLayout, /routing\.locales\.map/);
+  assert.match(localeLayout, /<RootDocument locale=\{locale\}>/);
+  assert.match(localeLayout, /clientMessageNamespaces/);
+  assert.match(localeLayout, /messages=\{clientMessages\}/);
+  assert.match(rootDocument, /<html lang=\{locale\}/);
   assert.match(revalidation, /localizedPublicPath\(path, "tr"\)/);
   assert.match(revalidation, /localizedPublicPath\(path, "en"\)/);
+});
+
+test("404 ve hata ekranları locale mesajlarını sunucu/istemci kataloglarından okur", async () => {
+  const [notFound, globalNotFound, errorPage] = await Promise.all([
+    read("app", "[locale]", "not-found.tsx"),
+    read("app", "global-not-found.tsx"),
+    read("app", "[locale]", "error.tsx"),
+  ]);
+
+  assert.match(notFound, /getTranslations\("notFound"\)/);
+  assert.match(globalNotFound, /getTranslations\(\{locale, namespace: "notFound"\}\)/);
+  assert.match(globalNotFound, /<html lang=\{locale\}/);
+  assert.match(errorPage, /useTranslations\("errorPage"\)/);
+  assert.doesNotMatch(notFound, /Aradığın sayfa/);
+  assert.doesNotMatch(errorPage, /Bu sayfa şu anda/);
 });
 
 test("SEO yardımcıları canonical ve tr/en/x-default hreflang üretir", async () => {
@@ -66,6 +95,7 @@ test("SEO yardımcıları canonical ve tr/en/x-default hreflang üretir", async 
   assert.match(metadata, /"\/hakkimizda": "\/en\/about"/);
   assert.match(metadata, /"\/etkinliklerimiz": "\/en\/events"/);
   assert.match(metadata, /"x-default": turkishPath/);
+  assert.match(metadata, /https:\/\/galatakariyervegirisimcilik\.com/);
   assert.match(sitemap, /alternates:\s*\{\s*languages/);
   assert.match(sitemap, /localizedPublicPath\(path, "en"\)/);
 });

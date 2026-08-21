@@ -47,6 +47,20 @@
     "subnavAriaLabel": "Footer navigation",
     "privacy": "Cookie and Analytics Notice"
   },
+  "notFound": {
+    "title": "This page has moved beyond the map.",
+    "description": "The link may have changed or the page may no longer be available. Head home or discover what is coming up next.",
+    "home": "Return home",
+    "events": "Explore events"
+  },
+  "errorPage": {
+    "eyebrow": "Something unexpected happened",
+    "title": "This page is unavailable right now.",
+    "description": "The issue may be temporary. Try again or return to the home page.",
+    "retry": "Try again",
+    "home": "Home",
+    "logMessage": "An unexpected error occurred while rendering the page."
+  },
   "home": {
     "metaTitle": "Galata KGK | Istanbul Galata University Career and Entrepreneurship Club",
     "metaDescription": "Istanbul Galata University Career and Entrepreneurship Club brings students together around experience, meaningful connections and the courage to build.",
