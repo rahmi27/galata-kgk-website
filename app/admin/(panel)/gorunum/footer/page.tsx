@@ -4,12 +4,14 @@ import {
   ContentEditorForm,
   type ContentEditorSection,
 } from "@/components/admin/content-editor-form";
-import { getAdminSiteContentMap } from "@/lib/site-content";
+import { getAdminSiteContentMap, getAdminSiteContentRows, getRawEnglishSiteContentMap } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminFooterContentPage() {
+  const rows = await getAdminSiteContentRows();
   const values = await getAdminSiteContentMap();
+  const englishValues = getRawEnglishSiteContentMap(rows);
   const sections: ContentEditorSection[] = [
     {
       title: "Footer metinleri",
@@ -52,6 +54,10 @@ export default async function AdminFooterContentPage() {
       ],
     },
   ];
+  const localizedSections = sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => ({ ...field, valueEn: englishValues[field.name] ?? "" })),
+  }));
 
   return (
     <>
@@ -62,7 +68,7 @@ export default async function AdminFooterContentPage() {
       />
       <ContentEditorForm
         action={updateFooterContentAction}
-        sections={sections}
+        sections={localizedSections}
         submitLabel="Footer’ı kaydet"
       />
     </>

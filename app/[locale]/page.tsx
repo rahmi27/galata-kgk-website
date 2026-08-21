@@ -20,6 +20,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { formatEventDate } from "@/lib/date";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
 import {
   getHomeHeroContentFromRows,
@@ -91,7 +92,7 @@ export default async function HomePage({
     }),
     getPublicSiteContentRows(),
   ]);
-  const heroContent = getHomeHeroContentFromRows(siteContentRows);
+  const heroContent = getHomeHeroContentFromRows(siteContentRows, locale);
 
   return (
     <div className="bg-background">
@@ -205,7 +206,11 @@ export default async function HomePage({
             />
             <div className="stagger-grid mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
               {stats.map((stat) => (
-                <StatCard key={stat.id} {...stat} />
+                <StatCard
+                  key={stat.id}
+                  {...stat}
+                  label={localizedValue(locale, stat.label, stat.labelEn)}
+                />
               ))}
             </div>
           </div>
@@ -233,12 +238,14 @@ export default async function HomePage({
 
               <div className="stagger-grid mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
                 {sponsors.map((sponsor) => {
+                  const sponsorName = localizedValue(locale, sponsor.name, sponsor.nameEn);
+                  const sponsorLogoAlt = localizedOptionalValue(locale, sponsor.logoAlt, sponsor.logoAltEn);
                   const logo = (
                     <div className="sponsor-logo-surface flex h-24 items-center justify-center rounded-2xl border p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/45 group-hover:shadow-[0_18px_40px_-28px_rgba(232,93,44,0.75)]">
                       {sponsor.logoUrl ? (
                         <Image
                           src={sponsor.logoUrl}
-                          alt={sponsor.logoAlt ?? sponsor.name}
+                          alt={sponsorLogoAlt ?? sponsorName}
                           width={180}
                           height={64}
                           sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
@@ -248,7 +255,7 @@ export default async function HomePage({
                         <div className="flex flex-col items-center gap-1.5 text-center text-primary-100">
                           <Building2 className="size-6" aria-hidden="true" />
                           <span className="line-clamp-2 font-heading text-xs font-bold">
-                            {sponsor.name}
+                            {sponsorName}
                           </span>
                         </div>
                       )}
@@ -265,7 +272,7 @@ export default async function HomePage({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group"
-                      aria-label={common("externalWebsite", { name: sponsor.name })}
+                      aria-label={common("externalWebsite", { name: sponsorName })}
                     >
                       {logo}
                     </NextLink>
@@ -303,11 +310,11 @@ export default async function HomePage({
                 <EventCard
                   key={event.id}
                   date={formatEventDate(event.date, locale)}
-                  title={event.title}
-                  description={event.description}
+                  title={localizedValue(locale, event.title, event.titleEn)}
+                  description={localizedValue(locale, event.description, event.descriptionEn)}
                   imageSrc={event.imageUrl ?? undefined}
-                  imageAlt={event.imageAlt ?? undefined}
-                  category={event.category}
+                  imageAlt={localizedOptionalValue(locale, event.imageAlt, event.imageAltEn) ?? undefined}
+                  category={localizedValue(locale, event.category, event.categoryEn)}
                   href={`/etkinliklerimiz/${event.slug}`}
                 />
               ))}

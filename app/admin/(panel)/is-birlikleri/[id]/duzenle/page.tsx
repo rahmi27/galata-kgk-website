@@ -54,9 +54,12 @@ export default async function EditPartnerClubPage({
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
             name: partnerClub.name,
+            nameEn: partnerClub.nameEn,
             shortDescription: partnerClub.shortDescription,
+            shortDescriptionEn: partnerClub.shortDescriptionEn,
             logoUrl: partnerClub.logoUrl,
             logoAlt: partnerClub.logoAlt ?? "",
+            logoAltEn: partnerClub.logoAltEn,
             order: partnerClub.order,
           }}
         />

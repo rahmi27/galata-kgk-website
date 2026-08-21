@@ -24,6 +24,7 @@ export async function updateContactContentAction(
 
     const value =
       formData.get(contactAddressDefinition.key)?.toString().trim() ?? "";
+    const valueEn = formData.get(`${contactAddressDefinition.key}.en`)?.toString().trim() || null;
 
     if (value.length < 10) {
       throw new Error("Adres en az 10 karakter olmalıdır.");
@@ -32,11 +33,13 @@ export async function updateContactContentAction(
     if (value.length > 500) {
       throw new Error("Adres en fazla 500 karakter olabilir.");
     }
+    if (valueEn && valueEn.length > 500) throw new Error("İngilizce adres en fazla 500 karakter olabilir.");
 
     await prisma.siteContent.upsert({
       where: { key: contactAddressDefinition.key },
       update: {
         value,
+        valueEn,
         label: contactAddressDefinition.label,
         page: contactAddressDefinition.page,
         type: contactAddressDefinition.type,
@@ -44,6 +47,7 @@ export async function updateContactContentAction(
       create: {
         ...contactAddressDefinition,
         value,
+        valueEn,
       },
     });
 

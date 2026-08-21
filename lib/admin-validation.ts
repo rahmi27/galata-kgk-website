@@ -23,34 +23,50 @@ export type EventAdminInput = {
   imageUrl: string | null;
   imageAlt: string | null;
   category: string;
+  titleEn: string | null;
+  descriptionEn: string | null;
+  longDescriptionEn: string | null;
+  locationEn: string | null;
+  imageAltEn: string | null;
+  categoryEn: string | null;
 };
 
 export type SiteStatAdminInput = {
   label: string;
+  labelEn: string | null;
   value: string;
   order: number;
 };
 
 export type SponsorAdminInput = {
   name: string;
+  nameEn: string | null;
   websiteUrl: string | null;
   description: string | null;
+  descriptionEn: string | null;
   tierId: number | null;
   newTierName: string | null;
+  newTierNameEn: string | null;
   logoAlt: string | null;
+  logoAltEn: string | null;
   order: number;
 };
 
 export type PartnerClubAdminInput = {
   name: string;
+  nameEn: string | null;
   shortDescription: string;
+  shortDescriptionEn: string | null;
   logoAlt: string;
+  logoAltEn: string | null;
   order: number;
 };
 
 export type CollaborationItemAdminInput = {
   title: string;
+  titleEn: string | null;
   description: string;
+  descriptionEn: string | null;
   date: Date | null;
   order: number;
 };
@@ -75,6 +91,12 @@ export function validateEventForm(
   const category = getFormString(formData, "category");
   const imageUrl = getFormString(formData, "imageUrl");
   const imageAlt = getFormString(formData, "imageAlt");
+  const titleEn = getFormString(formData, "titleEn");
+  const descriptionEn = getFormString(formData, "descriptionEn");
+  const longDescriptionEn = getFormString(formData, "longDescriptionEn");
+  const locationEn = getFormString(formData, "locationEn");
+  const imageAltEn = getFormString(formData, "imageAltEn");
+  const categoryEn = getFormString(formData, "categoryEn");
   const date = dateValue ? new Date(dateValue) : null;
 
   if (title.length < 3 || title.length > 140) {
@@ -133,6 +155,10 @@ export function validateEventForm(
     };
   }
 
+  if (titleEn.length > 140 || descriptionEn.length > 320 || longDescriptionEn.length > 5000 || locationEn.length > 180 || imageAltEn.length > 180 || categoryEn.length > 80) {
+    return { success: false, error: "İngilizce alanlardan biri izin verilen uzunluğu aşıyor." };
+  }
+
   return {
     success: true,
     data: {
@@ -144,6 +170,12 @@ export function validateEventForm(
       category,
       imageUrl: imageUrl || null,
       imageAlt: imageAlt || null,
+      titleEn: titleEn || null,
+      descriptionEn: descriptionEn || null,
+      longDescriptionEn: longDescriptionEn || null,
+      locationEn: locationEn || null,
+      imageAltEn: imageAltEn || null,
+      categoryEn: categoryEn || null,
     },
   };
 }
@@ -156,7 +188,11 @@ export function validateSponsorForm(
   const description = getFormString(formData, "description");
   const tierValue = getFormString(formData, "tierId");
   const newTierName = getFormString(formData, "newTierName");
+  const newTierNameEn = getFormString(formData, "newTierNameEn");
   const logoAlt = getFormString(formData, "logoAlt");
+  const nameEn = getFormString(formData, "nameEn");
+  const descriptionEn = getFormString(formData, "descriptionEn");
+  const logoAltEn = getFormString(formData, "logoAltEn");
   const order = Number(getFormString(formData, "order"));
 
   if (name.length < 2 || name.length > 120) {
@@ -185,6 +221,14 @@ export function validateSponsorForm(
       success: false,
       error: "Logo alt metni 3–180 karakter arasında olmalıdır.",
     };
+  }
+
+  if (nameEn.length > 120 || descriptionEn.length > 320 || logoAltEn.length > 180) {
+    return { success: false, error: "İngilizce sponsor alanlarından biri izin verilen uzunluğu aşıyor." };
+  }
+
+  if (newTierNameEn.length > 80) {
+    return { success: false, error: "İngilizce yeni tier adı en fazla 80 karakter olabilir." };
   }
 
   if (!Number.isInteger(order) || order < 0 || order > 9999) {
@@ -218,7 +262,11 @@ export function validateSponsorForm(
       description: description || null,
       tierId,
       newTierName: tierValue === "new" ? newTierName : null,
+      newTierNameEn: tierValue === "new" ? newTierNameEn || null : null,
       logoAlt: logoAlt || null,
+      nameEn: nameEn || null,
+      descriptionEn: descriptionEn || null,
+      logoAltEn: logoAltEn || null,
       order,
     },
   };
@@ -228,6 +276,7 @@ export function validateSiteStatForm(
   formData: FormData,
 ): ValidationResult<SiteStatAdminInput> {
   const label = getFormString(formData, "label");
+  const labelEn = getFormString(formData, "labelEn");
   const value = getFormString(formData, "value");
   const orderValue = getFormString(formData, "order");
   const order = Number(orderValue);
@@ -245,6 +294,7 @@ export function validateSiteStatForm(
       error: "İstatistik değeri 1–30 karakter arasında olmalıdır.",
     };
   }
+  if (labelEn.length > 80) return { success: false, error: "İngilizce etiket en fazla 80 karakter olabilir." };
 
   if (!Number.isInteger(order) || order < 0 || order > 9999) {
     return {
@@ -257,6 +307,7 @@ export function validateSiteStatForm(
     success: true,
     data: {
       label,
+      labelEn: labelEn || null,
       value,
       order,
     },
@@ -267,8 +318,11 @@ export function validatePartnerClubForm(
   formData: FormData,
 ): ValidationResult<PartnerClubAdminInput> {
   const name = getFormString(formData, "name");
+  const nameEn = getFormString(formData, "nameEn");
   const shortDescription = getFormString(formData, "shortDescription");
+  const shortDescriptionEn = getFormString(formData, "shortDescriptionEn");
   const logoAlt = getFormString(formData, "logoAlt");
+  const logoAltEn = getFormString(formData, "logoAltEn");
   const order = Number(getFormString(formData, "order"));
 
   if (name.length < 2 || name.length > 120) {
@@ -291,6 +345,9 @@ export function validatePartnerClubForm(
       error: "Logo alt metni 3–180 karakter arasında olmalıdır.",
     };
   }
+  if (nameEn.length > 120 || shortDescriptionEn.length > 500 || logoAltEn.length > 180) {
+    return { success: false, error: "İngilizce partner alanlarından biri izin verilen uzunluğu aşıyor." };
+  }
 
   if (!Number.isInteger(order) || order < 0 || order > 9999) {
     return {
@@ -301,7 +358,7 @@ export function validatePartnerClubForm(
 
   return {
     success: true,
-    data: { name, shortDescription, logoAlt, order },
+    data: { name, nameEn: nameEn || null, shortDescription, shortDescriptionEn: shortDescriptionEn || null, logoAlt, logoAltEn: logoAltEn || null, order },
   };
 }
 
@@ -309,7 +366,9 @@ export function validateCollaborationItemForm(
   formData: FormData,
 ): ValidationResult<CollaborationItemAdminInput> {
   const title = getFormString(formData, "title");
+  const titleEn = getFormString(formData, "titleEn");
   const description = getFormString(formData, "description");
+  const descriptionEn = getFormString(formData, "descriptionEn");
   const dateValue = getFormString(formData, "date");
   const order = Number(getFormString(formData, "order"));
   const date = dateValue ? new Date(`${dateValue}T12:00:00.000Z`) : null;
@@ -326,6 +385,9 @@ export function validateCollaborationItemForm(
       success: false,
       error: "Açıklama 10–2000 karakter arasında olmalıdır.",
     };
+  }
+  if (titleEn.length > 140 || descriptionEn.length > 2000) {
+    return { success: false, error: "İngilizce iş birliği alanlarından biri izin verilen uzunluğu aşıyor." };
   }
 
   if (date && Number.isNaN(date.getTime())) {
@@ -344,6 +406,6 @@ export function validateCollaborationItemForm(
 
   return {
     success: true,
-    data: { title, description, date, order },
+    data: { title, titleEn: titleEn || null, description, descriptionEn: descriptionEn || null, date, order },
   };
 }

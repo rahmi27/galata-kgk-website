@@ -29,7 +29,7 @@ export default async function ContactPage({
     getPublicSiteContentRows(),
     getPublicClubSocialLinks(),
   ]);
-  const content = getContactContentFromRows(siteContentRows, socialLinks);
+  const content = getContactContentFromRows(siteContentRows, socialLinks, locale);
   const { details } = content;
   const { directionsUrl, embedUrl: mapEmbedUrl } = buildGoogleMapsUrls(
     details.address.value,

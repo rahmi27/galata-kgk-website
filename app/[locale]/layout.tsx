@@ -27,7 +27,7 @@ export default async function LocaleLayout({
 
   const [messages, chromeContent] = await Promise.all([
     getMessages(),
-    getSiteChromeContent(),
+    getSiteChromeContent(locale),
   ]);
 
   return (

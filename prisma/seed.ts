@@ -262,6 +262,12 @@ async function main() {
   }
 
   for (const content of siteContentDefinitions) {
+    if (content.valueEn) {
+      await prisma.siteContent.updateMany({
+        where: { key: content.key, valueEn: null },
+        data: { valueEn: content.valueEn },
+      });
+    }
     await prisma.siteContent.upsert({
       where: {
         key: content.key,

@@ -79,6 +79,19 @@ export function MembershipAssignmentForm({
                   placeholder="Yalnızca değiştirmek istiyorsanız doldurun"
                 />
               </FormField>
+              <FormField
+                label="İngilizce bölümü güncelle (isteğe bağlı)"
+                htmlFor="membership-existing-department-en"
+                hint="Boş bırakırsanız mevcut İngilizce bölüm bilgisi korunur."
+              >
+                <Input
+                  id="membership-existing-department-en"
+                  name="existingDepartmentEn"
+                  minLength={2}
+                  maxLength={120}
+                  placeholder="Only if you want to update it"
+                />
+              </FormField>
             </div>
           ) : (
             <div className="space-y-5">
@@ -88,6 +101,14 @@ export function MembershipAssignmentForm({
                 </FormField>
                 <FormField label="Bölümü" htmlFor="membership-new-department">
                   <Input id="membership-new-department" name="department" minLength={2} maxLength={120} required={mode === "new"} />
+                </FormField>
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <FormField label="Ad Soyad — İngilizce (opsiyonel)" htmlFor="membership-new-name-en">
+                  <Input id="membership-new-name-en" name="nameEn" minLength={2} maxLength={100} />
+                </FormField>
+                <FormField label="Bölüm — İngilizce (opsiyonel)" htmlFor="membership-new-department-en">
+                  <Input id="membership-new-department-en" name="departmentEn" minLength={2} maxLength={120} />
                 </FormField>
               </div>
             </div>
@@ -108,9 +129,14 @@ export function MembershipAssignmentForm({
         </select>
       </FormField>
       {categorySelection === "new" ? (
-        <FormField label="Yeni kategori adı" htmlFor="membership-new-category" hint="Aynı ad farklı harf biçimiyle varsa mevcut kategori kullanılır.">
-          <Input id="membership-new-category" name="newCategoryName" minLength={2} maxLength={80} required />
-        </FormField>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <FormField label="Yeni kategori adı" htmlFor="membership-new-category" hint="Aynı ad farklı harf biçimiyle varsa mevcut kategori kullanılır.">
+            <Input id="membership-new-category" name="newCategoryName" minLength={2} maxLength={80} required />
+          </FormField>
+          <FormField label="Kategori adı — İngilizce (opsiyonel)" htmlFor="membership-new-category-en">
+            <Input id="membership-new-category-en" name="newCategoryNameEn" minLength={2} maxLength={80} />
+          </FormField>
+        </div>
       ) : null}
       <Link
         href="/admin/uyeler/kategoriler"
@@ -138,15 +164,31 @@ export function MembershipAssignmentForm({
               placeholder="Örn. Üye portresi"
             />
           </FormField>
+          <FormField
+            label="Fotoğraf alt metni — İngilizce (opsiyonel)"
+            htmlFor={mode === "new" ? "membership-photo-alt-en" : "membership-existing-photo-alt-en"}
+          >
+            <Input
+              id={mode === "new" ? "membership-photo-alt-en" : "membership-existing-photo-alt-en"}
+              name={mode === "new" ? "photoAltEn" : "existingPhotoAltEn"}
+              maxLength={180}
+              placeholder="E.g. Team member portrait"
+            />
+          </FormField>
         </>
       ) : null}
-      <div className="grid gap-5 sm:grid-cols-[1fr_8rem]">
+      <div className="grid gap-5 sm:grid-cols-2">
         <FormField label="Bu kategorideki rolü" htmlFor="membership-role">
           <Input id="membership-role" name="role" minLength={2} maxLength={140} placeholder="Örn. Etkinlik Koordinatörü" required />
         </FormField>
+        <FormField label="Rol — İngilizce (opsiyonel)" htmlFor="membership-role-en">
+          <Input id="membership-role-en" name="roleEn" minLength={2} maxLength={140} placeholder="E.g. Events Coordinator" />
+        </FormField>
+        <div className="sm:col-span-2 sm:max-w-32">
         <FormField label="Sıra" htmlFor="membership-order" hint="Otomatik dolar">
           <Input id="membership-order" name="order" type="number" min={0} max={9999} value={order} onChange={(event) => setOrder(Number(event.target.value))} />
         </FormField>
+        </div>
       </div>
       <ActionMessage state={state} />
       <Button type="submit" variant="primary" className="rounded-xl" disabled={isPending}>

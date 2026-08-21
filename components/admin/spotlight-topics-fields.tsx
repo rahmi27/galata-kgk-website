@@ -9,17 +9,21 @@ import { Input } from "@/components/ui/input";
 type TopicField = {
   id: string;
   value: string;
+  valueEn: string;
 };
 
 export function SpotlightTopicsFields({
   initialTopics,
+  initialTopicsEn = [],
 }: {
   initialTopics: string[];
+  initialTopicsEn?: string[];
 }) {
   const [topics, setTopics] = useState<TopicField[]>(
     initialTopics.map((value, index) => ({
       id: `initial-${index}`,
       value,
+      valueEn: initialTopicsEn[index] ?? "",
     })),
   );
 
@@ -30,6 +34,7 @@ export function SpotlightTopicsFields({
         name="spotlightTopics"
         value={JSON.stringify(topics.map((topic) => topic.value))}
       />
+      <input type="hidden" name="spotlightTopicsEn" value={JSON.stringify(topics.map((topic) => topic.valueEn))} />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="font-heading text-xl font-bold text-primary-950 dark:text-white">
@@ -46,7 +51,7 @@ export function SpotlightTopicsFields({
           onClick={() =>
             setTopics((current) => [
               ...current,
-              { id: `new-${Date.now()}`, value: "" },
+              { id: `new-${Date.now()}`, value: "", valueEn: "" },
             ])
           }
           disabled={topics.length >= 12}
@@ -61,7 +66,7 @@ export function SpotlightTopicsFields({
           topics.map((topic, index) => (
             <div
               key={topic.id}
-              className="grid grid-cols-[1fr_auto] items-center gap-3"
+              className="grid grid-cols-[1fr_1fr_auto] items-center gap-3"
             >
               <Input
                 value={topic.value}
@@ -77,6 +82,13 @@ export function SpotlightTopicsFields({
                 maxLength={80}
                 aria-label={`${index + 1}. odak etiketi`}
                 required
+              />
+              <Input
+                value={topic.valueEn}
+                onChange={(event) => setTopics((current) => current.map((item) => item.id === topic.id ? { ...item, valueEn: event.target.value } : item))}
+                maxLength={80}
+                aria-label={`${index + 1}. odak etiketi İngilizce (opsiyonel)`}
+                placeholder="English (optional)"
               />
               <Button
                 type="button"

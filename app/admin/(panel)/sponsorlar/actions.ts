@@ -22,7 +22,7 @@ async function refreshSponsorPages() {
   await notifyIndexNow(["/", "/sponsorlar"]);
 }
 
-async function resolveTier(tierId: number | null, newTierName: string | null) {
+async function resolveTier(tierId: number | null, newTierName: string | null, newTierNameEn: string | null) {
   if (tierId) {
     return prisma.sponsorTier.findUnique({ where: { id: tierId } });
   }
@@ -48,6 +48,7 @@ async function resolveTier(tierId: number | null, newTierName: string | null) {
   return prisma.sponsorTier.create({
     data: {
       ...validation.data,
+      nameEn: newTierNameEn,
       order: (highestOrder._max.order ?? 0) + 1,
     },
   });
@@ -84,6 +85,7 @@ export async function createSponsorAction(
   const tier = await resolveTier(
     validation.data.tierId,
     validation.data.newTierName,
+    validation.data.newTierNameEn,
   );
 
   if (!tier) {
@@ -95,12 +97,15 @@ export async function createSponsorAction(
     await prisma.sponsor.create({
       data: {
         name: validation.data.name,
+        nameEn: validation.data.nameEn,
         websiteUrl: validation.data.websiteUrl,
         description: validation.data.description,
+        descriptionEn: validation.data.descriptionEn,
         order: validation.data.order,
         tierId: tier.id,
         logoUrl: imageUpload.path,
         logoAlt: imageUpload.path ? validation.data.logoAlt : null,
+        logoAltEn: imageUpload.path ? validation.data.logoAltEn : null,
       },
     });
     await refreshSponsorPages();
@@ -161,6 +166,7 @@ export async function updateSponsorAction(
   const tier = await resolveTier(
     validation.data.tierId,
     validation.data.newTierName,
+    validation.data.newTierNameEn,
   );
 
   if (!tier) {
@@ -173,12 +179,15 @@ export async function updateSponsorAction(
       where: { id: sponsorId },
       data: {
         name: validation.data.name,
+        nameEn: validation.data.nameEn,
         websiteUrl: validation.data.websiteUrl,
         description: validation.data.description,
+        descriptionEn: validation.data.descriptionEn,
         order: validation.data.order,
         tierId: tier.id,
         logoUrl: nextLogoUrl,
         logoAlt: nextLogoUrl ? validation.data.logoAlt : null,
+        logoAltEn: nextLogoUrl ? validation.data.logoAltEn : null,
       },
     });
 

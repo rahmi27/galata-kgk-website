@@ -12,18 +12,24 @@ import { teamSocialPlatformOptions } from "@/lib/social-platforms";
 
 export type PersonFormValues = {
   name: string;
+  nameEn: string;
   department: string;
+  departmentEn: string;
   photoUrl: string;
   photoAlt: string;
+  photoAltEn: string;
   socialPlatform: string;
   socialUrl: string;
 };
 
 const emptyValues: PersonFormValues = {
   name: "",
+  nameEn: "",
   department: "",
+  departmentEn: "",
   photoUrl: "",
   photoAlt: "",
+  photoAltEn: "",
   socialPlatform: "",
   socialUrl: "",
 };
@@ -51,8 +57,14 @@ export function PersonAdminForm({
       <FormField label="Ad Soyad" htmlFor="person-name">
         <Input id="person-name" name="name" defaultValue={defaultValues.name} minLength={2} maxLength={100} required />
       </FormField>
+      <FormField label="Ad Soyad — İngilizce (opsiyonel)" htmlFor="person-name-en">
+        <Input id="person-name-en" name="nameEn" defaultValue={defaultValues.nameEn} minLength={2} maxLength={100} />
+      </FormField>
       <FormField label="Bölüm" htmlFor="person-department" hint="Örn. İç Mimarlık, İşletme">
         <Input id="person-department" name="department" defaultValue={defaultValues.department} minLength={2} maxLength={120} required />
+      </FormField>
+      <FormField label="Bölüm — İngilizce (opsiyonel)" htmlFor="person-department-en">
+        <Input id="person-department-en" name="departmentEn" defaultValue={defaultValues.departmentEn} minLength={2} maxLength={120} />
       </FormField>
       <ImageUploadField
         id="person-photo"
@@ -63,6 +75,9 @@ export function PersonAdminForm({
       />
       <FormField label="Fotoğraf alt metni" htmlFor="person-photo-alt" hint="Fotoğraf varsa erişilebilir, kısa bir açıklama yazın.">
         <Input id="person-photo-alt" name="photoAlt" defaultValue={defaultValues.photoAlt} maxLength={180} placeholder="Örn. Üye portresi" />
+      </FormField>
+      <FormField label="Fotoğraf alt metni — İngilizce (opsiyonel)" htmlFor="person-photo-alt-en">
+        <Input id="person-photo-alt-en" name="photoAltEn" defaultValue={defaultValues.photoAltEn} maxLength={180} placeholder="E.g. Team member portrait" />
       </FormField>
       <div className="grid gap-5 sm:grid-cols-2">
         <FormField label="Profil türü" htmlFor="person-social-platform" hint="İsteğe bağlı">

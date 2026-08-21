@@ -58,10 +58,13 @@ export async function updateHeaderContentAction(
       };
     }
 
-    const updates = editableTextKeys.map((key) => ({
-      key,
-      value: readRequiredText(formData, key),
-    }));
+    const updates: Array<{ key: string; value: string; valueEn?: string | null }> = editableTextKeys.map((key) => {
+      const valueEn = formData.get(`${key}.en`)?.toString().trim() || null;
+      if (valueEn && (valueEn.length < 2 || valueEn.length > 120)) {
+        throw new Error("İngilizce metinler boş bırakılmalı veya 2-120 karakter arasında olmalıdır.");
+      }
+      return { key, value: readRequiredText(formData, key), valueEn };
+    });
 
     order.forEach((id, index) => {
       updates.push({
@@ -71,7 +74,7 @@ export async function updateHeaderContentAction(
     });
 
     await prisma.$transaction(
-      updates.map(({ key, value }) => {
+      updates.map(({ key, value, valueEn }) => {
         const definition = definitionByKey.get(key);
 
         if (!definition) {
@@ -82,6 +85,7 @@ export async function updateHeaderContentAction(
           where: { key },
           update: {
             value,
+            ...(valueEn !== undefined ? { valueEn } : {}),
             label: definition.label,
             page: definition.page,
             type: definition.type,
@@ -89,6 +93,7 @@ export async function updateHeaderContentAction(
           create: {
             ...definition,
             value,
+            ...(valueEn !== undefined ? { valueEn } : {}),
           },
         });
       }),

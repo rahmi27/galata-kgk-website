@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { EventList } from "@/components/events/event-list";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { prisma } from "@/lib/prisma";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
@@ -22,12 +23,16 @@ const getCachedEvents = unstable_cache(
       select: {
         id: true,
         title: true,
+        titleEn: true,
         slug: true,
         description: true,
+        descriptionEn: true,
         date: true,
         imageUrl: true,
         imageAlt: true,
+        imageAltEn: true,
         category: true,
+        categoryEn: true,
       },
     });
 
@@ -51,7 +56,16 @@ export default async function EventsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "events" });
-  const events = await getCachedEvents();
+  const events = (await getCachedEvents()).map((event) => ({
+    id: event.id,
+    slug: event.slug,
+    date: event.date,
+    imageUrl: event.imageUrl,
+    title: localizedValue(locale, event.title, event.titleEn),
+    description: localizedValue(locale, event.description, event.descriptionEn),
+    imageAlt: localizedOptionalValue(locale, event.imageAlt, event.imageAltEn),
+    category: localizedValue(locale, event.category, event.categoryEn),
+  }));
 
   return (
     <div className="bg-background">

@@ -8,6 +8,7 @@ import { ArrowLeft, CalendarDays, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 type CollaborationDetailPageProps = {
@@ -67,10 +68,23 @@ export default async function CollaborationDetailPage({
     notFound();
   }
 
-  const datedCollaborations = partnerClub.collaborations.filter(
+  const partnerName = localizedValue(locale, partnerClub.name, partnerClub.nameEn);
+  const partnerDescription = localizedValue(
+    locale,
+    partnerClub.shortDescription,
+    partnerClub.shortDescriptionEn,
+  );
+  const partnerLogoAlt = localizedOptionalValue(locale, partnerClub.logoAlt, partnerClub.logoAltEn);
+  const localizedCollaborations = partnerClub.collaborations.map((item) => ({
+    ...item,
+    title: localizedValue(locale, item.title, item.titleEn),
+    description: localizedValue(locale, item.description, item.descriptionEn),
+  }));
+
+  const datedCollaborations = localizedCollaborations.filter(
     (item) => item.date,
   );
-  const ongoingCollaborations = partnerClub.collaborations.filter(
+  const ongoingCollaborations = localizedCollaborations.filter(
     (item) => !item.date,
   );
 
@@ -93,7 +107,7 @@ export default async function CollaborationDetailPage({
             <div className="flex aspect-square items-center justify-center overflow-hidden rounded-[1.75rem] border border-primary/10 bg-white p-5 shadow-[0_22px_60px_-42px_rgba(27,42,94,0.6)] dark:border-white/10">
               <Image
                 src={partnerClub.logoUrl}
-                alt={partnerClub.logoAlt ?? partnerClub.name}
+                alt={partnerLogoAlt ?? partnerName}
                 width={240}
                 height={240}
                 priority
@@ -106,10 +120,10 @@ export default async function CollaborationDetailPage({
                 {t("eyebrow")}
               </p>
               <h1 className="mt-3 font-heading text-4xl font-bold leading-[1.06] tracking-[-0.05em] text-primary sm:text-5xl dark:text-white">
-                {partnerClub.name}
+                {partnerName}
               </h1>
               <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">
-                {partnerClub.shortDescription}
+                {partnerDescription}
               </p>
             </div>
           </div>

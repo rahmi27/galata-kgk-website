@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
 import { createPageMetadata } from "@/lib/site-metadata";
 
@@ -75,7 +76,13 @@ export default async function EventDetailPage({
     notFound();
   }
 
-  const longDescriptionParagraphs = event.longDescription
+  const eventTitle = localizedValue(locale, event.title, event.titleEn);
+  const eventDescription = localizedValue(locale, event.description, event.descriptionEn);
+  const eventLongDescription = localizedValue(locale, event.longDescription, event.longDescriptionEn);
+  const eventLocation = localizedValue(locale, event.location, event.locationEn);
+  const eventCategory = localizedValue(locale, event.category, event.categoryEn);
+  const eventImageAlt = localizedOptionalValue(locale, event.imageAlt, event.imageAltEn);
+  const longDescriptionParagraphs = eventLongDescription
     .split(/\n\s*\n/)
     .filter(Boolean);
 
@@ -92,13 +99,13 @@ export default async function EventDetailPage({
               </Link>
             </Button>
             <p className="mt-9 inline-flex rounded-full bg-accent-50 px-3.5 py-2 font-heading text-xs font-bold uppercase tracking-[0.15em] text-accent-800 dark:bg-accent/15 dark:text-accent-300">
-              {event.category}
+              {eventCategory}
             </p>
             <h1 className="mt-6 max-w-4xl font-heading text-4xl font-bold leading-[1.05] tracking-[-0.05em] text-primary sm:text-5xl lg:text-6xl dark:text-white">
-              {event.title}
+              {eventTitle}
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9">
-              {event.description}
+              {eventDescription}
             </p>
           </div>
         </section>
@@ -110,7 +117,7 @@ export default async function EventDetailPage({
                 {event.imageUrl ? (
                   <Image
                     src={event.imageUrl}
-                    alt={event.imageAlt ?? `${event.title} etkinliği görseli`}
+                    alt={eventImageAlt ?? eventTitle}
                     fill
                     priority
                     className="object-cover"
@@ -120,7 +127,7 @@ export default async function EventDetailPage({
                   <div
                     className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_78%_22%,rgba(232,93,44,0.55),transparent_26%),linear-gradient(135deg,#1B2A5E_0%,#283B74_50%,#131D41_100%)]"
                     role="img"
-                    aria-label={`${event.title} için görsel alanı`}
+                    aria-label={eventTitle}
                   >
                     <CalendarDays
                       className="size-16 text-white/70"
@@ -167,7 +174,7 @@ export default async function EventDetailPage({
                     {t("location")}
                   </dt>
                   <dd className="mt-2 text-sm font-medium leading-6 text-primary dark:text-primary-100">
-                    {event.location}
+                    {eventLocation}
                   </dd>
                 </div>
                 <div className="border-t border-primary/10 pt-6 dark:border-white/10">
@@ -176,7 +183,7 @@ export default async function EventDetailPage({
                     {t("category")}
                   </dt>
                   <dd className="mt-2 text-sm font-medium leading-6 text-primary dark:text-primary-100">
-                    {event.category}
+                    {eventCategory}
                   </dd>
                 </div>
               </dl>

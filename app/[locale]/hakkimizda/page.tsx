@@ -26,7 +26,10 @@ export default async function AboutPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const content = getAboutContentFromRows(await getPublicSiteContentRows());
+  const content = getAboutContentFromRows(
+    await getPublicSiteContentRows(),
+    locale,
+  );
 
   return (
     <div className="bg-background">

@@ -108,6 +108,12 @@ export async function createEventAction(
       location: validation.data.location,
       category: validation.data.category,
       imageAlt: validation.data.imageAlt,
+      titleEn: validation.data.titleEn,
+      descriptionEn: validation.data.descriptionEn,
+      longDescriptionEn: validation.data.longDescriptionEn,
+      locationEn: validation.data.locationEn,
+      imageAltEn: validation.data.imageAltEn,
+      categoryEn: validation.data.categoryEn,
     };
 
     await prisma.event.create({
@@ -189,6 +195,12 @@ export async function updateEventAction(
       location: validation.data.location,
       category: validation.data.category,
       imageAlt: nextImageUrl ? validation.data.imageAlt : null,
+      titleEn: validation.data.titleEn,
+      descriptionEn: validation.data.descriptionEn,
+      longDescriptionEn: validation.data.longDescriptionEn,
+      locationEn: validation.data.locationEn,
+      imageAltEn: nextImageUrl ? validation.data.imageAltEn : null,
+      categoryEn: validation.data.categoryEn,
     };
 
     await prisma.event.update({

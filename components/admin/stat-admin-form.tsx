@@ -12,6 +12,7 @@ export function StatAdminForm({
   action,
   statId,
   label,
+  labelEn,
   value,
   order,
 }: {
@@ -21,6 +22,7 @@ export function StatAdminForm({
   ) => Promise<AdminActionState>;
   statId: number;
   label: string;
+  labelEn: string | null;
   value: string;
   order: number;
 }) {
@@ -31,7 +33,7 @@ export function StatAdminForm({
 
   return (
     <form action={formAction} className="space-y-5">
-      <div className="grid gap-5 sm:grid-cols-[1fr_10rem_8rem]">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_10rem_8rem]">
         <div className="space-y-2">
           <label
             htmlFor={`stat-label-${statId}`}
@@ -47,6 +49,12 @@ export function StatAdminForm({
             maxLength={80}
             required
           />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor={`stat-label-en-${statId}`} className="font-heading text-sm font-semibold text-primary-900">
+            Etiket — İngilizce (opsiyonel)
+          </label>
+          <Input id={`stat-label-en-${statId}`} name="labelEn" defaultValue={labelEn ?? ""} maxLength={80} />
         </div>
         <div className="space-y-2">
           <label

@@ -107,13 +107,24 @@
     "heroDescription": "Galata KGK is where students come together to shape their careers with intention and experience entrepreneurship first-hand.",
     "introEyebrow": "Who We Are",
     "introTitle": "Built by students, for the futures students want to create.",
+    "introParagraphs": "At Istanbul Galata University Career and Entrepreneurship Club, we help students discover the world of work while they are still at university, evaluate career options with intention and step into professional life with confidence.\n\nWe bring together students from dentistry, gastronomy, nursing, business, communication, design, computer engineering and public relations. By combining the perspective of every discipline, we create a more inclusive and powerful learning environment.",
     "principleLabel": "What we believe",
+    "principleText": "When knowledge and perspectives from different disciplines meet, every student's career journey becomes richer.",
     "visionEyebrow": "Our Vision",
     "visionTitle": "A sustainable career community that connects disciplines.",
+    "visionDescription": "We aim to become a trusted, pioneering campus community where students from different departments learn from one another, build meaningful relationships with the world of work and grow consistently every term.",
     "missionEyebrow": "Our Mission",
     "missionTitle": "Building career confidence through experience, guidance and strong relationships.",
+    "missionDescription": "Through professional conversations, summits, workshops and collaborations, we help students understand industries up close, strengthen their capabilities and meet the right professionals in their fields.",
     "timelineEyebrow": "Our Journey",
-    "timelineTitle": "A community designed to grow with purpose."
+    "timelineTitle": "A community designed to grow with purpose.",
+    "timelineDescription": "Our growth plan prioritises consistent activity, a strong team structure and lasting partnerships over short-lived crowds.",
+    "milestones": [
+      {"year":"The Beginning","title":"Building the core team","description":"We are creating an interdisciplinary team whose coordination units have clear responsibilities and work towards shared goals."},
+      {"year":"Start of Term","title":"Welcome and orientation","description":"We design a confident start where new members discover the club's vision, connect with one another and explore how they can contribute."},
+      {"year":"Mid-Term","title":"Consistent events and collaborations","description":"Professional meet-ups, workshops and stakeholder partnerships steadily strengthen the club's visibility and active participation across campus."},
+      {"year":"Year-End","title":"A lasting campus impact","description":"Our goal is a sustainable community where students from different disciplines take ownership, grow together and leave a stronger foundation for the next term."}
+    ]
   },
   "events": {
     "metaTitle": "Events | Galata KGK — Istanbul Galata University",

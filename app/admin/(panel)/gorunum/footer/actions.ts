@@ -38,15 +38,20 @@ export async function updateFooterContentAction(
         throw new Error(`${definition.label} geçerli bir http(s) adresi olmalıdır.`);
       }
 
-      return { definition, value };
+      const valueEn = urlKeys.has(definition.key)
+        ? null
+        : formData.get(`${definition.key}.en`)?.toString().trim() || null;
+      if (valueEn && valueEn.length > 3000) throw new Error(`${definition.label} İngilizce metni çok uzun.`);
+      return { definition, value, valueEn };
     });
 
     await prisma.$transaction(
-      updates.map(({ definition, value }) =>
+      updates.map(({ definition, value, valueEn }) =>
         prisma.siteContent.upsert({
           where: { key: definition.key },
           update: {
             value,
+            valueEn,
             label: definition.label,
             page: definition.page,
             type: definition.type,
@@ -54,6 +59,7 @@ export async function updateFooterContentAction(
           create: {
             ...definition,
             value,
+            valueEn,
           },
         }),
       ),

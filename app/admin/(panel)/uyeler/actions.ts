@@ -37,6 +37,7 @@ async function refreshPeoplePages() {
 async function resolveCategory(
   categoryId: number | null,
   newCategoryName: string | null,
+  newCategoryNameEn: string | null,
 ) {
   if (categoryId) {
     return prisma.teamCategory.findUnique({ where: { id: categoryId } });
@@ -56,6 +57,7 @@ async function resolveCategory(
   return prisma.teamCategory.create({
     data: {
       ...validation.data,
+      nameEn: newCategoryNameEn,
       order: (highestOrder._max.order ?? 0) + 1,
     },
   });
@@ -93,6 +95,7 @@ export async function createPersonAction(
         ...validation.data,
         photoUrl: imageUpload.path,
         photoAlt: imageUpload.path ? validation.data.photoAlt : null,
+        photoAltEn: imageUpload.path ? validation.data.photoAltEn : null,
       },
     });
     await refreshPeoplePages();
@@ -151,6 +154,7 @@ export async function updatePersonAction(
         ...validation.data,
         photoUrl: nextPhotoUrl,
         photoAlt: nextPhotoUrl ? validation.data.photoAlt : null,
+        photoAltEn: nextPhotoUrl ? validation.data.photoAltEn : null,
       },
     });
     if (person.photoUrl && person.photoUrl !== nextPhotoUrl) {
@@ -186,6 +190,7 @@ export async function createMembershipAction(
     name: string;
     photoUrl: string | null;
     photoAlt: string | null;
+    photoAltEn: string | null;
   } | null = null;
 
   if (!fixedPersonId && personMode === "new") {
@@ -216,7 +221,7 @@ export async function createMembershipAction(
 
     existingPerson = await prisma.person.findUnique({
       where: { id: personId },
-      select: { id: true, name: true, photoUrl: true, photoAlt: true },
+      select: { id: true, name: true, photoUrl: true, photoAlt: true, photoAltEn: true },
     });
     if (!existingPerson) {
       return { success: false, message: "Atamak istediğiniz kişi bulunamadı." };
@@ -226,6 +231,7 @@ export async function createMembershipAction(
   const category = await resolveCategory(
     membershipValidation.data.categoryId,
     membershipValidation.data.newCategoryName,
+    membershipValidation.data.newCategoryNameEn,
   );
   if (!category) {
     return { success: false, message: "Seçilen ekip kategorisi bulunamadı." };
@@ -251,6 +257,7 @@ export async function createMembershipAction(
             ...personData,
             photoUrl: imageUpload.path,
             photoAlt: imageUpload.path ? personData.photoAlt : null,
+            photoAltEn: imageUpload.path ? personData.photoAltEn : null,
           },
         });
         await transaction.teamMembership.create({
@@ -258,6 +265,7 @@ export async function createMembershipAction(
             personId: createdPerson.id,
             categoryId: category.id,
             role: membershipValidation.data.role,
+            roleEn: membershipValidation.data.roleEn,
             order,
           },
         });
@@ -303,6 +311,10 @@ export async function createMembershipAction(
     .trim()
     .replace(/\s+/g, " ");
   const photoAlt = String(formData.get("existingPhotoAlt") ?? "").trim();
+  const departmentEn = String(formData.get("existingDepartmentEn") ?? "")
+    .trim()
+    .replace(/\s+/g, " ");
+  const photoAltEn = String(formData.get("existingPhotoAltEn") ?? "").trim();
   if (department && (department.length < 2 || department.length > 120)) {
     return {
       success: false,
@@ -315,6 +327,12 @@ export async function createMembershipAction(
       message: "Fotoğraf alt metni en fazla 180 karakter olabilir.",
     };
   }
+  if (departmentEn && (departmentEn.length < 2 || departmentEn.length > 120)) {
+    return { success: false, message: "İngilizce bölüm güncellemesi 2–120 karakter olmalıdır." };
+  }
+  if (photoAltEn.length > 180) {
+    return { success: false, message: "İngilizce fotoğraf alt metni en fazla 180 karakter olabilir." };
+  }
 
   const imageUpload = await saveImageUpload(
     formData.get("memberPhoto"),
@@ -326,15 +344,17 @@ export async function createMembershipAction(
 
   try {
     await prisma.$transaction(async (transaction) => {
-      if (department || imageUpload.path) {
+      if (department || departmentEn || imageUpload.path) {
         await transaction.person.update({
           where: { id: personId },
           data: {
             ...(department ? { department } : {}),
+            ...(departmentEn ? { departmentEn } : {}),
             ...(imageUpload.path
               ? {
                   photoUrl: imageUpload.path,
                   photoAlt: photoAlt || person.photoAlt,
+                  photoAltEn: photoAltEn || person.photoAltEn,
                 }
               : {}),
           },
@@ -345,6 +365,7 @@ export async function createMembershipAction(
           personId,
           categoryId: category.id,
           role: membershipValidation.data.role,
+          roleEn: membershipValidation.data.roleEn,
           order,
         },
       });
@@ -377,9 +398,13 @@ export async function updateMembershipAction(
 ): Promise<AdminActionState> {
   await requireAdmin();
   const role = String(formData.get("role") ?? "").trim().replace(/\s+/g, " ");
+  const roleEn = String(formData.get("roleEn") ?? "").trim().replace(/\s+/g, " ");
   const order = Number(formData.get("order"));
   if (role.length < 2 || role.length > 140) {
     return { success: false, message: "Kategori rolü 2–140 karakter olmalıdır." };
+  }
+  if (roleEn && (roleEn.length < 2 || roleEn.length > 140)) {
+    return { success: false, message: "İngilizce kategori rolü 2–140 karakter olmalıdır." };
   }
   if (!Number.isInteger(order) || order < 0 || order > 9999) {
     return { success: false, message: "Sıralama 0–9999 arasında tam sayı olmalıdır." };
@@ -393,7 +418,7 @@ export async function updateMembershipAction(
   try {
     await prisma.teamMembership.update({
       where: { id: membershipId },
-      data: { role, order },
+      data: { role, roleEn: roleEn || null, order },
     });
     await refreshPeoplePages();
     return { success: true, message: "Rol ve kategori sırası güncellendi." };

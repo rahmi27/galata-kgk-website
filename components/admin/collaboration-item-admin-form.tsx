@@ -11,7 +11,9 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 
 type CollaborationItemFormValues = {
   title: string;
+  titleEn?: string | null;
   description: string;
+  descriptionEn?: string | null;
   date: string;
   order: number;
 };
@@ -28,7 +30,9 @@ type CollaborationItemAdminFormProps = {
 
 const emptyValues: CollaborationItemFormValues = {
   title: "",
+  titleEn: "",
   description: "",
+  descriptionEn: "",
   date: "",
   order: 0,
 };
@@ -108,6 +112,16 @@ export function CollaborationItemAdminForm({
           />
         </Field>
       </div>
+
+      <fieldset className="space-y-5 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
+        <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">İngilizce (opsiyonel)</legend>
+        <Field label="Başlık (EN)" htmlFor="collaboration-title-en">
+          <Input id="collaboration-title-en" name="titleEn" defaultValue={defaultValues.titleEn ?? ""} maxLength={140} />
+        </Field>
+        <Field label="Açıklama (EN)" htmlFor="collaboration-description-en">
+          <Textarea id="collaboration-description-en" name="descriptionEn" defaultValue={defaultValues.descriptionEn ?? ""} maxLength={2000} className="min-h-32" />
+        </Field>
+      </fieldset>
 
       {state.message ? (
         <p

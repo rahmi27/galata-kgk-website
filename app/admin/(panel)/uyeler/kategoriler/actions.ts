@@ -13,6 +13,12 @@ function parseOrder(formData: FormData) {
   return Number.isInteger(order) && order >= 0 && order <= 9999 ? order : null;
 }
 
+function parseEnglishName(formData: FormData) {
+  const nameEn = String(formData.get("nameEn") ?? "").trim().replace(/\s+/g, " ");
+  if (nameEn && (nameEn.length < 2 || nameEn.length > 80)) return null;
+  return nameEn || undefined;
+}
+
 async function refreshCategoryPages() {
   revalidatePath("/ekibimiz");
   revalidatePath("/admin/uyeler");
@@ -24,12 +30,14 @@ export async function createTeamCategoryAction(_previousState: AdminActionState,
   await requireAdmin();
   const validation = validateTeamCategoryName(String(formData.get("name") ?? ""));
   const order = parseOrder(formData);
+  const nameEn = parseEnglishName(formData);
   if (!validation.success) return { success: false, message: validation.error };
   if (order === null) return { success: false, message: "Sıralama 0–9999 arasında tam sayı olmalıdır." };
+  if (nameEn === null) return { success: false, message: "İngilizce kategori adı 2–80 karakter olmalıdır." };
   const duplicate = await prisma.teamCategory.findUnique({ where: { slug: validation.data.slug }, select: { id: true } });
   if (duplicate) return { success: false, message: "Bu kategori farklı büyük/küçük harf kullanımıyla zaten mevcut." };
   try {
-    await prisma.teamCategory.create({ data: { ...validation.data, order } });
+    await prisma.teamCategory.create({ data: { ...validation.data, nameEn, order } });
     await refreshCategoryPages();
     return { success: true, message: "Ekip kategorisi oluşturuldu." };
   } catch (error) {
@@ -42,14 +50,16 @@ export async function updateTeamCategoryAction(categoryId: number, _previousStat
   await requireAdmin();
   const validation = validateTeamCategoryName(String(formData.get("name") ?? ""));
   const order = parseOrder(formData);
+  const nameEn = parseEnglishName(formData);
   if (!validation.success) return { success: false, message: validation.error };
   if (order === null) return { success: false, message: "Sıralama 0–9999 arasında tam sayı olmalıdır." };
+  if (nameEn === null) return { success: false, message: "İngilizce kategori adı 2–80 karakter olmalıdır." };
   const current = await prisma.teamCategory.findUnique({ where: { id: categoryId }, select: { id: true } });
   if (!current) return { success: false, message: "Düzenlemek istediğiniz kategori bulunamadı." };
   const duplicate = await prisma.teamCategory.findFirst({ where: { slug: validation.data.slug, id: { not: categoryId } }, select: { id: true } });
   if (duplicate) return { success: false, message: "Bu kategori farklı büyük/küçük harf kullanımıyla zaten mevcut." };
   try {
-    await prisma.teamCategory.update({ where: { id: categoryId }, data: { ...validation.data, order } });
+    await prisma.teamCategory.update({ where: { id: categoryId }, data: { ...validation.data, nameEn, order } });
     await refreshCategoryPages();
     return { success: true, message: "Kategori güncellendi." };
   } catch (error) {

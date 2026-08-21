@@ -11,6 +11,7 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 export function TeamCategoryForm({
   action,
   defaultName = "",
+  defaultNameEn = "",
   defaultOrder = 0,
   submitLabel,
   resetOnSuccess = false,
@@ -20,6 +21,7 @@ export function TeamCategoryForm({
     formData: FormData,
   ) => Promise<AdminActionState>;
   defaultName?: string;
+  defaultNameEn?: string | null;
   defaultOrder?: number;
   submitLabel: string;
   resetOnSuccess?: boolean;
@@ -40,7 +42,7 @@ export function TeamCategoryForm({
     <form
       ref={formRef}
       action={formAction}
-      className="grid gap-4 sm:grid-cols-[1fr_8rem_auto] sm:items-end"
+      className="grid gap-4 sm:grid-cols-[1fr_1fr_8rem_auto] sm:items-end"
     >
       <div className="space-y-2">
         <label className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-50">
@@ -53,6 +55,19 @@ export function TeamCategoryForm({
             minLength={2}
             maxLength={80}
             required
+          />
+        </label>
+      </div>
+      <div className="space-y-2">
+        <label className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-50">
+          İngilizce Ad (opsiyonel)
+          <Input
+            name="nameEn"
+            defaultValue={defaultNameEn ?? ""}
+            placeholder="E.g. Sponsorship Team"
+            className="mt-2"
+            minLength={2}
+            maxLength={80}
           />
         </label>
       </div>
@@ -90,8 +105,8 @@ export function TeamCategoryForm({
           role={state.success ? "status" : "alert"}
           className={
             state.success
-              ? "text-sm font-medium text-emerald-700 sm:col-span-3"
-              : "text-sm font-medium text-red-600 sm:col-span-3"
+              ? "text-sm font-medium text-emerald-700 sm:col-span-4"
+              : "text-sm font-medium text-red-600 sm:col-span-4"
           }
         >
           {state.message}

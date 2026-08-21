@@ -60,7 +60,9 @@ export default async function EditCollaborationItemPage({
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
             title: item.title,
+            titleEn: item.titleEn,
             description: item.description,
+            descriptionEn: item.descriptionEn,
             date: item.date ? item.date.toISOString().slice(0, 10) : "",
             order: item.order,
           }}

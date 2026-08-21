@@ -15,6 +15,11 @@ function parseOrder(formData: FormData) {
     : null;
 }
 
+function parseEnglishName(formData: FormData) {
+  const value = String(formData.get("nameEn") ?? "").trim();
+  return value && value.length <= 80 ? value : null;
+}
+
 async function refreshTierPages() {
   revalidatePath("/");
   revalidatePath("/sponsorlar");
@@ -57,7 +62,7 @@ export async function createSponsorTierAction(
 
   try {
     await prisma.sponsorTier.create({
-      data: { ...validation.data, order },
+      data: { ...validation.data, nameEn: parseEnglishName(formData), order },
     });
     await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı oluşturuldu." };
@@ -109,7 +114,7 @@ export async function updateSponsorTierAction(
   try {
     await prisma.sponsorTier.update({
       where: { id: tierId },
-      data: { ...validation.data, order },
+      data: { ...validation.data, nameEn: parseEnglishName(formData), order },
     });
     await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı güncellendi." };

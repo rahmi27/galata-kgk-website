@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
@@ -46,11 +47,11 @@ export default async function CollaborationsPage({
               {partnerClubs.map((club) => (
                 <PartnerClubCard
                   key={club.id}
-                  name={club.name}
+                  name={localizedValue(locale, club.name, club.nameEn)}
                   slug={club.slug}
                   logoUrl={club.logoUrl}
-                  logoAlt={club.logoAlt}
-                  shortDescription={club.shortDescription}
+                  logoAlt={localizedOptionalValue(locale, club.logoAlt, club.logoAltEn)}
+                  shortDescription={localizedValue(locale, club.shortDescription, club.shortDescriptionEn)}
                 />
               ))}
             </div>

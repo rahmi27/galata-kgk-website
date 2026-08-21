@@ -2,6 +2,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { TeamMemberCard } from "@/components/shared/team-member-card";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
@@ -85,7 +86,7 @@ export default async function TeamPage({
                       id={`category-${category.slug}`}
                       className="font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white"
                     >
-                      {category.name}
+                      {localizedValue(locale, category.name, category.nameEn)}
                     </h2>
                     <span
                       className="h-px flex-1 bg-primary/10 dark:bg-white/10"
@@ -97,11 +98,11 @@ export default async function TeamPage({
                     {category.memberships.map((membership) => (
                       <TeamMemberCard
                         key={membership.id}
-                        name={membership.person.name}
-                        role={membership.role}
-                        department={membership.person.department}
+                        name={localizedValue(locale, membership.person.name, membership.person.nameEn)}
+                        role={localizedValue(locale, membership.role, membership.roleEn)}
+                        department={localizedValue(locale, membership.person.department, membership.person.departmentEn)}
                         imageSrc={membership.person.photoUrl ?? undefined}
-                        imageAlt={membership.person.photoAlt ?? undefined}
+                        imageAlt={localizedOptionalValue(locale, membership.person.photoAlt, membership.person.photoAltEn) ?? undefined}
                         socialPlatform={membership.person.socialPlatform ?? undefined}
                         socialUrl={membership.person.socialUrl ?? undefined}
                         reveal={categoryIndex !== 0}

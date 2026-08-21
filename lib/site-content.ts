@@ -1,6 +1,7 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 import contactContent from "@/content/contact.json";
 import homeContent from "@/content/home.json";
@@ -10,7 +11,11 @@ import {
   type PublicClubSocialLink,
 } from "@/lib/club-social-links";
 import { prisma } from "@/lib/prisma";
-import { siteContentDefaults } from "@/lib/site-content-defaults";
+import { localizedValue } from "@/lib/localized-content";
+import {
+  siteContentDefaults,
+  siteContentEnglishDefaults,
+} from "@/lib/site-content-defaults";
 
 export const navigationRoutes = [
   { id: "anasayfa", href: "/" },
@@ -24,6 +29,7 @@ export const navigationRoutes = [
 export type SiteContentRow = {
   key: string;
   value: string;
+  valueEn: string | null;
   type: "text" | "richtext" | "image";
   page: string;
   label: string;
@@ -70,6 +76,7 @@ async function readSiteContentRows() {
       select: {
         key: true,
         value: true,
+        valueEn: true,
         type: true,
         page: true,
         label: true,
@@ -93,10 +100,20 @@ const readCachedSiteContentRows = unstable_cache(
   },
 );
 
-export function mergeSiteContent(rows: SiteContentRow[]) {
+export function mergeSiteContent(rows: SiteContentRow[], locale = "tr") {
+  const localeDefaults =
+    locale === "en"
+      ? { ...siteContentDefaults, ...siteContentEnglishDefaults }
+      : siteContentDefaults;
+
   return {
-    ...siteContentDefaults,
-    ...Object.fromEntries(rows.map((row) => [row.key, row.value])),
+    ...localeDefaults,
+    ...Object.fromEntries(
+      rows.map((row) => [
+        row.key,
+        localizedValue(locale, row.value, row.valueEn),
+      ]),
+    ),
   };
 }
 
@@ -112,21 +129,59 @@ export async function getAdminSiteContentMap() {
   return mergeSiteContent(await getAdminSiteContentRows());
 }
 
-export function getHomeHeroContentFromRows(rows: SiteContentRow[]) {
-  const values = mergeSiteContent(rows);
+export function getRawEnglishSiteContentMap(rows: SiteContentRow[]) {
+  return Object.fromEntries(rows.map((row) => [row.key, row.valueEn ?? ""]));
+}
+
+export function getRawEnglishHomeTopics(rows: SiteContentRow[]) {
+  return rows
+    .filter(({ key }) => key.startsWith("home.hero.spotlight.topic."))
+    .sort((first, second) => first.key.localeCompare(second.key, "tr"))
+    .map((row) => row.valueEn ?? "");
+}
+
+export function getRawEnglishTimelineMilestones(rows: SiteContentRow[]) {
+  return rows
+    .filter(({ key }) => key.startsWith("about.timeline.milestone."))
+    .sort((first, second) => first.key.localeCompare(second.key, "tr"))
+    .flatMap((row) => {
+      if (!row.valueEn) return [{ year: "", title: "", description: "" }];
+      try {
+        const value = JSON.parse(row.valueEn) as Record<string, unknown>;
+        return [{
+          year: typeof value.year === "string" ? value.year : "",
+          title: typeof value.title === "string" ? value.title : "",
+          description: typeof value.description === "string" ? value.description : "",
+        }];
+      } catch {
+        return [{ year: "", title: "", description: "" }];
+      }
+    });
+}
+
+export function getHomeHeroContentFromRows(rows: SiteContentRow[], locale = "tr") {
+  const values = mergeSiteContent(rows, locale);
   const topicsAreInitialized = rows.some(
     (row) => row.key === "home.hero.spotlight.topics.initialized",
   );
   const topicSource = topicsAreInitialized
     ? rows
-    : Object.entries(siteContentDefaults).map(([key, value]) => ({
+    : Object.entries(
+        locale === "en"
+          ? { ...siteContentDefaults, ...siteContentEnglishDefaults }
+          : siteContentDefaults,
+      ).map(([key, value]) => ({
         key,
         value,
       }));
   const topics = topicSource
     .filter(({ key }) => key.startsWith("home.hero.spotlight.topic."))
     .sort((first, second) => first.key.localeCompare(second.key, "tr"))
-    .map(({ value }) => value);
+    .map((row) =>
+      "valueEn" in row
+        ? localizedValue(locale, row.value, row.valueEn as string | null)
+        : row.value,
+    );
 
   return {
     eyebrow: values["home.hero.eyebrow"],
@@ -155,22 +210,30 @@ export function getHomeHeroContentFromRows(rows: SiteContentRow[]) {
   };
 }
 
-export function getAboutContentFromRows(rows: SiteContentRow[]) {
-  const values = mergeSiteContent(rows);
+export function getAboutContentFromRows(rows: SiteContentRow[], locale = "tr") {
+  const values = mergeSiteContent(rows, locale);
   const milestonesAreInitialized = rows.some(
     (row) => row.key === "about.timeline.milestones.initialized",
   );
   const milestoneSource = milestonesAreInitialized
     ? rows
-    : Object.entries(siteContentDefaults).map(([key, value]) => ({
+    : Object.entries(
+        locale === "en"
+          ? { ...siteContentDefaults, ...siteContentEnglishDefaults }
+          : siteContentDefaults,
+      ).map(([key, value]) => ({
         key,
         value,
       }));
   const milestones = milestoneSource
     .filter(({ key }) => key.startsWith("about.timeline.milestone."))
     .sort((first, second) => first.key.localeCompare(second.key, "tr"))
-    .flatMap(({ value }) => {
+    .flatMap((row) => {
       try {
+        const value =
+          "valueEn" in row
+            ? localizedValue(locale, row.value, row.valueEn as string | null)
+            : row.value;
         const milestone = JSON.parse(value) as {
           year?: unknown;
           title?: unknown;
@@ -239,8 +302,9 @@ export function getAboutContentFromRows(rows: SiteContentRow[]) {
 export function getContactContentFromRows(
   rows: SiteContentRow[],
   socialLinks: PublicClubSocialLink[],
+  locale = "tr",
 ) {
-  const values = mergeSiteContent(rows);
+  const values = mergeSiteContent(rows, locale);
 
   return {
     ...contactContent,
@@ -259,12 +323,13 @@ export function getContactContentFromRows(
   };
 }
 
-export async function getSiteChromeContent(): Promise<SiteChromeContent> {
+export async function getSiteChromeContent(locale = "tr"): Promise<SiteChromeContent> {
   const [rows, socialLinks] = await Promise.all([
     getPublicSiteContentRows(),
     getPublicClubSocialLinks(),
   ]);
-  const values = mergeSiteContent(rows);
+  const values = mergeSiteContent(rows, locale);
+  const t = await getTranslations({ locale });
   const items = navigationRoutes
     .map((item, fallbackIndex) => ({
       ...item,
@@ -284,13 +349,13 @@ export async function getSiteChromeContent(): Promise<SiteChromeContent> {
   return {
     brand: {
       name: values["header.brand.name"],
-      homeAriaLabel: siteContent.brand.homeAriaLabel,
+      homeAriaLabel: t("nav.homeAriaLabel"),
     },
     navigation: {
-      desktopAriaLabel: siteContent.navigation.desktopAriaLabel,
-      mobileAriaLabel: siteContent.navigation.mobileAriaLabel,
-      openMenuLabel: siteContent.navigation.openMenuLabel,
-      closeMenuLabel: siteContent.navigation.closeMenuLabel,
+      desktopAriaLabel: t("nav.desktopAriaLabel"),
+      mobileAriaLabel: t("nav.mobileAriaLabel"),
+      openMenuLabel: t("nav.openMenu"),
+      closeMenuLabel: t("nav.closeMenu"),
       items,
       joinCta: {
         label: values["header.cta.label"],

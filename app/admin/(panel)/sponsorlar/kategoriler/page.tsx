@@ -97,6 +97,7 @@ export default async function SponsorTiersPage() {
               <SponsorTierForm
                 action={updateAction}
                 defaultName={tier.name}
+                defaultNameEn={tier.nameEn}
                 defaultOrder={tier.order}
                 submitLabel="Kaydet"
               />

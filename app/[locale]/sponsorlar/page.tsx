@@ -6,6 +6,7 @@ import { SponsorCard } from "@/components/sponsors/sponsor-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const revalidate = 300;
@@ -78,7 +79,7 @@ export default async function SponsorsPage({
                           id={`sponsor-tier-${tier.slug}`}
                           className="font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white"
                         >
-                          {tier.name}
+                          {localizedValue(locale, tier.name, tier.nameEn)}
                         </h2>
                         <span
                           className="h-px flex-1 bg-primary/10 dark:bg-white/10"
@@ -96,11 +97,11 @@ export default async function SponsorsPage({
                         {tier.sponsors.map((sponsor) => (
                           <SponsorCard
                             key={sponsor.id}
-                            name={sponsor.name}
+                            name={localizedValue(locale, sponsor.name, sponsor.nameEn)}
                             logoUrl={sponsor.logoUrl}
-                            logoAlt={sponsor.logoAlt}
+                            logoAlt={localizedOptionalValue(locale, sponsor.logoAlt, sponsor.logoAltEn)}
                             websiteUrl={sponsor.websiteUrl}
-                            description={sponsor.description}
+                            description={localizedOptionalValue(locale, sponsor.description, sponsor.descriptionEn)}
                             featured={featured}
                           />
                         ))}
@@ -196,7 +197,7 @@ export default async function SponsorsPage({
                       {stat.value}
                     </p>
                     <p className="mt-1 text-sm text-primary-200">
-                      {stat.label}
+                      {localizedValue(locale, stat.label, stat.labelEn)}
                     </p>
                   </div>
                 ))}
