@@ -225,7 +225,10 @@ export function EventList({
               imageSrc={event.imageUrl ?? undefined}
               imageAlt={event.imageAlt ?? undefined}
               category={event.category}
-              href={`/etkinliklerimiz/${event.slug}`}
+              href={{
+                pathname: "/etkinliklerimiz/[slug]",
+                params: { slug: event.slug },
+              }}
             />
           ))}
         </div>

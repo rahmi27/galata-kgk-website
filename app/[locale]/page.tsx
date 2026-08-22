@@ -322,7 +322,10 @@ export default async function HomePage({
                   imageSrc={event.imageUrl ?? undefined}
                   imageAlt={localizedOptionalValue(locale, event.imageAlt, event.imageAltEn) ?? undefined}
                   category={localizedValue(locale, event.category, event.categoryEn)}
-                  href={`/etkinliklerimiz/${event.slug}`}
+                  href={{
+                    pathname: "/etkinliklerimiz/[slug]",
+                    params: { slug: event.slug },
+                  }}
                 />
               ))}
             </div>

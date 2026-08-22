@@ -24,7 +24,10 @@ export default async function SponsorsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "partners" });
+  const [t, common] = await Promise.all([
+    getTranslations({ locale, namespace: "partners" }),
+    getTranslations({ locale, namespace: "common" }),
+  ]);
   const [tiers, stats] = await Promise.all([
     prisma.sponsorTier.findMany({
       where: {
@@ -100,17 +103,37 @@ export default async function SponsorsPage({
                             : "stagger-grid mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
                         }
                       >
-                        {tier.sponsors.map((sponsor) => (
-                          <SponsorCard
-                            key={sponsor.id}
-                            name={localizedValue(locale, sponsor.name, sponsor.nameEn)}
-                            logoUrl={sponsor.logoUrl}
-                            logoAlt={localizedOptionalValue(locale, sponsor.logoAlt, sponsor.logoAltEn)}
-                            websiteUrl={sponsor.websiteUrl}
-                            description={localizedOptionalValue(locale, sponsor.description, sponsor.descriptionEn)}
-                            featured={featured}
-                          />
-                        ))}
+                        {tier.sponsors.map((sponsor) => {
+                          const sponsorName = localizedValue(
+                            locale,
+                            sponsor.name,
+                            sponsor.nameEn,
+                          );
+
+                          return (
+                            <SponsorCard
+                              key={sponsor.id}
+                              name={sponsorName}
+                              logoUrl={sponsor.logoUrl}
+                              logoAlt={localizedOptionalValue(
+                                locale,
+                                sponsor.logoAlt,
+                                sponsor.logoAltEn,
+                              )}
+                              websiteUrl={sponsor.websiteUrl}
+                              description={localizedOptionalValue(
+                                locale,
+                                sponsor.description,
+                                sponsor.descriptionEn,
+                              )}
+                              externalWebsiteLabel={common(
+                                "externalWebsite",
+                                { name: sponsorName },
+                              )}
+                              featured={featured}
+                            />
+                          );
+                        })}
                       </div>
                     </section>
                   );
@@ -132,7 +155,7 @@ export default async function SponsorsPage({
                   {t("emptyDescription")}
                 </p>
                 <Button asChild variant="secondary" className="relative mt-8">
-                  <Link href="/iletisim">
+                  <Link href="/iletisim" locale={locale}>
                     {t("emptyCta")}
                     <ArrowRight aria-hidden="true" />
                   </Link>
@@ -182,7 +205,7 @@ export default async function SponsorsPage({
                 {t("closing")}
               </p>
               <Button asChild variant="secondary" className="mt-8">
-                <Link href="/iletisim">
+                <Link href="/iletisim" locale={locale}>
                   {t("cta")}
                   <ArrowRight aria-hidden="true" />
                 </Link>

@@ -73,7 +73,7 @@ export default async function CollaborationsPage({
                 {t("emptyDescription")}
               </p>
               <Button asChild variant="secondary" className="mt-8">
-                <Link href="/iletisim">
+                <Link href="/iletisim" locale={locale}>
                   {t("emptyCta")}
                   <ArrowRight aria-hidden="true" />
                 </Link>

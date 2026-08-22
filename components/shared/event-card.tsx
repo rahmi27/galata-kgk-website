@@ -11,7 +11,12 @@ type EventCardProps = {
   description: string;
   imageSrc?: string;
   imageAlt?: string;
-  href?: string;
+  href?:
+    | string
+    | {
+        pathname: "/etkinliklerimiz/[slug]";
+        params: { slug: string };
+      };
   category?: string;
   className?: string;
 };

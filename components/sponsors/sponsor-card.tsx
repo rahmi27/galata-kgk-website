@@ -12,6 +12,7 @@ type SponsorCardProps = {
   logoAlt?: string | null;
   websiteUrl?: string | null;
   description?: string | null;
+  externalWebsiteLabel?: string;
   featured?: boolean;
 };
 
@@ -21,6 +22,7 @@ export function SponsorCard({
   logoAlt,
   websiteUrl,
   description,
+  externalWebsiteLabel,
   featured = false,
 }: SponsorCardProps) {
   const t = useTranslations("common");
@@ -64,7 +66,7 @@ export function SponsorCard({
           href={safeWebsiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={t("externalWebsite", { name })}
+          aria-label={externalWebsiteLabel ?? t("externalWebsite", { name })}
         >
           {logo}
         </Link>

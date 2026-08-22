@@ -94,7 +94,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const [messages, chromeContent] = await Promise.all([
-    getMessages(),
+    getMessages({locale}),
     getSiteChromeContent(locale),
   ]);
   const clientMessages = Object.fromEntries(
@@ -106,7 +106,7 @@ export default async function LocaleLayout({
 
   return (
     <RootDocument locale={locale}>
-      <NextIntlClientProvider messages={clientMessages}>
+      <NextIntlClientProvider locale={locale} messages={clientMessages}>
         <SiteShell content={chromeContent}>{children}</SiteShell>
       </NextIntlClientProvider>
     </RootDocument>
