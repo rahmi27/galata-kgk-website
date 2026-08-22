@@ -65,3 +65,11 @@ test("repository has no Vercel cron that can trigger revalidation", () => {
   const vercel = JSON.parse(read("vercel.json"));
   assert.equal(vercel.crons, undefined);
 });
+
+test("localized revalidation targets the internal locale cache paths", () => {
+  const source = read("lib/revalidate-public.ts");
+
+  assert.match(source, /for \(const locale of routing\.locales\)/);
+  assert.match(source, /`\/\$\{locale\}\$\{normalizedPath\}`/);
+  assert.doesNotMatch(source, /localizedPublicPath/);
+});
