@@ -1,10 +1,24 @@
 import assert from "node:assert/strict";
-import {readFile} from "node:fs/promises";
+import {readFile, readdir} from "node:fs/promises";
 import {test} from "node:test";
 import path from "node:path";
 
 const root = process.cwd();
 const read = (...parts) => readFile(path.join(root, ...parts), "utf8");
+
+async function sourceFiles(directory) {
+  const entries = await readdir(directory, {withFileTypes: true});
+  const nested = await Promise.all(entries.map((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    return entry.isDirectory()
+      ? sourceFiles(entryPath)
+      : entry.name.endsWith(".tsx")
+        ? [entryPath]
+        : [];
+  }));
+
+  return nested.flat();
+}
 
 function leafKeys(value, prefix = "") {
   return Object.entries(value).flatMap(([key, child]) => {
@@ -51,6 +65,27 @@ test("dil değiştirici aynı iç rotayı hedef locale ile değiştirir", async 
   assert.match(switcher, /useRouter\(\)/);
   assert.match(switcher, /router\.replace\(\{ pathname, params, query \}/);
   assert.match(switcher, /\{ locale: nextLocale \}/);
+});
+
+test("halka açık iç bağlantılar aktif locale'i açıkça korur", async () => {
+  const files = [
+    ...await sourceFiles(path.join(root, "app", "[locale]")),
+    ...await sourceFiles(path.join(root, "components")),
+  ];
+
+  for (const file of files) {
+    const source = await readFile(file, "utf8");
+    if (!source.includes('from "@/i18n/navigation"')) continue;
+
+    for (const match of source.matchAll(/<Link\b[\s\S]*?>/g)) {
+      const line = source.slice(0, match.index).split("\n").length;
+      assert.match(
+        match[0],
+        /\blocale=\{?[^\s>]+/,
+        `${path.relative(root, file)}:${line} locale prop olmadan iç bağlantı içeriyor`,
+      );
+    }
+  }
 });
 
 test("form API hata kodları kullanıcıya aktif dilin mesajlarıyla gösterilir", async () => {

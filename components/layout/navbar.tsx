@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight, ChevronDown, Handshake, Menu, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
@@ -16,6 +16,7 @@ const partnerRouteHrefs = ["/sponsorlar", "/is-birlikleri"] as const;
 
 export function Navbar({ content }: { content: SiteChromeContent }) {
   const t = useTranslations("nav");
+  const locale = useLocale();
   const partnerLinks = [
     { label: t("sponsors"), href: "/sponsorlar" as const, description: t("sponsorsDescription") },
     { label: t("collaborations"), href: "/is-birlikleri" as const, description: t("collaborationsDescription") },
@@ -72,6 +73,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
       <div className="mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-10">
         <Link
           href="/"
+          locale={locale}
           className="group inline-flex min-w-0 max-w-[11.25rem] items-center gap-3 font-heading text-[0.78rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[20.5rem] sm:text-[0.95rem] dark:text-primary-100"
           aria-label={brand.homeAriaLabel}
         >
@@ -145,6 +147,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                         <Link
                           key={link.href}
                           href={link.href}
+                          locale={locale}
                           role="menuitem"
                           className="flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-primary-50 dark:hover:bg-white/[0.07]"
                           onClick={(event) => {
@@ -174,7 +177,8 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             return (
               <Link
                 key={item.href}
-              href={item.href as never}
+                href={item.href as never}
+                locale={locale}
                 className={cn(
                   "relative py-2 text-sm font-medium text-primary-700 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-accent after:transition-transform hover:text-primary hover:after:scale-x-100 dark:text-primary-200 dark:hover:text-white",
                   isActive ? "text-primary after:scale-x-100 dark:text-white" : "after:scale-x-0",
@@ -195,7 +199,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             variant="secondary"
             className="hidden md:inline-flex"
           >
-            <Link href={navigation.joinCta.href as never}>
+            <Link href={navigation.joinCta.href as never} locale={locale}>
               {navigation.joinCta.label}
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </Link>
@@ -274,6 +278,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                             <Link
                               key={link.href}
                               href={link.href}
+                              locale={locale}
                               className="block rounded-xl px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10"
                               onClick={() => {
                                 setIsMenuOpen(false);
@@ -294,6 +299,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
                 <Link
                   key={item.href}
                   href={item.href as never}
+                  locale={locale}
                   className={cn(
                     "rounded-xl px-4 py-3 font-heading text-base font-semibold text-primary transition-colors hover:bg-primary-50 dark:text-primary-100 dark:hover:bg-white/10",
                     currentPathname === item.href &&
@@ -315,6 +321,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             >
               <Link
                 href={navigation.joinCta.href as never}
+                locale={locale}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {navigation.joinCta.label}

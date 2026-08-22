@@ -96,7 +96,7 @@ export default async function EventDetailPage({
         <section className="border-b border-primary/10 bg-primary-50/65 py-16 dark:border-white/10 dark:bg-primary-900/30 sm:py-20">
           <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
             <Button asChild variant="ghost" className="-ml-4 w-fit">
-              <Link href="/etkinliklerimiz">
+              <Link href="/etkinliklerimiz" locale={locale}>
                 <ArrowLeft aria-hidden="true" />
                 {t("back")}
               </Link>
@@ -153,7 +153,7 @@ export default async function EventDetailPage({
               </article>
 
               <Button asChild variant="outline" className="mt-10">
-                <Link href="/etkinliklerimiz">
+                <Link href="/etkinliklerimiz" locale={locale}>
                   <ArrowLeft aria-hidden="true" />
                   {t("back")}
                 </Link>

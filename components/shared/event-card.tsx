@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
@@ -32,6 +32,7 @@ export function EventCard({
   className,
 }: EventCardProps) {
   const t = useTranslations("common");
+  const locale = useLocale();
 
   return (
     <article
@@ -85,6 +86,7 @@ export function EventCard({
         {href ? (
           <Link
             href={href as never}
+            locale={locale}
             className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-accent-700 dark:text-primary-100 dark:hover:text-accent-300"
           >
             {t("details")}

@@ -1,10 +1,11 @@
 import {ArrowLeft, CalendarDays} from "lucide-react";
-import {getTranslations} from "next-intl/server";
+import {getLocale, getTranslations} from "next-intl/server";
 
 import {Link} from "@/i18n/navigation";
 import {Button} from "@/components/ui/button";
 
 export default async function LocalizedNotFound() {
+  const locale = await getLocale();
   const t = await getTranslations("notFound");
 
   return (
@@ -30,13 +31,13 @@ export default async function LocalizedNotFound() {
         </p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Button asChild variant="primary" size="lg">
-            <Link href="/">
+            <Link href="/" locale={locale}>
               <ArrowLeft aria-hidden="true" />
               {t("home")}
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link href="/etkinliklerimiz">
+            <Link href="/etkinliklerimiz" locale={locale}>
               <CalendarDays aria-hidden="true" />
               {t("events")}
             </Link>

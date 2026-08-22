@@ -2,7 +2,7 @@
 
 import {useEffect} from "react";
 import {House, RefreshCw} from "lucide-react";
-import {useTranslations} from "next-intl";
+import {useLocale, useTranslations} from "next-intl";
 
 import {Link} from "@/i18n/navigation";
 import {Button} from "@/components/ui/button";
@@ -15,6 +15,7 @@ export default function LocalizedErrorPage({
   reset: () => void;
 }) {
   const t = useTranslations("errorPage");
+  const locale = useLocale();
 
   useEffect(() => {
     console.error(t("logMessage"), error);
@@ -39,7 +40,7 @@ export default function LocalizedErrorPage({
             {t("retry")}
           </Button>
           <Button asChild variant="outline">
-            <Link href="/">
+            <Link href="/" locale={locale}>
               <House aria-hidden="true" />
               {t("home")}
             </Link>

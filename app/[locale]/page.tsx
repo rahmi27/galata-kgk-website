@@ -136,7 +136,7 @@ export default async function HomePage({
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <MagneticTarget className="self-start">
                   <Button asChild size="lg" variant="primary">
-                    <Link href="/etkinliklerimiz">
+                    <Link href="/etkinliklerimiz" locale={locale}>
                       {heroContent.primaryCta.label}
                       <ArrowRight aria-hidden="true" />
                     </Link>
@@ -144,7 +144,7 @@ export default async function HomePage({
                 </MagneticTarget>
                 <MagneticTarget className="self-start">
                   <Button asChild size="lg" variant="outline">
-                    <Link href="/katilim">
+                    <Link href="/katilim" locale={locale}>
                       {heroContent.secondaryCta.label}
                     </Link>
                   </Button>
@@ -167,6 +167,7 @@ export default async function HomePage({
                     pathname: "/etkinliklerimiz",
                     query: { view: locale === "en" ? "calendar" : "takvim" },
                   }}
+                  locale={locale}
                   className="group/calendar relative z-10 -m-2 inline-flex size-12 cursor-pointer items-center justify-center rounded-2xl text-accent-300 outline-none transition-all hover:scale-105 hover:bg-white/[0.08] hover:text-accent-200 focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900"
                   aria-label={heroContent.spotlight.calendarCta.label}
                 >
@@ -236,7 +237,7 @@ export default async function HomePage({
                   </h2>
                 </div>
                 <Button asChild variant="link" className="w-fit">
-                  <Link href="/sponsorlar">
+                  <Link href="/sponsorlar" locale={locale}>
                     {t("sponsors.all")}
                     <ArrowRight aria-hidden="true" />
                   </Link>
@@ -306,7 +307,7 @@ export default async function HomePage({
                 description={t("events.description")}
               />
               <Button asChild variant="link" className="w-fit">
-                <Link href="/etkinliklerimiz">
+                <Link href="/etkinliklerimiz" locale={locale}>
                   {t("events.all")}
                   <ArrowRight aria-hidden="true" />
                 </Link>
@@ -398,7 +399,7 @@ export default async function HomePage({
             </div>
             <MagneticTarget className="relative mt-8 shrink-0 lg:mt-0">
               <Button asChild size="lg" variant="secondary">
-                <Link href="/katilim">
+                <Link href="/katilim" locale={locale}>
                   {t("closing.button")}
                   <ArrowRight aria-hidden="true" />
                 </Link>

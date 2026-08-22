@@ -173,6 +173,7 @@ export function YearCalendar({
             eventsByDay={eventsByDay}
             detailsLabel={common("details")}
             weekdays={weekdays}
+            locale={locale}
           />
         ))}
       </div>
@@ -195,6 +196,7 @@ function MonthCard({
   eventsByDay,
   detailsLabel,
   weekdays,
+  locale,
 }: {
   year: number;
   month: string;
@@ -205,6 +207,7 @@ function MonthCard({
   >;
   detailsLabel: string;
   weekdays: Array<{ short: string; long: string }>;
+  locale: string;
 }) {
   const firstWeekday = (new Date(Date.UTC(year, monthIndex, 1)).getUTCDay() + 6) % 7;
   const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
@@ -255,6 +258,7 @@ function MonthCard({
                 pathname: "/etkinliklerimiz/[slug]",
                 params: { slug: dayEvents[0].slug },
               }}
+              locale={locale}
               className="group relative z-0 flex aspect-square items-center justify-center rounded-full text-xs font-bold text-primary-900 outline-none transition-transform hover:z-20 hover:scale-105 focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:text-white dark:focus-visible:ring-offset-background"
               aria-label={`${day} ${month} ${year}: ${eventTitles}. ${detailsLabel}.`}
             >

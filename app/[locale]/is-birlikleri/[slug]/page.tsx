@@ -100,7 +100,7 @@ export default async function CollaborationDetailPage({
         />
         <div className="relative mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
           <Button asChild variant="ghost" className="-ml-4 w-fit">
-            <Link href="/is-birlikleri">
+            <Link href="/is-birlikleri" locale={locale}>
               <ArrowLeft aria-hidden="true" />
               {t("back")}
             </Link>
@@ -165,7 +165,7 @@ export default async function CollaborationDetailPage({
           )}
 
           <Button asChild variant="outline">
-            <Link href="/is-birlikleri">
+            <Link href="/is-birlikleri" locale={locale}>
               <ArrowLeft aria-hidden="true" />
               {t("back")}
             </Link>

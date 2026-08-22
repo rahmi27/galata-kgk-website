@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { GraduationCap } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
@@ -12,6 +12,7 @@ import { getSafeHttpUrl } from "@/lib/url-security";
 
 export function Footer({ content }: { content: SiteChromeContent }) {
   const t = useTranslations();
+  const locale = useLocale();
   const partnerLinks = [
     { label: t("nav.sponsors"), href: "/sponsorlar" as const },
     { label: t("nav.collaborations"), href: "/is-birlikleri" as const },
@@ -82,6 +83,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
                 <Link
                   key={item.href}
                   href={item.href as never}
+                  locale={locale}
                   className="w-fit text-sm text-primary-200 transition-colors hover:text-white"
                 >
                   {item.label}
@@ -99,6 +101,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    locale={locale}
                     className="text-sm text-primary-200 transition-colors hover:text-white"
                   >
                     {item.label}
@@ -121,6 +124,7 @@ export function Footer({ content }: { content: SiteChromeContent }) {
             </NextLink>
             <Link
               href="/cerez-politikasi"
+              locale={locale}
               className="w-fit transition-colors hover:text-white"
             >
               {t("footer.privacy")}
