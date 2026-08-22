@@ -207,7 +207,7 @@ export function AdminShell({
                 @{username}
               </p>
             </div>
-            <ThemeToggle />
+            <ThemeToggle ariaLabel="Temayı değiştir" />
           </div>
           <button
             type="button"
@@ -229,7 +229,7 @@ export function AdminShell({
           Galata KGK Admin
         </Link>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <ThemeToggle ariaLabel="Temayı değiştir" />
           <Button
             type="button"
             size="icon"

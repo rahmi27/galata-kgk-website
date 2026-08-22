@@ -16,6 +16,7 @@ const partnerRouteHrefs = ["/sponsorlar", "/is-birlikleri"] as const;
 
 export function Navbar({ content }: { content: SiteChromeContent }) {
   const t = useTranslations("nav");
+  const common = useTranslations("common");
   const locale = useLocale();
   const partnerLinks = [
     { label: t("sponsors"), href: "/sponsorlar" as const, description: t("sponsorsDescription") },
@@ -193,7 +194,7 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
 
         <div className="flex items-center gap-2.5">
           <LanguageSwitcher />
-          <ThemeToggle />
+          <ThemeToggle ariaLabel={common("themeToggle")} />
           <Button
             asChild
             variant="secondary"
