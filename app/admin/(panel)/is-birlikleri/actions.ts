@@ -18,10 +18,15 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePublicPath } from "@/lib/revalidate-public";
 import { createNormalizedSlug } from "@/lib/slug";
 
-async function refreshCollaborationPages(slugs: string[] = []) {
+async function refreshPartnerClubPages(
+  slugs: string[] = [],
+  options: { revalidateSitemap?: boolean } = {},
+) {
   revalidatePublicPath("/is-birlikleri");
   revalidatePath("/admin/is-birlikleri");
-  revalidatePath("/sitemap.xml");
+  if (options.revalidateSitemap) {
+    revalidatePath("/sitemap.xml");
+  }
 
   for (const slug of new Set(slugs.filter(Boolean))) {
     revalidatePublicPath(`/is-birlikleri/${slug}`);
@@ -31,6 +36,15 @@ async function refreshCollaborationPages(slugs: string[] = []) {
     "/is-birlikleri",
     ...slugs.filter(Boolean).map((slug) => `/is-birlikleri/${slug}`),
   ]);
+}
+
+async function refreshCollaborationItemPage(
+  partnerClubId: number,
+  slug: string,
+) {
+  revalidatePublicPath(`/is-birlikleri/${slug}`);
+  revalidatePath(`/admin/is-birlikleri/${partnerClubId}`);
+  await notifyIndexNow([`/is-birlikleri/${slug}`]);
 }
 
 export async function createPartnerClubAction(
@@ -75,7 +89,7 @@ export async function createPartnerClubAction(
         logoUrl: imageUpload.path,
       },
     });
-    await refreshCollaborationPages([slug]);
+    await refreshPartnerClubPages([slug], { revalidateSitemap: true });
 
     return { success: true, message: "Partner kulüp başarıyla eklendi." };
   } catch (error) {
@@ -146,7 +160,9 @@ export async function updatePartnerClubAction(
       await deleteUploadedImage(partnerClub.logoUrl);
     }
 
-    await refreshCollaborationPages([partnerClub.slug, slug]);
+    await refreshPartnerClubPages([partnerClub.slug, slug], {
+      revalidateSitemap: partnerClub.slug !== slug,
+    });
   } catch (error) {
     await deleteUploadedImage(imageUpload.path);
     console.error("Partner kulüp güncellenemedi.", error);
@@ -175,7 +191,9 @@ export async function deletePartnerClubAction(
   try {
     await prisma.partnerClub.delete({ where: { id: partnerClubId } });
     await deleteUploadedImage(partnerClub.logoUrl);
-    await refreshCollaborationPages([partnerClub.slug]);
+    await refreshPartnerClubPages([partnerClub.slug], {
+      revalidateSitemap: true,
+    });
     return {
       success: true,
       message: "Partner kulüp ve bağlı iş birlikleri silindi.",
@@ -214,8 +232,7 @@ export async function createCollaborationItemAction(
     await prisma.collaborationItem.create({
       data: { ...validation.data, partnerClubId },
     });
-    await refreshCollaborationPages([partnerClub.slug]);
-    revalidatePath(`/admin/is-birlikleri/${partnerClubId}`);
+    await refreshCollaborationItemPage(partnerClubId, partnerClub.slug);
     return { success: true, message: "İş birliği maddesi eklendi." };
   } catch (error) {
     console.error("İş birliği maddesi eklenemedi.", error);
@@ -253,7 +270,7 @@ export async function updateCollaborationItemAction(
       where: { id: collaborationItemId },
       data: validation.data,
     });
-    await refreshCollaborationPages([item.partnerClub.slug]);
+    await refreshCollaborationItemPage(partnerClubId, item.partnerClub.slug);
   } catch (error) {
     console.error("İş birliği maddesi güncellenemedi.", error);
     return {
@@ -283,8 +300,7 @@ export async function deleteCollaborationItemAction(
     await prisma.collaborationItem.delete({
       where: { id: collaborationItemId },
     });
-    await refreshCollaborationPages([item.partnerClub.slug]);
-    revalidatePath(`/admin/is-birlikleri/${partnerClubId}`);
+    await refreshCollaborationItemPage(partnerClubId, item.partnerClub.slug);
     return { success: true, message: "İş birliği maddesi silindi." };
   } catch (error) {
     console.error("İş birliği maddesi silinemedi.", error);

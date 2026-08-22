@@ -14,8 +14,9 @@ import { isSafeHttpUrl } from "@/lib/url-security";
 
 async function refreshSocialLinks() {
   updateTag("club-social-links");
+  // Social links are rendered by the shared public layout. Invalidating both
+  // localized layouts already covers the contact page as well.
   revalidatePublicPath("/", "layout");
-  revalidatePublicPath("/iletisim");
   revalidatePath("/admin/gorunum/iletisim");
 }
 

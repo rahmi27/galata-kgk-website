@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/hakkimizda", locale, keywords: locale === "en" ? ["Galata KGK vision", "Galata KGK mission"] : ["Galata KGK vizyon", "Galata KGK misyon"] });
 }
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export default async function AboutPage({
   params,

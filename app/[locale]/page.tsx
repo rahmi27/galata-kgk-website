@@ -29,7 +29,7 @@ import {
 import { getSafeHttpUrl } from "@/lib/url-security";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

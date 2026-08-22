@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -49,7 +49,7 @@ const getCachedEvents = unstable_cache(
   },
   ["public-events"],
   {
-    revalidate: 300,
+    revalidate: 86400,
     tags: ["events"],
   },
 );

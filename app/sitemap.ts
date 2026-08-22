@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { localizedPublicPath, siteUrl } from "@/lib/site-metadata";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const publicPaths = [
   "/",

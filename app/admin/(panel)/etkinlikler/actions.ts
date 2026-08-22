@@ -54,11 +54,16 @@ async function findAvailableSlug(title: string, currentEventId?: number) {
   return candidate;
 }
 
-async function refreshEventPages(slugs: string[] = []) {
+async function refreshEventPages(
+  slugs: string[] = [],
+  options: { revalidateSitemap?: boolean } = {},
+) {
   updateTag("events");
   revalidatePublicPath("/");
   revalidatePublicPath("/etkinliklerimiz");
-  revalidatePath("/sitemap.xml");
+  if (options.revalidateSitemap) {
+    revalidatePath("/sitemap.xml");
+  }
   revalidatePath("/admin");
   revalidatePath("/admin/etkinlikler");
 
@@ -125,7 +130,7 @@ export async function createEventAction(
       },
     });
 
-    await refreshEventPages([slug]);
+    await refreshEventPages([slug], { revalidateSitemap: true });
 
     return {
       success: true,
@@ -215,7 +220,9 @@ export async function updateEventAction(
       },
     });
 
-    await refreshEventPages([existingEvent.slug, slug]);
+    await refreshEventPages([existingEvent.slug, slug], {
+      revalidateSitemap: existingEvent.slug !== slug,
+    });
 
     if (
       existingEvent.imageUrl &&
@@ -266,7 +273,7 @@ export async function deleteEventAction(
     });
 
     await deleteUploadedImage(event.imageUrl);
-    await refreshEventPages([event.slug]);
+    await refreshEventPages([event.slug], { revalidateSitemap: true });
 
     return {
       success: true,

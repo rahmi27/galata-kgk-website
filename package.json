@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test:security": "tsx --test tests/security/input-security.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs",
     "test:i18n": "tsx --test tests/localized-content.test.ts && node --test tests/i18n-routing.test.mjs",
+    "test:isr": "node --test tests/isr-revalidation.test.mjs",
     "test:team": "tsx --test tests/person-priority.test.ts && node --test tests/team-membership-integrity.test.mjs",
     "db:seed": "prisma db seed",
     "db:seed-content": "tsx scripts/seed-site-content.ts",

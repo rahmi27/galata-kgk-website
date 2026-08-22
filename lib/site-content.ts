@@ -95,7 +95,7 @@ const readCachedSiteContentRows = unstable_cache(
   readSiteContentRows,
   ["public-site-content-v1"],
   {
-    revalidate: 300,
+    revalidate: 86400,
     tags: ["site-content"],
   },
 );

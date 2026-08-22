@@ -32,7 +32,7 @@ const getEventBySlug = cache((slug: string) =>
   }),
 );
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   return prisma.event.findMany({

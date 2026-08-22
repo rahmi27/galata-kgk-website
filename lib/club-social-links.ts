@@ -35,7 +35,7 @@ const readCachedClubSocialLinks = unstable_cache(
   readClubSocialLinks,
   ["public-club-social-links-v1"],
   {
-    revalidate: 300,
+    revalidate: 86400,
     tags: ["club-social-links"],
   },
 );

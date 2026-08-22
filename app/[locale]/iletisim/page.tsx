@@ -14,7 +14,7 @@ import {
 } from "@/lib/site-content";
 import { buildGoogleMapsUrls } from "@/lib/url-security";
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

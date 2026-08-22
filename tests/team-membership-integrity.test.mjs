@@ -50,7 +50,7 @@ test("veri migration'ı doğrulamadan eski tabloyu kaldırmaz", async () => {
 test("Ekibimiz ISR kalır ve admin değişiklikleri iki dilde önbelleği yeniler", async () => {
   const publicPage = await read("app", "[locale]", "ekibimiz", "page.tsx");
   const actions = await read("app", "admin", "(panel)", "uyeler", "actions.ts");
-  assert.match(publicPage, /export const revalidate = 300/);
+  assert.match(publicPage, /export const revalidate = 86400/);
   assert.match(publicPage, /memberships:[\s\S]*person: true/);
   assert.doesNotMatch(publicPage, /force-dynamic/);
   assert.match(actions, /revalidatePublicPath\("\/ekibimiz"\)/);

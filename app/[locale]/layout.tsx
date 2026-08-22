@@ -19,7 +19,10 @@ import "../globals.css";
 // Locale params are finite and known. Force the public tree to remain static/ISR
 // even though unknown dynamic slugs can still be generated on first request.
 export const dynamic = "force-static";
-export const revalidate = 300;
+// Public content is refreshed on demand by the related admin action. The
+// daily fallback only protects against out-of-band database changes and date
+// rollovers without continuously rewriting every localized route.
+export const revalidate = 86400;
 
 const clientMessageNamespaces = [
   "common",
