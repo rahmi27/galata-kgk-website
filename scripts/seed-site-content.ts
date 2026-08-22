@@ -29,23 +29,41 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   for (const content of siteContentDefinitions) {
-    if (content.valueEn) {
-      await prisma.siteContent.updateMany({
-        where: { key: content.key, valueEn: null },
-        data: { valueEn: content.valueEn },
+    const existing = await prisma.siteContent.findUnique({
+      where: { key: content.key },
+      select: {
+        label: true,
+        page: true,
+        type: true,
+        valueEn: true,
+      },
+    });
+
+    if (!existing) {
+      await prisma.siteContent.create({ data: content });
+      continue;
+    }
+
+    const update: {
+      label?: string;
+      page?: string;
+      type?: typeof content.type;
+      valueEn?: string;
+    } = {};
+
+    if (existing.label !== content.label) update.label = content.label;
+    if (existing.page !== content.page) update.page = content.page;
+    if (existing.type !== content.type) update.type = content.type;
+    if (content.valueEn && existing.valueEn === null) {
+      update.valueEn = content.valueEn;
+    }
+
+    if (Object.keys(update).length > 0) {
+      await prisma.siteContent.update({
+        where: { key: content.key },
+        data: update,
       });
     }
-    await prisma.siteContent.upsert({
-      where: {
-        key: content.key,
-      },
-      update: {
-        label: content.label,
-        page: content.page,
-        type: content.type,
-      },
-      create: content,
-    });
   }
 
   console.log(

@@ -73,3 +73,11 @@ test("localized revalidation targets the internal locale cache paths", () => {
   assert.match(source, /`\/\$\{locale\}\$\{normalizedPath\}`/);
   assert.doesNotMatch(source, /localizedPublicPath/);
 });
+
+test("production content seeding skips no-op updates", () => {
+  const source = read("scripts/seed-site-content.ts");
+
+  assert.match(source, /if \(Object\.keys\(update\)\.length > 0\)/);
+  assert.doesNotMatch(source, /siteContent\.upsert/);
+  assert.doesNotMatch(source, /siteContent\.updateMany/);
+});
