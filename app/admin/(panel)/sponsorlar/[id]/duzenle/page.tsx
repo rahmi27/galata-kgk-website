@@ -59,11 +59,14 @@ export default async function EditSponsorPage({
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
             name: sponsor.name,
+            nameEn: sponsor.nameEn,
             websiteUrl: sponsor.websiteUrl ?? "",
             description: sponsor.description ?? "",
+            descriptionEn: sponsor.descriptionEn,
             tierId: sponsor.tierId,
             logoUrl: sponsor.logoUrl ?? "",
             logoAlt: sponsor.logoAlt ?? "",
+            logoAltEn: sponsor.logoAltEn,
             order: sponsor.order,
           }}
         />

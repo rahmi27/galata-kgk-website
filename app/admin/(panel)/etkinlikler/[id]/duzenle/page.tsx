@@ -65,13 +65,19 @@ export default async function EditEventPage({
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
             title: event.title,
+            titleEn: event.titleEn,
             description: event.description,
+            descriptionEn: event.descriptionEn,
             longDescription: event.longDescription,
+            longDescriptionEn: event.longDescriptionEn,
             date: toDateTimeLocal(event.date),
             location: event.location,
+            locationEn: event.locationEn,
             imageUrl: event.imageUrl ?? "",
             imageAlt: event.imageAlt ?? "",
+            imageAltEn: event.imageAltEn,
             category: event.category,
+            categoryEn: event.categoryEn,
           }}
         />
       </section>

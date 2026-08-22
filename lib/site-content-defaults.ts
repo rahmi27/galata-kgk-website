@@ -2,12 +2,14 @@ import aboutContent from "@/content/about.json";
 import contactContent from "@/content/contact.json";
 import homeContent from "@/content/home.json";
 import siteContent from "@/content/site.json";
+import enMessages from "@/messages/en.json";
 
 export type EditableContentType = "text" | "richtext" | "image";
 
 export type SiteContentDefinition = {
   key: string;
   value: string;
+  valueEn?: string | null;
   type: EditableContentType;
   page: "header" | "footer" | "anasayfa" | "hakkimizda" | "iletisim";
   label: string;
@@ -349,14 +351,79 @@ export const repeatableSiteContentDefinitions: SiteContentDefinition[] = [
   ),
 ];
 
+const englishValues: Record<string, string> = {
+  "header.brand.name": enMessages.nav.brand,
+  "header.nav.anasayfa.label": enMessages.nav.home,
+  "header.nav.hakkimizda.label": enMessages.nav.about,
+  "header.nav.etkinliklerimiz.label": enMessages.nav.events,
+  "header.nav.ekibimiz.label": enMessages.nav.team,
+  "header.nav.ortaklarimiz.label": enMessages.nav.partners,
+  "header.nav.iletisim.label": enMessages.nav.contact,
+  "header.cta.label": enMessages.nav.join,
+  "footer.description": enMessages.footer.description,
+  "footer.quickLinksLabel": enMessages.footer.quickLinks,
+  "footer.copyright": enMessages.footer.copyright,
+  "footer.institution": enMessages.footer.institution,
+  "footer.institutionHref": siteContent.footer.institutionHref,
+  "contact.address.value": contactContent.details.address.value,
+  "home.hero.eyebrow": enMessages.home.hero.eyebrow,
+  "home.hero.title": enMessages.home.hero.title,
+  "home.hero.emphasis": enMessages.home.hero.emphasis,
+  "home.hero.description": enMessages.home.hero.description,
+  "home.hero.primaryCta.label": enMessages.home.hero.primaryCta,
+  "home.hero.secondaryCta.label": enMessages.home.hero.secondaryCta,
+  "home.hero.spotlight.calendarCta.label": enMessages.home.hero.calendarCta,
+  "home.hero.spotlight.eyebrow": enMessages.home.hero.spotlightEyebrow,
+  "home.hero.spotlight.title": enMessages.home.hero.spotlightTitle,
+  "home.hero.spotlight.description": enMessages.home.hero.spotlightDescription,
+  "about.hero.eyebrow": enMessages.about.heroEyebrow,
+  "about.hero.title": enMessages.about.heroTitle,
+  "about.hero.description": enMessages.about.heroDescription,
+  "about.introduction.eyebrow": enMessages.about.introEyebrow,
+  "about.introduction.title": enMessages.about.introTitle,
+  "about.introduction.paragraphs": enMessages.about.introParagraphs,
+  "about.introduction.principle.label": enMessages.about.principleLabel,
+  "about.introduction.principle.text": enMessages.about.principleText,
+  "about.vision.eyebrow": enMessages.about.visionEyebrow,
+  "about.vision.title": enMessages.about.visionTitle,
+  "about.vision.description": enMessages.about.visionDescription,
+  "about.mission.eyebrow": enMessages.about.missionEyebrow,
+  "about.mission.title": enMessages.about.missionTitle,
+  "about.mission.description": enMessages.about.missionDescription,
+  "about.timeline.eyebrow": enMessages.about.timelineEyebrow,
+  "about.timeline.title": enMessages.about.timelineTitle,
+  "about.timeline.description": enMessages.about.timelineDescription,
+};
+
+Object.assign(englishValues, {
+  "home.hero.spotlight.topics.initialized": "true",
+  "home.hero.spotlight.topic.001": enMessages.home.hero.topic1,
+  "home.hero.spotlight.topic.002": enMessages.home.hero.topic2,
+  "home.hero.spotlight.topic.003": enMessages.home.hero.topic3,
+  "about.timeline.milestones.initialized": "true",
+  ...Object.fromEntries(
+    enMessages.about.milestones.map((milestone, index) => [
+      `about.timeline.milestone.${String(index + 1).padStart(3, "0")}`,
+      JSON.stringify(milestone),
+    ]),
+  ),
+});
+
 export const siteContentDefinitions = [
   ...staticSiteContentDefinitions,
   ...repeatableSiteContentDefinitions,
-];
+].map((definition) => ({
+  ...definition,
+  valueEn: englishValues[definition.key] ?? null,
+}));
 
 export const siteContentDefaults = Object.fromEntries(
   siteContentDefinitions.map((definition) => [
     definition.key,
     definition.value,
   ]),
+) as Record<string, string>;
+
+export const siteContentEnglishDefaults = Object.fromEntries(
+  Object.entries(englishValues),
 ) as Record<string, string>;

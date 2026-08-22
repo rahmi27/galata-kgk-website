@@ -6,7 +6,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      // Keep both the default Turkish routes and localized English routes crawlable.
+      allow: ["/", "/en/"],
       disallow: ["/admin/", "/api/", "/design-system/"],
     },
     sitemap: new URL("/sitemap.xml", siteUrl).toString(),

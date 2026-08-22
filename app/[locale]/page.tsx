@@ -1,0 +1,412 @@
+import Image from "next/image";
+import NextLink from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import {
+  ArrowRight,
+  Building2,
+  CalendarDays,
+  Compass,
+  Lightbulb,
+  Network,
+  Rocket,
+} from "lucide-react";
+
+import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
+import { MagneticTarget } from "@/components/effects/magnetic-target";
+import { OrganizationJsonLd } from "@/components/seo/organization-json-ld";
+import { EventCard } from "@/components/shared/event-card";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { StatCard } from "@/components/shared/stat-card";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
+import { formatEventDate } from "@/lib/date";
+import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
+import { prisma } from "@/lib/prisma";
+import {
+  getHomeHeroContentFromRows,
+  getPublicSiteContentRows,
+} from "@/lib/site-content";
+import { getSafeHttpUrl } from "@/lib/url-security";
+import { createPageMetadata } from "@/lib/site-metadata";
+
+export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+  return createPageMetadata({ title: t("metaTitle"), description: t("metaDescription"), path: "/", locale });
+}
+
+const whyUsIcons = {
+  compass: Compass,
+  lightbulb: Lightbulb,
+  network: Network,
+} as const;
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "home" });
+  const common = await getTranslations({ locale, namespace: "common" });
+  const [stats, featuredEvents, sponsors, siteContentRows] = await Promise.all([
+    prisma.siteStat.findMany({
+      orderBy: {
+        order: "asc",
+      },
+    }),
+    prisma.event.findMany({
+      where: {
+        OR: [
+          {
+            date: null,
+          },
+          {
+            date: {
+              gte: new Date(),
+            },
+          },
+        ],
+      },
+      orderBy: [
+        {
+          date: "asc",
+        },
+        {
+          title: "asc",
+        },
+      ],
+      take: 3,
+    }),
+    prisma.sponsor.findMany({
+      orderBy: [
+        {
+          tier: {
+            order: "asc",
+          },
+        },
+        {
+          order: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+      take: 8,
+    }),
+    getPublicSiteContentRows(),
+  ]);
+  const heroContent = getHomeHeroContentFromRows(siteContentRows, locale);
+
+  return (
+    <div className="bg-background">
+      <OrganizationJsonLd locale={locale} slogan={heroContent.eyebrow} description={t("metaDescription")} />
+
+      <main>
+        <section className="relative isolate overflow-hidden border-b border-primary/10 dark:border-white/10">
+          <div
+            className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_80%_15%,rgba(232,93,44,0.12),transparent_24%),radial-gradient(circle_at_10%_85%,rgba(27,42,94,0.1),transparent_28%)] dark:bg-[radial-gradient(circle_at_80%_15%,rgba(232,93,44,0.12),transparent_24%),radial-gradient(circle_at_10%_85%,rgba(109,127,190,0.12),transparent_30%)]"
+            aria-hidden="true"
+          />
+          <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:px-10 lg:py-32">
+            <div>
+              <p className="inline-flex items-center gap-2.5 rounded-full border border-primary/20 bg-primary-50 px-5 py-2.5 font-heading text-sm font-bold uppercase tracking-[0.13em] text-primary-800 shadow-[0_10px_30px_-20px_rgba(27,42,94,0.55)] dark:border-primary-400/25 dark:bg-primary-800/75 dark:text-primary-100">
+                <Rocket
+                  className="size-4 text-accent-600 dark:text-accent-300"
+                  aria-hidden="true"
+                />
+                {heroContent.eyebrow}
+              </p>
+              <h1 className="mt-8 max-w-4xl font-heading text-5xl font-bold leading-[0.98] tracking-[-0.055em] text-primary sm:text-6xl lg:text-7xl dark:text-white">
+                {heroContent.title}{" "}
+                <span className="relative inline-block text-primary dark:text-primary-100">
+                  {heroContent.emphasis}
+                  <span
+                    className="absolute inset-x-0 -bottom-1 h-1.5 rounded-full bg-accent sm:-bottom-2"
+                    aria-hidden="true"
+                  />
+                </span>
+              </h1>
+              <p className="mt-8 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9">
+                {heroContent.description}
+              </p>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <MagneticTarget className="self-start">
+                  <Button asChild size="lg" variant="primary">
+                    <Link href="/etkinliklerimiz">
+                      {heroContent.primaryCta.label}
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </MagneticTarget>
+                <MagneticTarget className="self-start">
+                  <Button asChild size="lg" variant="outline">
+                    <Link href="/katilim">
+                      {heroContent.secondaryCta.label}
+                    </Link>
+                  </Button>
+                </MagneticTarget>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+              <div
+                className="absolute -inset-5 -z-10 rotate-2 rounded-[2.5rem] bg-accent-100/70 dark:bg-accent/10"
+                aria-hidden="true"
+              />
+              <div className="relative overflow-hidden rounded-[2rem] bg-primary-900 p-8 text-white shadow-[0_32px_90px_-40px_rgba(27,42,94,0.8)] sm:p-10">
+                <div
+                  className="absolute -right-14 -top-14 size-44 rounded-full border-[28px] border-accent/45 bg-accent/10 dark:border-accent/35 dark:bg-accent/10"
+                  aria-hidden="true"
+                />
+                <Link
+                  href={{
+                    pathname: "/etkinliklerimiz",
+                    query: { view: locale === "en" ? "calendar" : "takvim" },
+                  }}
+                  className="group/calendar relative z-10 -m-2 inline-flex size-12 cursor-pointer items-center justify-center rounded-2xl text-accent-300 outline-none transition-all hover:scale-105 hover:bg-white/[0.08] hover:text-accent-200 focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-900"
+                  aria-label={heroContent.spotlight.calendarCta.label}
+                >
+                  <CalendarDays
+                    className="size-8 transition-transform group-hover/calendar:-rotate-3"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
+                  <span className="pointer-events-none absolute left-full top-1/2 ml-2.5 w-max -translate-y-1/2 translate-x-1 rounded-lg border border-white/10 bg-primary-950 px-2.5 py-1.5 text-[0.68rem] font-semibold text-white opacity-0 shadow-lg transition-all group-hover/calendar:translate-x-0 group-hover/calendar:opacity-100 group-focus-visible/calendar:translate-x-0 group-focus-visible/calendar:opacity-100">
+                    {heroContent.spotlight.calendarCta.label}
+                  </span>
+                </Link>
+                <p className="mt-12 font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
+                  {heroContent.spotlight.eyebrow}
+                </p>
+                <h2 className="mt-4 max-w-md font-heading text-3xl font-bold leading-tight tracking-[-0.035em] sm:text-4xl">
+                  {heroContent.spotlight.title}
+                </h2>
+                <p className="mt-5 max-w-md leading-7 text-primary-200">
+                  {heroContent.spotlight.description}
+                </p>
+                <div className="mt-9 flex flex-wrap gap-2.5">
+                  {heroContent.spotlight.topics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-xs font-semibold text-primary-100"
+                    >
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="istatistikler" className="scroll-mt-24 py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+              <SectionHeading
+              reveal
+              eyebrow={t("stats.eyebrow")}
+              title={t("stats.title")}
+              description={t("stats.description")}
+            />
+            <div className="stagger-grid mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))]">
+              {stats.map((stat) => (
+                <StatCard
+                  key={stat.id}
+                  {...stat}
+                  label={localizedValue(locale, stat.label, stat.labelEn)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {sponsors.length ? (
+          <section className="border-y border-primary/10 bg-primary-50/45 py-12 dark:border-white/10 dark:bg-white/[0.025] sm:py-14">
+            <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between" data-reveal="">
+                <div>
+                  <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
+                    {t("sponsors.eyebrow")}
+                  </p>
+                  <h2 className="mt-3 font-heading text-2xl font-bold tracking-[-0.035em] text-primary sm:text-3xl dark:text-white">
+                    {t("sponsors.title")}
+                  </h2>
+                </div>
+                <Button asChild variant="link" className="w-fit">
+                  <Link href="/sponsorlar">
+                    {t("sponsors.all")}
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="stagger-grid mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
+                {sponsors.map((sponsor) => {
+                  const sponsorName = localizedValue(locale, sponsor.name, sponsor.nameEn);
+                  const sponsorLogoAlt = localizedOptionalValue(locale, sponsor.logoAlt, sponsor.logoAltEn);
+                  const logo = (
+                    <div className="sponsor-logo-surface flex h-24 items-center justify-center rounded-2xl border p-4 transition-all group-hover:-translate-y-0.5 group-hover:border-accent/45 group-hover:shadow-[0_18px_40px_-28px_rgba(232,93,44,0.75)]">
+                      {sponsor.logoUrl ? (
+                        <Image
+                          src={sponsor.logoUrl}
+                          alt={sponsorLogoAlt ?? sponsorName}
+                          width={180}
+                          height={64}
+                          sizes="(min-width: 1280px) 12vw, (min-width: 640px) 30vw, 50vw"
+                          className="h-auto max-h-12 w-auto max-w-full object-contain"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1.5 text-center text-primary-100">
+                          <Building2 className="size-6" aria-hidden="true" />
+                          <span className="line-clamp-2 font-heading text-xs font-bold">
+                            {sponsorName}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+
+                  const safeWebsiteUrl = getSafeHttpUrl(sponsor.websiteUrl);
+
+                  return safeWebsiteUrl ? (
+                    <NextLink
+                      key={sponsor.id}
+                      data-reveal=""
+                      href={safeWebsiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                      aria-label={common("externalWebsite", { name: sponsorName })}
+                    >
+                      {logo}
+                    </NextLink>
+                  ) : (
+                    <div key={sponsor.id} className="group" data-reveal="">
+                      {logo}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <section
+          id="etkinlikler"
+          className="scroll-mt-24 border-y border-primary/10 bg-primary-50/55 py-20 dark:border-white/10 dark:bg-white/[0.025] sm:py-28"
+        >
+          <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between" data-reveal="">
+              <SectionHeading
+                eyebrow={t("events.eyebrow")}
+                title={t("events.title")}
+                description={t("events.description")}
+              />
+              <Button asChild variant="link" className="w-fit">
+                <Link href="/etkinliklerimiz">
+                  {t("events.all")}
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+            <div className="stagger-grid mt-12 grid gap-6 md:grid-cols-3">
+              {featuredEvents.map((event) => (
+                <EventCard
+                  key={event.id}
+                  date={formatEventDate(event.date, locale)}
+                  title={localizedValue(locale, event.title, event.titleEn)}
+                  description={localizedValue(locale, event.description, event.descriptionEn)}
+                  imageSrc={event.imageUrl ?? undefined}
+                  imageAlt={localizedOptionalValue(locale, event.imageAlt, event.imageAltEn) ?? undefined}
+                  category={localizedValue(locale, event.category, event.categoryEn)}
+                  href={{
+                    pathname: "/etkinliklerimiz/[slug]",
+                    params: { slug: event.slug },
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 sm:py-28">
+          <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-20 lg:px-10">
+            <SectionHeading
+              reveal
+              eyebrow={t("whyUs.eyebrow")}
+              title={t("whyUs.title")}
+              description={t("whyUs.description")}
+            />
+            <div className="stagger-grid grid gap-5">
+              {(["compass", "lightbulb", "network"] as const).map((icon, index) => {
+                const itemNumber = index + 1;
+                const item = {
+                  title: t(`whyUs.item${itemNumber}Title`),
+                  description: t(`whyUs.item${itemNumber}Description`),
+                };
+                const Icon = whyUsIcons[icon] ?? Compass;
+
+                return (
+                  <article
+                    key={item.title}
+                    data-reveal=""
+                    className="group grid gap-5 rounded-[1.75rem] border border-primary/10 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/20 sm:grid-cols-[auto_1fr] sm:p-7 dark:border-white/10 dark:bg-white/[0.035]"
+                  >
+                    <div className="flex size-12 items-center justify-center rounded-2xl bg-primary-50 text-primary transition-colors group-hover:bg-accent-50 group-hover:text-accent-700 dark:bg-white/10 dark:text-primary-100 dark:group-hover:bg-accent/15 dark:group-hover:text-accent-300">
+                      <Icon className="size-5" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="font-heading text-xs font-bold uppercase tracking-[0.16em] text-accent-700 dark:text-accent-300">
+                        0{index + 1}
+                      </p>
+                      <h3 className="mt-2 font-heading text-xl font-bold tracking-[-0.025em] text-primary dark:text-white">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
+                        {item.description}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 pb-20 sm:px-8 sm:pb-28 lg:px-10">
+          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-primary-900 px-6 py-14 text-white shadow-[0_32px_90px_-44px_rgba(27,42,94,0.9)] sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between lg:gap-14 lg:px-16" data-reveal="">
+            <BrandMountainEcho
+              className="-bottom-24 -right-16 w-[24rem] rotate-[7deg] opacity-25 sm:w-[30rem]"
+            />
+            <div
+              className="absolute -bottom-32 -right-20 size-72 rounded-full border-[44px] border-accent/20"
+              aria-hidden="true"
+            />
+            <div className="relative max-w-3xl">
+              <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-300">
+                {t("closing.eyebrow")}
+              </p>
+              <h2 className="mt-5 font-heading text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">
+                {t("closing.title")}
+              </h2>
+              <p className="mt-4 max-w-2xl leading-7 text-primary-200">
+                {t("closing.description")}
+              </p>
+            </div>
+            <MagneticTarget className="relative mt-8 shrink-0 lg:mt-0">
+              <Button asChild size="lg" variant="secondary">
+                <Link href="/katilim">
+                  {t("closing.button")}
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </MagneticTarget>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}

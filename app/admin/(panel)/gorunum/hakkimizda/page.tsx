@@ -8,6 +8,8 @@ import { TimelineMilestonesFields } from "@/components/admin/timeline-milestones
 import {
   getAboutContentFromRows,
   getAdminSiteContentRows,
+  getRawEnglishSiteContentMap,
+  getRawEnglishTimelineMilestones,
 } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminAboutContentPage() {
   const rows = await getAdminSiteContentRows();
   const content = getAboutContentFromRows(rows);
+  const englishValues = getRawEnglishSiteContentMap(rows);
   const sections: ContentEditorSection[] = [
     {
       title: "Sayfa girişi",
@@ -153,6 +156,10 @@ export default async function AdminAboutContentPage() {
       ],
     },
   ];
+  const localizedSections = sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => ({ ...field, valueEn: englishValues[field.name] ?? "" })),
+  }));
 
   return (
     <>
@@ -163,11 +170,12 @@ export default async function AdminAboutContentPage() {
       />
       <ContentEditorForm
         action={updateAboutContentAction}
-        sections={sections}
+        sections={localizedSections}
         submitLabel="Hakkımızda sayfasını kaydet"
       >
         <TimelineMilestonesFields
           initialMilestones={content.timelineSection.milestones}
+          initialMilestonesEn={getRawEnglishTimelineMilestones(rows)}
         />
       </ContentEditorForm>
     </>

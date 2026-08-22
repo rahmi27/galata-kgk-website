@@ -8,6 +8,8 @@ import { SpotlightTopicsFields } from "@/components/admin/spotlight-topics-field
 import {
   getAdminSiteContentRows,
   getHomeHeroContentFromRows,
+  getRawEnglishHomeTopics,
+  getRawEnglishSiteContentMap,
 } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminHomeContentPage() {
   const rows = await getAdminSiteContentRows();
   const hero = getHomeHeroContentFromRows(rows);
+  const englishValues = getRawEnglishSiteContentMap(rows);
   const sections: ContentEditorSection[] = [
     {
       title: "Hero metinleri",
@@ -89,6 +92,10 @@ export default async function AdminHomeContentPage() {
       ],
     },
   ];
+  const localizedSections = sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => ({ ...field, valueEn: englishValues[field.name] ?? "" })),
+  }));
 
   return (
     <>
@@ -99,10 +106,10 @@ export default async function AdminHomeContentPage() {
       />
       <ContentEditorForm
         action={updateHomeHeroContentAction}
-        sections={sections}
+        sections={localizedSections}
         submitLabel="Hero’yu kaydet"
       >
-        <SpotlightTopicsFields initialTopics={hero.spotlight.topics} />
+        <SpotlightTopicsFields initialTopics={hero.spotlight.topics} initialTopicsEn={getRawEnglishHomeTopics(rows)} />
       </ContentEditorForm>
     </>
   );

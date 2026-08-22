@@ -2,12 +2,12 @@
 
 import { type FormEvent, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import membershipContent from "@/content/membership.json";
 import { cn } from "@/lib/utils";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
 
@@ -22,7 +22,8 @@ const inputClassName =
   "h-12 rounded-xl border-primary/15 bg-background px-4 shadow-none focus-visible:border-primary/30 focus-visible:ring-2 focus-visible:ring-accent-300 dark:border-white/15";
 
 export function MembershipForm() {
-  const { form } = membershipContent;
+  const t = useTranslations("join");
+  const common = useTranslations("common");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<FormFeedback>(null);
 
@@ -60,18 +61,23 @@ export function MembershipForm() {
       const result = (await response.json().catch(() => ({}))) as {
         message?: string;
         error?: string;
+        code?: string;
       };
 
       if (!response.ok) {
-        throw new FormSubmissionError(
-          result.error ?? form.errorMessage,
-        );
+        const errorMessages: Record<string, string> = {
+          INVALID_SUBMISSION: t("invalidError"),
+          EMAIL_RATE_LIMITED: t("emailRateLimitError"),
+          IP_RATE_LIMITED: t("ipRateLimitError"),
+          INTERNAL_ERROR: t("error"),
+        };
+        throw new FormSubmissionError(errorMessages[result.code ?? ""] ?? t("error"));
       }
 
       formElement.reset();
       setFeedback({
         type: "success",
-        message: result.message ?? form.successMessage,
+        message: t("success"),
       });
     } catch (error) {
       setFeedback({
@@ -79,7 +85,7 @@ export function MembershipForm() {
         message:
           error instanceof FormSubmissionError
             ? error.message
-            : form.errorMessage,
+            : t("error"),
       });
     } finally {
       setIsSubmitting(false);
@@ -92,7 +98,7 @@ export function MembershipForm() {
         className="absolute left-[-10000px] top-auto size-px overflow-hidden"
         aria-hidden="true"
       >
-        <label htmlFor="membership-website">Web sitesi</label>
+        <label htmlFor="membership-website">{common("websiteHoneypot")}</label>
         <input
           id="membership-website"
           name="website"
@@ -102,13 +108,13 @@ export function MembershipForm() {
         />
       </div>
       <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-        {form.eyebrow}
+        {t("formEyebrow")}
       </p>
       <h2 className="mt-4 font-heading text-3xl font-bold leading-tight tracking-[-0.04em] text-primary sm:text-4xl dark:text-white">
-        {form.title}
+        {t("formTitle")}
       </h2>
       <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
-        {form.description}
+        {t("formDescription")}
       </p>
 
       <div className="mt-9 grid gap-6 sm:grid-cols-2">
@@ -117,14 +123,14 @@ export function MembershipForm() {
             htmlFor="fullName"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.fullName.label}
+            {t("fullName")}
           </label>
           <Input
             id="fullName"
             name="fullName"
             type="text"
             autoComplete="name"
-            placeholder={form.fields.fullName.placeholder}
+            placeholder={t("fullNamePlaceholder")}
             required
             minLength={2}
             maxLength={100}
@@ -137,14 +143,14 @@ export function MembershipForm() {
             htmlFor="membershipEmail"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.email.label}
+            {t("email")}
           </label>
           <Input
             id="membershipEmail"
             name="email"
             type="email"
             autoComplete="email"
-            placeholder={form.fields.email.placeholder}
+            placeholder={t("emailPlaceholder")}
             required
             maxLength={254}
             className={inputClassName}
@@ -156,14 +162,14 @@ export function MembershipForm() {
             htmlFor="studentNumber"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.studentNumber.label}
+            {t("studentNumber")}
           </label>
           <Input
             id="studentNumber"
             name="studentNumber"
             type="text"
             autoComplete="off"
-            placeholder={form.fields.studentNumber.placeholder}
+            placeholder={t("studentNumberPlaceholder")}
             maxLength={30}
             className={inputClassName}
           />
@@ -174,13 +180,13 @@ export function MembershipForm() {
             htmlFor="department"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.department.label}
+            {t("department")}
           </label>
           <Input
             id="department"
             name="department"
             type="text"
-            placeholder={form.fields.department.placeholder}
+            placeholder={t("departmentPlaceholder")}
             required
             minLength={2}
             maxLength={150}
@@ -193,7 +199,7 @@ export function MembershipForm() {
             htmlFor="phone"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.phone.label}
+            {t("phone")}
           </label>
           <Input
             id="phone"
@@ -201,7 +207,7 @@ export function MembershipForm() {
             type="tel"
             autoComplete="tel"
             inputMode="tel"
-            placeholder={form.fields.phone.placeholder}
+            placeholder={t("phonePlaceholder")}
             maxLength={30}
             className={inputClassName}
           />
@@ -212,12 +218,12 @@ export function MembershipForm() {
             htmlFor="motivation"
             className="font-heading text-sm font-semibold text-primary dark:text-primary-100"
           >
-            {form.fields.motivation.label}
+            {t("motivation")}
           </label>
           <Textarea
             id="motivation"
             name="motivation"
-            placeholder={form.fields.motivation.placeholder}
+            placeholder={t("motivationPlaceholder")}
             required
             minLength={10}
             maxLength={1000}
@@ -234,16 +240,16 @@ export function MembershipForm() {
           className="mt-1 size-4 shrink-0 accent-accent"
         />
         <span>
-          İstanbul Galata Üniversitesi{" "}
+          {common("privacyPrefix")}
           <Link
             href={OFFICIAL_PRIVACY_NOTICE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-accent-700 underline underline-offset-4 dark:text-accent-300"
           >
-            KVKK Aydınlatma Metni’ni
-          </Link>{" "}
-          okudum ve kişisel verilerimin işlenmesi hakkında bilgi edindim.
+            {common("privacyLink")}
+          </Link>
+          {common("privacySuffix")}
         </span>
       </label>
 
@@ -257,11 +263,11 @@ export function MembershipForm() {
         {isSubmitting ? (
           <>
             <LoaderCircle className="animate-spin" aria-hidden="true" />
-            {form.submittingLabel}
+            {t("submitting")}
           </>
         ) : (
           <>
-            {form.submitLabel}
+            {t("submit")}
             <ArrowRight aria-hidden="true" />
           </>
         )}

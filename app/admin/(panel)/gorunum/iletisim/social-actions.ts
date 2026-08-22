@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 import {
   getSocialPlatformLabel,
   isSocialPlatform,
@@ -13,8 +14,8 @@ import { isSafeHttpUrl } from "@/lib/url-security";
 
 async function refreshSocialLinks() {
   updateTag("club-social-links");
-  revalidatePath("/", "layout");
-  revalidatePath("/iletisim");
+  revalidatePublicPath("/", "layout");
+  revalidatePublicPath("/iletisim");
   revalidatePath("/admin/gorunum/iletisim");
 }
 

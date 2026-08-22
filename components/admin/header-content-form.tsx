@@ -13,12 +13,15 @@ type NavigationItem = {
   id: (typeof navigationRoutes)[number]["id"];
   href: string;
   label: string;
+  labelEn: string;
 };
 
 export function HeaderContentForm({
   action,
   brandName,
+  brandNameEn,
   ctaLabel,
+  ctaLabelEn,
   navigation,
 }: {
   action: (
@@ -26,7 +29,9 @@ export function HeaderContentForm({
     formData: FormData,
   ) => Promise<AdminActionState>;
   brandName: string;
+  brandNameEn: string;
   ctaLabel: string;
+  ctaLabelEn: string;
   navigation: NavigationItem[];
 }) {
   const [items, setItems] = useState(navigation);
@@ -79,6 +84,10 @@ export function HeaderContentForm({
             />
           </div>
           <div className="space-y-2">
+            <label htmlFor="header-brand-name-en" className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-100">Logo yanındaki metin — İngilizce (opsiyonel)</label>
+            <Input id="header-brand-name-en" name="header.brand.name.en" defaultValue={brandNameEn} maxLength={120} />
+          </div>
+          <div className="space-y-2">
             <label
               htmlFor="header-cta-label"
               className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-100"
@@ -93,6 +102,10 @@ export function HeaderContentForm({
               maxLength={120}
               required
             />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="header-cta-label-en" className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-100">Katılım butonu — İngilizce (opsiyonel)</label>
+            <Input id="header-cta-label-en" name="header.cta.label.en" defaultValue={ctaLabelEn} maxLength={120} />
           </div>
         </div>
       </section>
@@ -112,7 +125,7 @@ export function HeaderContentForm({
           {items.map((item, index) => (
             <div
               key={item.id}
-              className="grid gap-3 rounded-2xl border border-primary-100 bg-primary-50/55 p-4 dark:border-white/10 dark:bg-white/[0.04] sm:grid-cols-[2rem_1fr_auto] sm:items-end"
+              className="grid gap-3 rounded-2xl border border-primary-100 bg-primary-50/55 p-4 dark:border-white/10 dark:bg-white/[0.04] sm:grid-cols-[2rem_1fr_1fr_auto] sm:items-end"
             >
               <span className="font-heading text-sm font-bold text-accent-700 dark:text-accent-300">
                 {String(index + 1).padStart(2, "0")}
@@ -132,6 +145,10 @@ export function HeaderContentForm({
                   maxLength={120}
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor={`header-nav-${item.id}-en`} className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-100">İngilizce menü metni (opsiyonel)</label>
+                <Input id={`header-nav-${item.id}-en`} name={`header.nav.${item.id}.label.en`} defaultValue={item.labelEn} maxLength={120} />
               </div>
               <div className="flex gap-2">
                 <Button

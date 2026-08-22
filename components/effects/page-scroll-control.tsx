@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type ScrollDirection = "down" | "up";
 
 export function PageScrollControl() {
+  const t = useTranslations("common");
   const [direction, setDirection] = useState<ScrollDirection>("down");
 
   useEffect(() => {
@@ -76,8 +78,8 @@ export function PageScrollControl() {
       onClick={handleClick}
       data-direction={direction}
       className="page-scroll-control fixed bottom-5 right-4 z-40 inline-flex size-11 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-primary shadow-[0_14px_38px_-16px_rgba(27,42,94,0.65)] backdrop-blur-md transition-[transform,background-color,color,border-color] duration-200 hover:-translate-y-0.5 hover:border-accent/45 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:bottom-7 sm:right-7 sm:size-12 dark:border-white/15 dark:bg-primary-950/85 dark:text-primary-100 dark:hover:border-accent/60 dark:hover:bg-accent dark:hover:text-accent-foreground"
-      aria-label={isDown ? "Sayfada aşağı kaydır" : "Sayfanın başına dön"}
-      title={isDown ? "Aşağı kaydır" : "Yukarı dön"}
+      aria-label={isDown ? t("scrollDown") : t("scrollTop")}
+      title={isDown ? t("scrollDown") : t("scrollTop")}
     >
       <Icon
         className="page-scroll-control__icon size-5"

@@ -13,19 +13,25 @@ type Milestone = {
   description: string;
 };
 
+type EnglishMilestone = Milestone;
+
 type MilestoneField = Milestone & {
   id: string;
+  english: EnglishMilestone;
 };
 
 export function TimelineMilestonesFields({
   initialMilestones,
+  initialMilestonesEn = [],
 }: {
   initialMilestones: Milestone[];
+  initialMilestonesEn?: EnglishMilestone[];
 }) {
   const [milestones, setMilestones] = useState<MilestoneField[]>(
     initialMilestones.map((milestone, index) => ({
       ...milestone,
       id: `initial-${index}`,
+      english: initialMilestonesEn[index] ?? { year: "", title: "", description: "" },
     })),
   );
 
@@ -41,6 +47,12 @@ export function TimelineMilestonesFields({
     );
   }
 
+  function updateEnglishMilestone(id: string, field: keyof EnglishMilestone, value: string) {
+    setMilestones((current) => current.map((milestone) => milestone.id === id
+      ? { ...milestone, english: { ...milestone.english, [field]: value } }
+      : milestone));
+  }
+
   return (
     <section className="rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-primary-950/65 sm:p-7">
       <input
@@ -54,6 +66,7 @@ export function TimelineMilestonesFields({
           })),
         )}
       />
+      <input type="hidden" name="timelineMilestonesEn" value={JSON.stringify(milestones.map(({ english }) => english))} />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="font-heading text-xl font-bold text-primary-950 dark:text-white">
@@ -75,6 +88,7 @@ export function TimelineMilestonesFields({
                 year: "",
                 title: "",
                 description: "",
+                english: { year: "", title: "", description: "" },
               },
             ])
           }
@@ -175,6 +189,14 @@ export function TimelineMilestonesFields({
                     maxLength={1000}
                     required
                   />
+                </div>
+              </div>
+              <div className="mt-4 rounded-xl border border-primary-100 bg-white/70 p-4 dark:border-white/10 dark:bg-primary-950/45">
+                <p className="mb-3 font-heading text-sm font-bold text-primary-900 dark:text-primary-100">İngilizce (opsiyonel)</p>
+                <div className="grid gap-4 lg:grid-cols-[12rem_1fr]">
+                  <Input value={milestone.english.year} onChange={(event) => updateEnglishMilestone(milestone.id, "year", event.target.value)} maxLength={40} aria-label="Yıl / dönem İngilizce" placeholder="Year / period" />
+                  <Input value={milestone.english.title} onChange={(event) => updateEnglishMilestone(milestone.id, "title", event.target.value)} maxLength={160} aria-label="Başlık İngilizce" placeholder="Title" />
+                  <Textarea value={milestone.english.description} onChange={(event) => updateEnglishMilestone(milestone.id, "description", event.target.value)} rows={3} maxLength={1000} className="lg:col-span-2" aria-label="Açıklama İngilizce" placeholder="Description" />
                 </div>
               </div>
             </article>

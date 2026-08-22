@@ -37,7 +37,7 @@ export default async function PersonDetailPage({ params, searchParams }: { param
       <div className="mt-9 grid gap-7 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
         <section className="h-fit rounded-[1.5rem] border border-primary-100 bg-white p-5 dark:border-white/10 dark:bg-primary-950 sm:p-7">
           <h2 className="flex items-center gap-2 font-heading text-xl font-bold text-primary-950 dark:text-white"><UserRound className="size-5 text-accent-700" />Kişi bilgileri</h2>
-          <div className="mt-6"><PersonAdminForm action={updatePerson} submitLabel="Kişiyi güncelle" defaultValues={{ name: person.name, department: person.department, photoUrl: person.photoUrl ?? "", photoAlt: person.photoAlt ?? "", socialPlatform: person.socialPlatform ?? "", socialUrl: person.socialUrl ?? "" }} /></div>
+          <div className="mt-6"><PersonAdminForm action={updatePerson} submitLabel="Kişiyi güncelle" defaultValues={{ name: person.name, nameEn: person.nameEn ?? "", department: person.department, departmentEn: person.departmentEn ?? "", photoUrl: person.photoUrl ?? "", photoAlt: person.photoAlt ?? "", photoAltEn: person.photoAltEn ?? "", socialPlatform: person.socialPlatform ?? "", socialUrl: person.socialUrl ?? "" }} /></div>
         </section>
         <div className="space-y-6">
           <section className="rounded-[1.5rem] border border-primary-100 bg-white p-5 dark:border-white/10 dark:bg-primary-950 sm:p-7">
@@ -45,7 +45,7 @@ export default async function PersonDetailPage({ params, searchParams }: { param
             <div className="mt-5 space-y-4">
               {person.memberships.length ? person.memberships.map((membership) => {
                 const updateMembership = updateMembershipAction.bind(null, membership.id);
-                return <article key={membership.id} className="rounded-xl border border-primary-100 bg-primary-50/70 p-4 dark:border-white/10 dark:bg-primary-900"><div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-heading font-bold text-primary-950 dark:text-white">{membership.category.name}</h3><p className="mt-1 text-xs text-primary-500 dark:text-primary-200">/{membership.category.slug}</p></div><DeleteTeamMembershipButton membershipId={membership.id} personName={person.name} categoryName={membership.category.name} /></div><MembershipEditForm action={updateMembership} role={membership.role} order={membership.order} membershipId={membership.id} /></article>;
+                return <article key={membership.id} className="rounded-xl border border-primary-100 bg-primary-50/70 p-4 dark:border-white/10 dark:bg-primary-900"><div className="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-heading font-bold text-primary-950 dark:text-white">{membership.category.name}</h3><p className="mt-1 text-xs text-primary-500 dark:text-primary-200">/{membership.category.slug}</p></div><DeleteTeamMembershipButton membershipId={membership.id} personName={person.name} categoryName={membership.category.name} /></div><MembershipEditForm action={updateMembership} role={membership.role} roleEn={membership.roleEn ?? ""} order={membership.order} membershipId={membership.id} /></article>;
               }) : <p className="rounded-xl border border-dashed border-primary-200 px-4 py-8 text-center text-sm font-medium text-primary-600 dark:border-white/15 dark:text-primary-200">Bu kişi henüz bir kategoriye atanmadı.</p>}
             </div>
           </section>

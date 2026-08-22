@@ -8,9 +8,11 @@
     "start": "next start",
     "lint": "eslint .",
     "test:security": "tsx --test tests/security/input-security.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs",
+    "test:i18n": "tsx --test tests/localized-content.test.ts && node --test tests/i18n-routing.test.mjs",
     "test:team": "tsx --test tests/person-priority.test.ts && node --test tests/team-membership-integrity.test.mjs",
     "db:seed": "prisma db seed",
-    "db:seed-content": "tsx scripts/seed-site-content.ts"
+    "db:seed-content": "tsx scripts/seed-site-content.ts",
+    "db:translate-content": "tsx scripts/backfill-english-content.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
@@ -27,6 +29,7 @@
     "lucide-react": "^1.25.0",
     "next": "^16.2.11",
     "next-auth": "^5.0.0-beta.32",
+    "next-intl": "^4.13.7",
     "next-themes": "^0.4.6",
     "pg": "^8.22.0",
     "react": "^19.2.8",
@@ -51,6 +54,7 @@
     "typescript": "^5"
   },
   "overrides": {
+    "deepmerge-ts": "8.0.2",
     "find-my-way": "9.7.0",
     "postcss": "8.5.25",
     "sharp": "0.35.3"

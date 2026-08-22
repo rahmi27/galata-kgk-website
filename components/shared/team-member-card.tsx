@@ -14,6 +14,7 @@ type TeamMemberCardProps = {
   imageAlt?: string;
   socialPlatform?: string;
   socialUrl?: string;
+  profileLinkLabel?: string;
   className?: string;
   reveal?: boolean;
 };
@@ -26,6 +27,7 @@ export function TeamMemberCard({
   imageAlt,
   socialPlatform,
   socialUrl,
+  profileLinkLabel,
   className,
   reveal = true,
 }: TeamMemberCardProps) {
@@ -59,7 +61,7 @@ export function TeamMemberCard({
           <div
             className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(232,93,44,0.2),transparent_30%),linear-gradient(160deg,#F6F7FB_0%,#C4CBE1_100%)] dark:bg-[radial-gradient(circle_at_50%_35%,rgba(232,93,44,0.2),transparent_30%),linear-gradient(160deg,#202F62_0%,#131D41_100%)]"
             role="img"
-            aria-label={`${name} için fotoğraf alanı`}
+            aria-label={imageAlt ?? name}
           >
             <span
               className="inline-flex size-24 items-center justify-center rounded-full border border-primary/15 bg-white/60 font-heading text-2xl font-bold tracking-[0.08em] text-primary shadow-[0_18px_45px_-24px_rgba(27,42,94,0.7)] backdrop-blur dark:border-white/15 dark:bg-white/10 dark:text-primary-100"
@@ -75,7 +77,10 @@ export function TeamMemberCard({
             target="_blank"
             rel="noopener noreferrer"
             className="group/social absolute inset-0 z-20 flex items-end justify-end p-4 outline-none sm:items-center sm:justify-center sm:p-0"
-            aria-label={`${name} ${getSocialPlatformLabel(socialPlatform)} profilini yeni sekmede aç`}
+            aria-label={
+              profileLinkLabel ??
+              `${name} ${getSocialPlatformLabel(socialPlatform)}`
+            }
           >
             <span
               className="absolute inset-0 bg-[linear-gradient(145deg,rgba(27,42,94,0.3),rgba(12,19,47,0.9)_62%,rgba(232,93,44,0.58))] opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-visible/social:opacity-100 motion-reduce:transition-none"

@@ -13,6 +13,7 @@ export type ContentEditorField = {
   name: string;
   label: string;
   value: string;
+  valueEn?: string;
   kind?: "input" | "textarea" | "url";
   required?: boolean;
   maxLength?: number;
@@ -63,6 +64,7 @@ export function ContentEditorForm({
             {section.fields.map((field) => {
               const id = `content-${field.name.replaceAll(".", "-")}`;
               const isTextarea = field.kind === "textarea";
+              const englishId = `${id}-en`;
 
               return (
                 <div
@@ -98,6 +100,19 @@ export function ContentEditorForm({
                     <p className="text-xs leading-5 text-primary-600 dark:text-primary-300">
                       {field.hint}
                     </p>
+                  ) : null}
+                  {field.kind !== "url" ? (
+                    <div className="mt-4 space-y-2 rounded-xl border border-primary-100 bg-primary-50/55 p-4 dark:border-white/10 dark:bg-white/[0.04]">
+                      <label htmlFor={englishId} className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-100">
+                        {field.label} — İngilizce (opsiyonel)
+                      </label>
+                      {isTextarea ? (
+                        <Textarea id={englishId} name={`${field.name}.en`} defaultValue={field.valueEn ?? ""} rows={5} maxLength={field.maxLength ?? 3000} />
+                      ) : (
+                        <Input id={englishId} name={`${field.name}.en`} defaultValue={field.valueEn ?? ""} maxLength={field.maxLength ?? 300} />
+                      )}
+                      <p className="text-xs leading-5 text-primary-600 dark:text-primary-300">Boş bırakırsanız İngilizce sayfada Türkçe metin gösterilir.</p>
+                    </div>
                   ) : null}
                 </div>
               );

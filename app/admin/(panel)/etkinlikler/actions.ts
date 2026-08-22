@@ -12,6 +12,7 @@ import {
 } from "@/lib/image-upload";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function createSlug(value: string) {
   return value
@@ -55,14 +56,14 @@ async function findAvailableSlug(title: string, currentEventId?: number) {
 
 async function refreshEventPages(slugs: string[] = []) {
   updateTag("events");
-  revalidatePath("/");
-  revalidatePath("/etkinliklerimiz");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/etkinliklerimiz");
   revalidatePath("/sitemap.xml");
   revalidatePath("/admin");
   revalidatePath("/admin/etkinlikler");
 
   for (const slug of new Set(slugs)) {
-    revalidatePath(`/etkinliklerimiz/${slug}`);
+    revalidatePublicPath(`/etkinliklerimiz/${slug}`);
   }
 
   await notifyIndexNow([
@@ -108,6 +109,12 @@ export async function createEventAction(
       location: validation.data.location,
       category: validation.data.category,
       imageAlt: validation.data.imageAlt,
+      titleEn: validation.data.titleEn,
+      descriptionEn: validation.data.descriptionEn,
+      longDescriptionEn: validation.data.longDescriptionEn,
+      locationEn: validation.data.locationEn,
+      imageAltEn: validation.data.imageAltEn,
+      categoryEn: validation.data.categoryEn,
     };
 
     await prisma.event.create({
@@ -189,6 +196,12 @@ export async function updateEventAction(
       location: validation.data.location,
       category: validation.data.category,
       imageAlt: nextImageUrl ? validation.data.imageAlt : null,
+      titleEn: validation.data.titleEn,
+      descriptionEn: validation.data.descriptionEn,
+      longDescriptionEn: validation.data.longDescriptionEn,
+      locationEn: validation.data.locationEn,
+      imageAltEn: nextImageUrl ? validation.data.imageAltEn : null,
+      categoryEn: validation.data.categoryEn,
     };
 
     await prisma.event.update({

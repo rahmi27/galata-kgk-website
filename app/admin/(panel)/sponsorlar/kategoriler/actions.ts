@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
 import { validateSponsorTierName } from "@/lib/sponsor-tier";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 function parseOrder(formData: FormData) {
   const order = Number(formData.get("order"));
@@ -15,9 +16,14 @@ function parseOrder(formData: FormData) {
     : null;
 }
 
+function parseEnglishName(formData: FormData) {
+  const value = String(formData.get("nameEn") ?? "").trim();
+  return value && value.length <= 80 ? value : null;
+}
+
 async function refreshTierPages() {
-  revalidatePath("/");
-  revalidatePath("/sponsorlar");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/sponsorlar");
   revalidatePath("/admin/sponsorlar");
   revalidatePath("/admin/sponsorlar/kategoriler");
   await notifyIndexNow(["/", "/sponsorlar"]);
@@ -57,7 +63,7 @@ export async function createSponsorTierAction(
 
   try {
     await prisma.sponsorTier.create({
-      data: { ...validation.data, order },
+      data: { ...validation.data, nameEn: parseEnglishName(formData), order },
     });
     await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı oluşturuldu." };
@@ -109,7 +115,7 @@ export async function updateSponsorTierAction(
   try {
     await prisma.sponsorTier.update({
       where: { id: tierId },
-      data: { ...validation.data, order },
+      data: { ...validation.data, nameEn: parseEnglishName(formData), order },
     });
     await refreshTierPages();
     return { success: true, message: "Sponsor tier'ı güncellendi." };

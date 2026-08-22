@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 import {
   repeatableSiteContentDefinitions,
   staticSiteContentDefinitions,
@@ -36,14 +37,20 @@ export async function updateHomeHeroContentAction(
         throw new Error(`${definition.label} çok uzun.`);
       }
 
-      return { definition, value };
+      const valueEn = formData.get(`${definition.key}.en`)?.toString().trim() || null;
+      if (valueEn && valueEn.length > 3000) throw new Error(`${definition.label} İngilizce metni çok uzun.`);
+      return { definition, value, valueEn };
     });
     const parsedTopics = JSON.parse(
       formData.get("spotlightTopics")?.toString() ?? "[]",
     );
+    const parsedTopicsEn = JSON.parse(formData.get("spotlightTopicsEn")?.toString() ?? "[]");
 
     if (!Array.isArray(parsedTopics) || parsedTopics.length > 12) {
       throw new Error("Odak etiketleri geçersiz veya izin verilenden fazla.");
+    }
+    if (!Array.isArray(parsedTopicsEn) || parsedTopicsEn.length !== parsedTopics.length) {
+      throw new Error("İngilizce odak etiketleri geçersiz.");
     }
 
     const topics = parsedTopics.map((topic) => {
@@ -57,17 +64,24 @@ export async function updateHomeHeroContentAction(
       }
       return value;
     });
+    const topicsEn = parsedTopicsEn.map((topic) => {
+      if (typeof topic !== "string") throw new Error("İngilizce odak etiketi metin olmalıdır.");
+      const value = topic.trim();
+      if (value.length > 80) throw new Error("İngilizce odak etiketi en fazla 80 karakter olabilir.");
+      return value || null;
+    });
 
     if (new Set(topics.map((topic) => topic.toLocaleLowerCase("tr"))).size !== topics.length) {
       throw new Error("Aynı odak etiketi birden fazla kez kullanılamaz.");
     }
 
     await prisma.$transaction([
-      ...updates.map(({ definition, value }) =>
+      ...updates.map(({ definition, value, valueEn }) =>
         prisma.siteContent.upsert({
           where: { key: definition.key },
           update: {
             value,
+            valueEn,
             label: definition.label,
             page: definition.page,
             type: definition.type,
@@ -75,6 +89,7 @@ export async function updateHomeHeroContentAction(
           create: {
             ...definition,
             value,
+            valueEn,
           },
         }),
       ),
@@ -94,6 +109,7 @@ export async function updateHomeHeroContentAction(
         data: topics.map((value, index) => ({
           key: `home.hero.spotlight.topic.${String(index + 1).padStart(3, "0")}`,
           value,
+          valueEn: topicsEn[index],
           type: "text" as const,
           page: "anasayfa",
           label: "Odak etiketi",
@@ -102,7 +118,7 @@ export async function updateHomeHeroContentAction(
     ]);
 
     updateTag("site-content");
-    revalidatePath("/");
+    revalidatePublicPath("/");
     revalidatePath("/admin/gorunum/anasayfa");
 
     return {

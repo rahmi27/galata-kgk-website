@@ -31,17 +31,23 @@ model AdminLoginAttempt {
 }
 
 model Event {
-  id              Int       @id @default(autoincrement())
-  title           String
-  slug            String    @unique
-  description     String
-  longDescription String
-  date            DateTime?
-  location        String
-  imageUrl        String?
-  imageAlt        String?
-  category        String
-  createdAt       DateTime  @default(now())
+  id                Int       @id @default(autoincrement())
+  title             String
+  titleEn           String?
+  slug              String    @unique
+  description       String
+  descriptionEn     String?
+  longDescription   String
+  longDescriptionEn String?
+  date              DateTime?
+  location          String
+  locationEn        String?
+  imageUrl          String?
+  imageAlt          String?
+  imageAltEn        String?
+  category          String
+  categoryEn        String?
+  createdAt         DateTime  @default(now())
 
   @@index([date])
 }
@@ -49,10 +55,13 @@ model Event {
 model Person {
   id             Int              @id @default(autoincrement())
   name           String
+  nameEn         String?
   normalizedName String           @unique
   photoUrl       String?
   photoAlt       String?
+  photoAltEn     String?
   department     String           @default("Belirtilmedi")
+  departmentEn   String?
   socialPlatform String?
   socialUrl      String?
   createdAt      DateTime         @default(now())
@@ -66,6 +75,7 @@ model TeamMembership {
   personId   Int
   categoryId Int
   role       String
+  roleEn     String?
   order      Int
   createdAt  DateTime     @default(now())
   person     Person       @relation(fields: [personId], references: [id], onDelete: Cascade)
@@ -91,6 +101,7 @@ model ClubSocialLink {
 model TeamCategory {
   id          Int              @id @default(autoincrement())
   name        String           @unique
+  nameEn      String?
   slug        String           @unique
   order       Int
   memberships TeamMembership[]
@@ -99,16 +110,19 @@ model TeamCategory {
 }
 
 model Sponsor {
-  id          Int         @id @default(autoincrement())
-  name        String
-  logoUrl     String?
-  logoAlt     String?
-  websiteUrl  String?
-  description String?
-  order       Int
-  createdAt   DateTime    @default(now())
-  tierId      Int
-  tier        SponsorTier @relation(fields: [tierId], references: [id], onDelete: Restrict)
+  id            Int         @id @default(autoincrement())
+  name          String
+  nameEn        String?
+  logoUrl       String?
+  logoAlt       String?
+  logoAltEn     String?
+  websiteUrl    String?
+  description   String?
+  descriptionEn String?
+  order         Int
+  createdAt     DateTime    @default(now())
+  tierId        Int
+  tier          SponsorTier @relation(fields: [tierId], references: [id], onDelete: Restrict)
 
   @@index([tierId, order])
 }
@@ -116,6 +130,7 @@ model Sponsor {
 model SponsorTier {
   id       Int       @id @default(autoincrement())
   name     String    @unique
+  nameEn   String?
   slug     String    @unique
   order    Int
   sponsors Sponsor[]
@@ -124,15 +139,18 @@ model SponsorTier {
 }
 
 model PartnerClub {
-  id               Int                 @id @default(autoincrement())
-  name             String
-  slug             String              @unique
-  logoUrl          String
-  logoAlt          String?
-  shortDescription String
-  order            Int
-  createdAt        DateTime            @default(now())
-  collaborations   CollaborationItem[]
+  id                 Int                 @id @default(autoincrement())
+  name               String
+  nameEn             String?
+  slug               String              @unique
+  logoUrl            String
+  logoAlt            String?
+  logoAltEn          String?
+  shortDescription   String
+  shortDescriptionEn String?
+  order              Int
+  createdAt          DateTime            @default(now())
+  collaborations     CollaborationItem[]
 
   @@index([order])
 }
@@ -141,7 +159,9 @@ model CollaborationItem {
   id            Int         @id @default(autoincrement())
   partnerClubId Int
   title         String
+  titleEn       String?
   description   String
+  descriptionEn String?
   date          DateTime?
   order         Int
   createdAt     DateTime    @default(now())
@@ -184,10 +204,11 @@ model MembershipApplication {
 }
 
 model SiteStat {
-  id    Int    @id @default(autoincrement())
-  label String
-  value String
-  order Int
+  id      Int     @id @default(autoincrement())
+  label   String
+  labelEn String?
+  value   String
+  order   Int
 
   @@index([order])
 }
@@ -196,6 +217,7 @@ model SiteContent {
   id        Int             @id @default(autoincrement())
   key       String          @unique
   value     String          @db.Text
+  valueEn   String?         @db.Text
   type      SiteContentType @default(text)
   page      String
   label     String

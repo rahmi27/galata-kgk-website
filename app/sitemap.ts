@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 
 import { prisma } from "@/lib/prisma";
-import { siteUrl } from "@/lib/site-metadata";
+import { localizedPublicPath, siteUrl } from "@/lib/site-metadata";
 
 export const revalidate = 3600;
 
 const publicPaths = [
-  "",
+  "/",
   "/hakkimizda",
   "/etkinliklerimiz",
   "/ekibimiz",
@@ -16,6 +16,23 @@ const publicPaths = [
   "/katilim",
   "/cerez-politikasi",
 ];
+
+function localizedEntries(path: string, options: { lastModified?: Date; priority: number; changeFrequency: "weekly" | "monthly" }) {
+  const trPath = localizedPublicPath(path, "tr");
+  const enPath = localizedPublicPath(path, "en");
+  const languages = {
+    tr: new URL(trPath, siteUrl).toString(),
+    en: new URL(enPath, siteUrl).toString(),
+    "x-default": new URL(trPath, siteUrl).toString(),
+  };
+  return ([trPath, enPath] as const).map((localizedPath) => ({
+    url: new URL(localizedPath, siteUrl).toString(),
+    lastModified: options.lastModified,
+    changeFrequency: options.changeFrequency,
+    priority: options.priority,
+    alternates: { languages },
+  }));
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, partnerClubs] = await Promise.all([
@@ -40,22 +57,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   return [
-    ...publicPaths.map((path) => ({
-      url: new URL(path || "/", siteUrl).toString(),
-      changeFrequency: path === "" ? ("weekly" as const) : ("monthly" as const),
-      priority: path === "" ? 1 : 0.8,
-    })),
-    ...events.map((event) => ({
-      url: new URL(`/etkinliklerimiz/${event.slug}`, siteUrl).toString(),
-      lastModified: event.createdAt,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-    ...partnerClubs.map((partnerClub) => ({
-      url: new URL(`/is-birlikleri/${partnerClub.slug}`, siteUrl).toString(),
-      lastModified: partnerClub.createdAt,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
+    ...publicPaths.flatMap((path) => localizedEntries(path, { changeFrequency: path === "/" ? "weekly" : "monthly", priority: path === "/" ? 1 : 0.8 })),
+    ...events.flatMap((event) => localizedEntries(`/etkinliklerimiz/${event.slug}`, { lastModified: event.createdAt, changeFrequency: "monthly", priority: 0.7 })),
+    ...partnerClubs.flatMap((partnerClub) => localizedEntries(`/is-birlikleri/${partnerClub.slug}`, { lastModified: partnerClub.createdAt, changeFrequency: "monthly", priority: 0.7 })),
   ];
 }

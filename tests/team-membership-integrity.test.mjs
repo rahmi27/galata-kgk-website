@@ -47,13 +47,13 @@ test("veri migration'ı doğrulamadan eski tabloyu kaldırmaz", async () => {
   assert.match(migration, /lost_role_count/);
 });
 
-test("Ekibimiz ISR kalır ve admin değişiklikleri önbelleği yeniler", async () => {
-  const publicPage = await read("app", "ekibimiz", "page.tsx");
+test("Ekibimiz ISR kalır ve admin değişiklikleri iki dilde önbelleği yeniler", async () => {
+  const publicPage = await read("app", "[locale]", "ekibimiz", "page.tsx");
   const actions = await read("app", "admin", "(panel)", "uyeler", "actions.ts");
   assert.match(publicPage, /export const revalidate = 300/);
   assert.match(publicPage, /memberships:[\s\S]*person: true/);
   assert.doesNotMatch(publicPage, /force-dynamic/);
-  assert.match(actions, /revalidatePath\("\/ekibimiz"\)/);
+  assert.match(actions, /revalidatePublicPath\("\/ekibimiz"\)/);
 });
 
 test("merge öncesi main sürümü yeni tekil veri kaynağına uyumlu kalır", async () => {
@@ -78,7 +78,7 @@ test("sağlık koordinatörlükleri boş hazırlanır ve public sayfada gizlenir
     "migration.sql",
   );
   const seed = await read("prisma", "seed.ts");
-  const publicPage = await read("app", "ekibimiz", "page.tsx");
+  const publicPage = await read("app", "[locale]", "ekibimiz", "page.tsx");
 
   assert.match(migration, /Diş Hekimliği Koordinatörlüğü/);
   assert.match(migration, /Hemşirelik Koordinatörlüğü/);

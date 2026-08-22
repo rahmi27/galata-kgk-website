@@ -19,6 +19,12 @@ type EventFormValues = {
   imageUrl: string;
   imageAlt: string;
   category: string;
+  titleEn?: string | null;
+  descriptionEn?: string | null;
+  longDescriptionEn?: string | null;
+  locationEn?: string | null;
+  imageAltEn?: string | null;
+  categoryEn?: string | null;
 };
 
 type EventAdminFormProps = {
@@ -40,6 +46,12 @@ const emptyValues: EventFormValues = {
   imageUrl: "",
   imageAlt: "",
   category: "",
+  titleEn: "",
+  descriptionEn: "",
+  longDescriptionEn: "",
+  locationEn: "",
+  imageAltEn: "",
+  categoryEn: "",
 };
 
 export function EventAdminForm({
@@ -168,6 +180,34 @@ export function EventAdminForm({
           maxLength={180}
         />
       </FormField>
+
+      <fieldset className="space-y-5 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
+        <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">
+          İngilizce (opsiyonel)
+        </legend>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <FormField label="Başlık (EN)" htmlFor="event-title-en">
+            <Input id="event-title-en" name="titleEn" defaultValue={defaultValues.titleEn ?? ""} maxLength={140} />
+          </FormField>
+          <FormField label="Kategori (EN)" htmlFor="event-category-en">
+            <Input id="event-category-en" name="categoryEn" defaultValue={defaultValues.categoryEn ?? ""} maxLength={80} />
+          </FormField>
+        </div>
+        <FormField label="Kısa açıklama (EN)" htmlFor="event-description-en">
+          <Textarea id="event-description-en" name="descriptionEn" defaultValue={defaultValues.descriptionEn ?? ""} maxLength={320} className="min-h-24" />
+        </FormField>
+        <FormField label="Detaylı açıklama (EN)" htmlFor="event-long-description-en">
+          <Textarea id="event-long-description-en" name="longDescriptionEn" defaultValue={defaultValues.longDescriptionEn ?? ""} maxLength={5000} className="min-h-36" />
+        </FormField>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <FormField label="Konum (EN)" htmlFor="event-location-en">
+            <Input id="event-location-en" name="locationEn" defaultValue={defaultValues.locationEn ?? ""} maxLength={180} />
+          </FormField>
+          <FormField label="Görsel alt metni (EN)" htmlFor="event-image-alt-en">
+            <Input id="event-image-alt-en" name="imageAltEn" defaultValue={defaultValues.imageAltEn ?? ""} maxLength={180} />
+          </FormField>
+        </div>
+      </fieldset>
 
       {state.message ? (
         <p

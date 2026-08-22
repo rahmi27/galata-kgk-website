@@ -13,11 +13,14 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 
 type SponsorFormValues = {
   name: string;
+  nameEn?: string | null;
   websiteUrl: string;
   description: string;
+  descriptionEn?: string | null;
   tierId: number | "new" | "";
   logoUrl: string;
   logoAlt: string;
+  logoAltEn?: string | null;
   order: number;
 };
 
@@ -34,11 +37,14 @@ type SponsorAdminFormProps = {
 
 const emptyValues: SponsorFormValues = {
   name: "",
+  nameEn: "",
   websiteUrl: "",
   description: "",
+  descriptionEn: "",
   tierId: "",
   logoUrl: "",
   logoAlt: "",
+  logoAltEn: "",
   order: 0,
 };
 
@@ -120,19 +126,15 @@ export function SponsorAdminForm({
       </div>
 
       {tierSelection === "new" ? (
-        <FormField label="Yeni Tier Adı" htmlFor="sponsor-new-tier">
-          <Input
-            id="sponsor-new-tier"
-            name="newTierName"
-            placeholder="Örn. Ana Sponsor"
-            minLength={2}
-            maxLength={80}
-            required
-          />
-          <p className="text-xs leading-5 text-primary-500 dark:text-primary-200">
-            Aynı ad farklı büyük/küçük harfle mevcutsa var olan tier kullanılır.
-          </p>
-        </FormField>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <FormField label="Yeni Tier Adı" htmlFor="sponsor-new-tier">
+            <Input id="sponsor-new-tier" name="newTierName" placeholder="Örn. Ana Sponsor" minLength={2} maxLength={80} required />
+            <p className="text-xs leading-5 text-primary-500 dark:text-primary-200">Aynı ad farklı büyük/küçük harfle mevcutsa var olan tier kullanılır.</p>
+          </FormField>
+          <FormField label="Yeni Tier Adı — İngilizce (opsiyonel)" htmlFor="sponsor-new-tier-en">
+            <Input id="sponsor-new-tier-en" name="newTierNameEn" placeholder="E.g. Main Sponsor" minLength={2} maxLength={80} />
+          </FormField>
+        </div>
       ) : null}
 
       <Link
@@ -178,6 +180,19 @@ export function SponsorAdminForm({
           maxLength={180}
         />
       </FormField>
+
+      <fieldset className="space-y-5 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
+        <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">İngilizce (opsiyonel)</legend>
+        <FormField label="Sponsor adı (EN)" htmlFor="sponsor-name-en">
+          <Input id="sponsor-name-en" name="nameEn" defaultValue={defaultValues.nameEn ?? ""} maxLength={120} />
+        </FormField>
+        <FormField label="Kısa açıklama (EN)" htmlFor="sponsor-description-en">
+          <Textarea id="sponsor-description-en" name="descriptionEn" defaultValue={defaultValues.descriptionEn ?? ""} maxLength={320} className="min-h-24" />
+        </FormField>
+        <FormField label="Logo alt metni (EN)" htmlFor="sponsor-logo-alt-en">
+          <Input id="sponsor-logo-alt-en" name="logoAltEn" defaultValue={defaultValues.logoAltEn ?? ""} maxLength={180} />
+        </FormField>
+      </fieldset>
 
       <div className="max-w-40">
         <FormField

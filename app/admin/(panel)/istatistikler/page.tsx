@@ -68,6 +68,7 @@ export default async function AdminStatsPage() {
                     action={updateAction}
                     statId={stat.id}
                     label={stat.label}
+                    labelEn={stat.labelEn}
                     value={stat.value}
                     order={stat.order}
                   />

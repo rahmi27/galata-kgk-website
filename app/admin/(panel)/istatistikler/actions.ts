@@ -7,10 +7,11 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { validateSiteStatForm } from "@/lib/admin-validation";
 import { notifyIndexNow } from "@/lib/indexnow";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 
 async function revalidateSiteStats() {
-  revalidatePath("/");
-  revalidatePath("/sponsorlar");
+  revalidatePublicPath("/");
+  revalidatePublicPath("/sponsorlar");
   revalidatePath("/admin/istatistikler");
   await notifyIndexNow(["/", "/sponsorlar"]);
 }

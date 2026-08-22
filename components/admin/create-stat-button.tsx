@@ -81,6 +81,12 @@ export function CreateStatButton({ suggestedOrder }: { suggestedOrder: number })
                 required
               />
             </div>
+            <div className="space-y-2 sm:col-span-2">
+              <label htmlFor="new-stat-label-en" className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-50">
+                Etiket — İngilizce (opsiyonel)
+              </label>
+              <Input id="new-stat-label-en" name="labelEn" maxLength={80} placeholder="E.g. Active Members" />
+            </div>
             <div className="space-y-2">
               <label
                 htmlFor="new-stat-value"

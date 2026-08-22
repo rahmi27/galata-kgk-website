@@ -12,9 +12,12 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 
 type PartnerClubFormValues = {
   name: string;
+  nameEn?: string | null;
   shortDescription: string;
+  shortDescriptionEn?: string | null;
   logoUrl: string;
   logoAlt: string;
+  logoAltEn?: string | null;
   order: number;
 };
 
@@ -30,9 +33,12 @@ type PartnerClubAdminFormProps = {
 
 const emptyValues: PartnerClubFormValues = {
   name: "",
+  nameEn: "",
   shortDescription: "",
+  shortDescriptionEn: "",
   logoUrl: "",
   logoAlt: "",
+  logoAltEn: "",
   order: 0,
 };
 
@@ -108,6 +114,19 @@ export function PartnerClubAdminForm({
           required
         />
       </FormField>
+
+      <fieldset className="space-y-5 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
+        <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">İngilizce (opsiyonel)</legend>
+        <FormField label="Partner kulüp adı (EN)" htmlFor="partner-name-en">
+          <Input id="partner-name-en" name="nameEn" defaultValue={defaultValues.nameEn ?? ""} maxLength={120} />
+        </FormField>
+        <FormField label="Kısa açıklama (EN)" htmlFor="partner-description-en">
+          <Textarea id="partner-description-en" name="shortDescriptionEn" defaultValue={defaultValues.shortDescriptionEn ?? ""} maxLength={500} className="min-h-28" />
+        </FormField>
+        <FormField label="Logo alt metni (EN)" htmlFor="partner-logo-alt-en">
+          <Input id="partner-logo-alt-en" name="logoAltEn" defaultValue={defaultValues.logoAltEn ?? ""} maxLength={180} />
+        </FormField>
+      </fieldset>
 
       <div className="max-w-40">
         <FormField

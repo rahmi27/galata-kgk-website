@@ -6,15 +6,17 @@ import {
   type ContentEditorSection,
 } from "@/components/admin/content-editor-form";
 import { getAdminClubSocialLinks } from "@/lib/club-social-links";
-import { getAdminSiteContentMap } from "@/lib/site-content";
+import { getAdminSiteContentMap, getAdminSiteContentRows, getRawEnglishSiteContentMap } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminContactContentPage() {
-  const [values, socialLinks] = await Promise.all([
+  const [values, rows, socialLinks] = await Promise.all([
     getAdminSiteContentMap(),
+    getAdminSiteContentRows(),
     getAdminClubSocialLinks(),
   ]);
+  const englishValues = getRawEnglishSiteContentMap(rows);
   const sections: ContentEditorSection[] = [
     {
       title: "Kampüs adresi",
@@ -32,6 +34,10 @@ export default async function AdminContactContentPage() {
       ],
     },
   ];
+  const localizedSections = sections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => ({ ...field, valueEn: englishValues[field.name] ?? "" })),
+  }));
 
   return (
     <>
@@ -42,7 +48,7 @@ export default async function AdminContactContentPage() {
       />
       <ContentEditorForm
         action={updateContactContentAction}
-        sections={sections}
+        sections={localizedSections}
         submitLabel="İletişim adresini kaydet"
       />
       <ClubSocialLinksAdmin links={socialLinks} />

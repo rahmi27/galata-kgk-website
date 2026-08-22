@@ -11,6 +11,7 @@ import { initialAdminActionState } from "@/lib/admin-action-state";
 export function SponsorTierForm({
   action,
   defaultName = "",
+  defaultNameEn = "",
   defaultOrder = 0,
   submitLabel,
   resetOnSuccess = false,
@@ -20,6 +21,7 @@ export function SponsorTierForm({
     formData: FormData,
   ) => Promise<AdminActionState>;
   defaultName?: string;
+  defaultNameEn?: string | null;
   defaultOrder?: number;
   submitLabel: string;
   resetOnSuccess?: boolean;
@@ -54,6 +56,12 @@ export function SponsorTierForm({
             maxLength={80}
             required
           />
+        </label>
+      </div>
+      <div className="space-y-2">
+        <label className="font-heading text-sm font-semibold text-primary-900 dark:text-primary-50">
+          Tier Adı — İngilizce (opsiyonel)
+          <Input name="nameEn" defaultValue={defaultNameEn ?? ""} className="mt-2" maxLength={80} />
         </label>
       </div>
       <div className="space-y-2">

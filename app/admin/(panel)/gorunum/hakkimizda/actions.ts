@@ -5,6 +5,7 @@ import { revalidatePath, updateTag } from "next/cache";
 import type { AdminActionState } from "@/lib/admin-action-state";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePublicPath } from "@/lib/revalidate-public";
 import {
   repeatableSiteContentDefinitions,
   staticSiteContentDefinitions,
@@ -65,6 +66,25 @@ function parseMilestones(formData: FormData): MilestoneInput[] {
   });
 }
 
+function parseEnglishMilestones(formData: FormData, expectedLength: number): Array<MilestoneInput | null> {
+  const parsed = JSON.parse(formData.get("timelineMilestonesEn")?.toString() ?? "[]") as unknown;
+  if (!Array.isArray(parsed) || parsed.length !== expectedLength) {
+    throw new Error("İngilizce kilometre taşı listesi geçersiz.");
+  }
+  return parsed.map((item) => {
+    if (!item || typeof item !== "object") throw new Error("İngilizce kilometre taşı bilgileri geçersiz.");
+    const candidate = item as Record<string, unknown>;
+    const year = typeof candidate.year === "string" ? candidate.year.trim() : "";
+    const title = typeof candidate.title === "string" ? candidate.title.trim() : "";
+    const description = typeof candidate.description === "string" ? candidate.description.trim() : "";
+    if (!year && !title && !description) return null;
+    if (year.length < 2 || year.length > 40 || title.length < 2 || title.length > 160 || description.length < 2 || description.length > 1000) {
+      throw new Error("İngilizce kilometre taşı ya tamamen boş olmalı ya da tüm alanları geçerli olmalıdır.");
+    }
+    return { year, title, description };
+  });
+}
+
 export async function updateAboutContentAction(
   _previousState: AdminActionState,
   formData: FormData,
@@ -83,16 +103,20 @@ export async function updateAboutContentAction(
         throw new Error(`${definition.label} çok uzun.`);
       }
 
-      return { definition, value };
+      const valueEn = formData.get(`${definition.key}.en`)?.toString().trim() || null;
+      if (valueEn && valueEn.length > 5000) throw new Error(`${definition.label} İngilizce metni çok uzun.`);
+      return { definition, value, valueEn };
     });
     const milestones = parseMilestones(formData);
+    const milestonesEn = parseEnglishMilestones(formData, milestones.length);
 
     await prisma.$transaction([
-      ...updates.map(({ definition, value }) =>
+      ...updates.map(({ definition, value, valueEn }) =>
         prisma.siteContent.upsert({
           where: { key: definition.key },
           update: {
             value,
+            valueEn,
             label: definition.label,
             page: definition.page,
             type: definition.type,
@@ -100,6 +124,7 @@ export async function updateAboutContentAction(
           create: {
             ...definition,
             value,
+            valueEn,
           },
         }),
       ),
@@ -119,6 +144,7 @@ export async function updateAboutContentAction(
         data: milestones.map((milestone, index) => ({
           key: `about.timeline.milestone.${String(index + 1).padStart(3, "0")}`,
           value: JSON.stringify(milestone),
+          valueEn: milestonesEn[index] ? JSON.stringify(milestonesEn[index]) : null,
           type: "richtext" as const,
           page: "hakkimizda",
           label: "Zaman tüneli kilometre taşı",
@@ -127,7 +153,7 @@ export async function updateAboutContentAction(
     ]);
 
     updateTag("site-content");
-    revalidatePath("/hakkimizda");
+    revalidatePublicPath("/hakkimizda");
     revalidatePath("/admin/gorunum/hakkimizda");
 
     return {

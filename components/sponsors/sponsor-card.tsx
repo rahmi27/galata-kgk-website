@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, Building2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -11,6 +12,7 @@ type SponsorCardProps = {
   logoAlt?: string | null;
   websiteUrl?: string | null;
   description?: string | null;
+  externalWebsiteLabel?: string;
   featured?: boolean;
 };
 
@@ -20,8 +22,10 @@ export function SponsorCard({
   logoAlt,
   websiteUrl,
   description,
+  externalWebsiteLabel,
   featured = false,
 }: SponsorCardProps) {
+  const t = useTranslations("common");
   const safeWebsiteUrl = getSafeHttpUrl(websiteUrl);
   const logo = (
     <div
@@ -37,7 +41,7 @@ export function SponsorCard({
       {logoUrl ? (
         <Image
           src={logoUrl}
-          alt={logoAlt ?? `${name} logosu`}
+          alt={logoAlt ?? t("logoAlt", { name })}
           width={featured ? 360 : 240}
           height={featured ? 160 : 96}
           sizes={featured ? "(min-width: 1024px) 30vw, 50vw" : "(min-width: 1024px) 20vw, 50vw"}
@@ -62,7 +66,7 @@ export function SponsorCard({
           href={safeWebsiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${name} web sitesini yeni sekmede aç`}
+          aria-label={externalWebsiteLabel ?? t("externalWebsite", { name })}
         >
           {logo}
         </Link>

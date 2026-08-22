@@ -1,6 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, Handshake } from "lucide-react";
+
+import { Link } from "@/i18n/navigation";
 
 type PartnerClubCardProps = {
   name: string;
@@ -17,10 +19,12 @@ export function PartnerClubCard({
   logoAlt,
   shortDescription,
 }: PartnerClubCardProps) {
+  const t = useTranslations();
+
   return (
     <Link
       data-reveal=""
-      href={`/is-birlikleri/${slug}`}
+      href={{ pathname: "/is-birlikleri/[slug]", params: { slug } }}
       className="card-gradient-edge group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card shadow-[0_24px_70px_-52px_rgba(27,42,94,0.7)] transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_30px_80px_-48px_rgba(27,42,94,0.85)] dark:border-white/10 dark:bg-white/[0.035]"
     >
       <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden bg-primary-50/70 p-8 dark:bg-primary-900/55">
@@ -30,7 +34,7 @@ export function PartnerClubCard({
         />
         <Image
           src={logoUrl}
-          alt={logoAlt ?? `${name} logosu`}
+          alt={logoAlt ?? t("common.logoAlt", { name })}
           width={320}
           height={220}
           sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 90vw"
@@ -49,7 +53,7 @@ export function PartnerClubCard({
           {shortDescription}
         </p>
         <span className="mt-6 inline-flex items-center gap-2 font-heading text-sm font-bold text-accent-700 dark:text-accent-300">
-          İş birliklerini incele
+          {t("common.details")}
           <ArrowUpRight
             className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             aria-hidden="true"
