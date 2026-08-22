@@ -125,8 +125,8 @@ test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", 
   assert.match(localeLayout, /clientMessageNamespaces/);
   assert.match(localeLayout, /messages=\{clientMessages\}/);
   assert.match(rootDocument, /<html lang=\{locale\}/);
-  assert.match(revalidation, /localizedPublicPath\(path, "tr"\)/);
-  assert.match(revalidation, /localizedPublicPath\(path, "en"\)/);
+  assert.match(revalidation, /for \(const locale of routing\.locales\)/);
+  assert.match(revalidation, /`\/\$\{locale\}\$\{normalizedPath\}`/);
 });
 
 test("404 ve hata ekranları locale mesajlarını sunucu/istemci kataloglarından okur", async () => {
