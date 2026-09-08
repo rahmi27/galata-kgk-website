@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { getClientIpHash } from "@/lib/client-ip";
 import { isHoneypotTriggered } from "@/lib/form-spam-protection";
 import { validateMembershipApplication } from "@/lib/form-validation";
+import { sendMembershipNotification } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { PRIVACY_NOTICE_VERSION } from "@/lib/privacy";
 import {
@@ -84,13 +85,17 @@ export async function POST(request: Request) {
       );
     }
 
-    await prisma.membershipApplication.create({
+    const application = await prisma.membershipApplication.create({
       data: {
         ...validation.data,
         ipHash,
         privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
         privacyAcknowledgedAt: new Date(),
       },
+    });
+
+    after(async () => {
+      await sendMembershipNotification(validation.data, application.id);
     });
 
     return NextResponse.json(

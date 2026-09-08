@@ -33,6 +33,22 @@ export default async function AdminContactContentPage() {
         },
       ],
     },
+    {
+      title: "Kulüp e-posta adresi",
+      description:
+        "Bu adres İletişim sayfasında ve footer alanında ziyaretçilere gösterilir. Form bildirimlerinin hedefi Vercel ortam değişkeninden ayrıca korunur.",
+      fields: [
+        {
+          name: "contact.email.value",
+          label: "E-posta adresi",
+          value: values["contact.email.value"],
+          kind: "input",
+          required: true,
+          maxLength: 254,
+          hint: "Örnek: info@galatakariyervegirisimcilik.com",
+        },
+      ],
+    },
   ];
   const localizedSections = sections.map((section) => ({
     ...section,
@@ -44,12 +60,12 @@ export default async function AdminContactContentPage() {
       <AdminPageHeader
         eyebrow="Görünüm Yönetimi"
         title="İletişim"
-        description="İletişim sayfasındaki kampüs adresini, harita hedefini ve kulüp sosyal medya hesaplarını yönetin."
+        description="İletişim sayfasındaki kampüs adresini, e-posta adresini, harita hedefini ve kulüp sosyal medya hesaplarını yönetin."
       />
       <ContentEditorForm
         action={updateContactContentAction}
         sections={localizedSections}
-        submitLabel="İletişim adresini kaydet"
+        submitLabel="İletişim bilgilerini kaydet"
       />
       <ClubSocialLinksAdmin links={socialLinks} />
     </>

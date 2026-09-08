@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ContactForm } from "@/components/contact/contact-form";
@@ -95,6 +95,22 @@ export default async function ContactPage({
                         </span>
                         <span className="mt-1.5 block text-sm leading-6 text-primary-100">
                           {details.address.value}
+                        </span>
+                      </span>
+                    </Link>
+                    <Link
+                      href={`mailto:${details.email.value}`}
+                      className="group flex gap-4"
+                    >
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent-300 transition-colors group-hover:bg-accent group-hover:text-accent-foreground">
+                        <Mail className="size-5" aria-hidden="true" />
+                      </span>
+                      <span>
+                        <span className="block font-heading text-xs font-bold uppercase tracking-[0.14em] text-primary-300">
+                          {t("clubEmail")}
+                        </span>
+                        <span className="mt-1.5 block break-all text-sm leading-6 text-primary-100">
+                          {details.email.value}
                         </span>
                       </span>
                     </Link>

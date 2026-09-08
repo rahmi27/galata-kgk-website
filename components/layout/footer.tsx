@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Mail } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { BrandMountainEcho } from "@/components/effects/brand-mountain-motif";
@@ -45,6 +45,15 @@ export function Footer({ content }: { content: SiteChromeContent }) {
             <p className="mt-6 max-w-xl text-base leading-7 text-primary-200">
               {footer.description}
             </p>
+
+            <NextLink
+              href={`mailto:${footer.email}`}
+              className="mt-5 inline-flex items-center gap-2 break-all text-sm font-semibold text-primary-100 transition-colors hover:text-white"
+              aria-label={t("footer.emailAriaLabel")}
+            >
+              <Mail className="size-4 shrink-0 text-accent-300" aria-hidden="true" />
+              {footer.email}
+            </NextLink>
 
             <div className="mt-8 flex items-center gap-3">
               {footer.socials.map((social) => {

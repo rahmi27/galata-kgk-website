@@ -126,6 +126,13 @@ export const staticSiteContentDefinitions: SiteContentDefinition[] = [
     label: "İletişim adresi",
   },
   {
+    key: "contact.email.value",
+    value: contactContent.details.email.value,
+    type: "text",
+    page: "iletisim",
+    label: "Kulüp e-posta adresi",
+  },
+  {
     key: "home.hero.eyebrow",
     value: homeContent.hero.eyebrow,
     type: "text",
@@ -366,6 +373,7 @@ const englishValues: Record<string, string> = {
   "footer.institution": enMessages.footer.institution,
   "footer.institutionHref": siteContent.footer.institutionHref,
   "contact.address.value": contactContent.details.address.value,
+  "contact.email.value": contactContent.details.email.value,
   "home.hero.eyebrow": enMessages.home.hero.eyebrow,
   "home.hero.title": enMessages.home.hero.title,
   "home.hero.emphasis": enMessages.home.hero.emphasis,

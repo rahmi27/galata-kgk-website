@@ -45,7 +45,8 @@
     "institution": "Istanbul Galata University",
     "copyright": "© {year} Istanbul Galata University Career and Entrepreneurship Club. All rights reserved.",
     "subnavAriaLabel": "Footer navigation",
-    "privacy": "Cookie and Analytics Notice"
+    "privacy": "Cookie and Analytics Notice",
+    "emailAriaLabel": "Email the club"
   },
   "notFound": {
     "title": "This page has moved beyond the map.",
@@ -222,6 +223,7 @@
     "detailsTitle": "We would love to hear from you.",
     "detailsDescription": "Share your question or idea and our club team will get back to you as soon as possible.",
     "address": "Address",
+    "clubEmail": "Club email",
     "socials": "Follow us",
     "mapEyebrow": "Campus Location",
     "mapTitle": "Find us on the map.",

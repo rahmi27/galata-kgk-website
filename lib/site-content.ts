@@ -62,6 +62,7 @@ export type SiteChromeContent = {
     copyright: string;
     institution: string;
     institutionHref: string;
+    email: string;
     socials: Array<{
       platform: string;
       label: string;
@@ -314,6 +315,10 @@ export function getContactContentFromRows(
         ...contactContent.details.address,
         value: values["contact.address.value"],
       },
+      email: {
+        ...contactContent.details.email,
+        value: values["contact.email.value"],
+      },
       socials: socialLinks.map((social) => ({
         platform: social.platform,
         label: social.label,
@@ -368,6 +373,7 @@ export async function getSiteChromeContent(locale = "tr"): Promise<SiteChromeCon
       copyright: values["footer.copyright"],
       institution: values["footer.institution"],
       institutionHref: values["footer.institutionHref"],
+      email: values["contact.email.value"],
       socials,
     },
   };

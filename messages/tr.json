@@ -45,7 +45,8 @@
     "institution": "İstanbul Galata Üniversitesi",
     "copyright": "© {year} İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü. Tüm hakları saklıdır.",
     "subnavAriaLabel": "Alt menü",
-    "privacy": "Çerez ve Analitik Bilgilendirmesi"
+    "privacy": "Çerez ve Analitik Bilgilendirmesi",
+    "emailAriaLabel": "Kulübe e-posta gönder"
   },
   "notFound": {
     "title": "Aradığın sayfa burada değil.",
@@ -222,6 +223,7 @@
     "detailsTitle": "Mesajını bekliyoruz.",
     "detailsDescription": "Sorunu veya fikrini paylaş; kulüp ekibimiz en kısa sürede seninle iletişime geçsin.",
     "address": "Adres",
+    "clubEmail": "Kulüp e-postası",
     "socials": "Sosyal medyada takip et",
     "mapEyebrow": "Kampüs Konumu",
     "mapTitle": "Bizi haritada bulun.",

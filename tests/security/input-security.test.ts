@@ -15,9 +15,14 @@ import {
 import { shouldBlockAdminLogin } from "../../lib/rate-limit-policy";
 import {
   buildGoogleMapsUrls,
+  getSafeEmailAddress,
   getSafeHttpUrl,
   isAllowedGoogleMapsUrl,
 } from "../../lib/url-security";
+import {
+  createContactNotification,
+  createMembershipNotification,
+} from "../../lib/mail-content";
 
 test("React, yönetici kaynaklı metinlerde HTML/XSS yükünü escape eder", () => {
   const payload = `<img src=x onerror=alert(1)><script>alert("xss")</script>`;
@@ -120,6 +125,39 @@ test("Google Haritalar URL'si sabit izinli host üzerinde üretilir", () => {
   assert.equal(embed.hostname, "www.google.com");
   assert.equal(embed.searchParams.get("q"), maliciousAddress);
   assert.equal(new URL(directionsUrl).hostname, "www.google.com");
+});
+
+test("kulüp e-posta adresi yalnızca güvenli e-posta biçimini kabul eder", () => {
+  assert.equal(getSafeEmailAddress(" INFO@Example.COM "), "info@example.com");
+  assert.equal(getSafeEmailAddress("javascript:alert(1)"), null);
+  assert.equal(getSafeEmailAddress("a\r\nBcc:evil@example.com"), null);
+});
+
+test("form e-posta bildirimleri kullanıcı girdisini HTML içinde escape eder", () => {
+  const contact = createContactNotification(
+    {
+      name: `<img src=x onerror=alert(1)>`,
+      email: "security@example.com",
+      message: `<script>alert("xss")</script>`,
+    },
+    7,
+  );
+  const membership = createMembershipNotification(
+    {
+      fullName: "Test Kullanıcısı",
+      email: "security@example.com",
+      studentNumber: null,
+      department: "Bilgisayar Mühendisliği",
+      phone: null,
+      motivation: `<script>alert("xss")</script>`,
+    },
+    9,
+  );
+
+  assert.equal(contact.html.includes("<script>"), false);
+  assert.match(contact.html, /&lt;script&gt;/);
+  assert.equal(membership.html.includes("<script>"), false);
+  assert.match(membership.html, /&lt;script&gt;/);
 });
 
 test("admin girişi beş kullanıcı denemesinde ve yirmi IP denemesinde kilitlenir", () => {

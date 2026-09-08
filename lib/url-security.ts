@@ -3,6 +3,18 @@ const GOOGLE_MAPS_HOSTS = new Set([
   "maps.google.com",
 ]);
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function getSafeEmailAddress(value: string | null | undefined) {
+  const email = value?.trim().toLowerCase();
+
+  if (!email || email.length > 254 || !EMAIL_PATTERN.test(email)) {
+    return null;
+  }
+
+  return email;
+}
+
 export function getSafeHttpUrl(value: string | null | undefined) {
   if (!value) {
     return null;
