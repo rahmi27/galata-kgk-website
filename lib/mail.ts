@@ -103,6 +103,72 @@ async function sendNotification(
   }
 }
 
+const DELIVERY_TEST_RECIPIENTS = new Set([
+  "rahmiatillaavci@gmail.com",
+  "rakofib@gmail.com",
+  "ainqs.mail@gmail.com",
+]);
+
+export async function sendPlainDeliveryTest(recipient: string) {
+  const safeRecipient = getSafeEmailAddress(recipient);
+  const configuration = readMailConfiguration();
+
+  if (!safeRecipient || !DELIVERY_TEST_RECIPIENTS.has(safeRecipient)) {
+    throw new Error("Teslimat testi alıcısına izin verilmiyor.");
+  }
+
+  if (!configuration) {
+    throw new Error("SMTP ortam değişkenleri tamamlanmamış.");
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: configuration.host,
+    port: configuration.port,
+    secure: configuration.secure,
+    auth: {
+      user: configuration.user,
+      pass: configuration.password,
+    },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
+    tls: {
+      minVersion: "TLSv1.2",
+      servername: configuration.host,
+    },
+  });
+
+  try {
+    const result = await transporter.sendMail({
+      from: {
+        name: "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
+        address: configuration.user,
+      },
+      to: safeRecipient,
+      subject: "Galata KGK e-posta teslimat testi",
+      text: [
+        "Merhaba,",
+        "",
+        "Bu ileti, info@galatakariyervegirisimcilik.com adresinin e-posta teslimat yapılandırmasını doğrulamak amacıyla gönderilen tek seferlik bir testtir.",
+        "",
+        "Yanıtlamanız gerekmez.",
+        "",
+        "İstanbul Galata Üniversitesi Kariyer ve Girişimcilik Kulübü",
+      ].join("\n"),
+      disableFileAccess: true,
+      disableUrlAccess: true,
+    });
+
+    return {
+      accepted: result.accepted.map(String),
+      rejected: result.rejected.map(String),
+      messageId: result.messageId,
+    };
+  } finally {
+    transporter.close();
+  }
+}
+
 export function sendContactNotification(
   submission: ContactSubmissionInput,
   submissionId: number,
