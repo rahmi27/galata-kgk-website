@@ -12,7 +12,7 @@ import {
 } from "@/lib/mail-content";
 import { getSafeEmailAddress } from "@/lib/url-security";
 
-const DEFAULT_SMTP_HOST = "marduk.mx.amelu.org";
+const DEFAULT_SMTP_HOST = "smtp.zeptomail.eu";
 const DEFAULT_SMTP_PORT = 465;
 const DEFAULT_MAILBOX = "info@galatakariyervegirisimcilik.com";
 
@@ -20,8 +20,9 @@ type MailConfiguration = {
   host: string;
   port: number;
   secure: boolean;
-  user: string;
+  authUser: string;
   password: string;
+  fromAddress: string;
   fromName: string;
   notificationTo: string;
 };
@@ -30,13 +31,16 @@ function readMailConfiguration(): MailConfiguration | null {
   const host = process.env.SMTP_HOST?.trim() || DEFAULT_SMTP_HOST;
   const port = Number.parseInt(process.env.SMTP_PORT?.trim() || String(DEFAULT_SMTP_PORT), 10);
   const secure = (process.env.SMTP_SECURE?.trim().toLowerCase() || "true") !== "false";
-  const user = getSafeEmailAddress(process.env.SMTP_USER?.trim() || DEFAULT_MAILBOX);
+  const authUser = process.env.SMTP_USER?.trim() || DEFAULT_MAILBOX;
   const password = process.env.SMTP_PASSWORD;
+  const fromAddress = getSafeEmailAddress(
+    process.env.MAIL_FROM_ADDRESS?.trim() || DEFAULT_MAILBOX,
+  );
   const notificationTo = getSafeEmailAddress(
     process.env.MAIL_NOTIFICATION_TO?.trim() || DEFAULT_MAILBOX,
   );
 
-  if (!host || !Number.isInteger(port) || port < 1 || port > 65535 || !user || !password || !notificationTo) {
+  if (!host || !Number.isInteger(port) || port < 1 || port > 65535 || !authUser || !password || !fromAddress || !notificationTo) {
     return null;
   }
 
@@ -44,8 +48,9 @@ function readMailConfiguration(): MailConfiguration | null {
     host,
     port,
     secure,
-    user,
+    authUser,
     password,
+    fromAddress,
     fromName: process.env.MAIL_FROM_NAME?.trim() || "Galata KGK Web Sitesi",
     notificationTo,
   };
@@ -67,7 +72,7 @@ async function sendNotification(
     port: configuration.port,
     secure: configuration.secure,
     auth: {
-      user: configuration.user,
+      user: configuration.authUser,
       pass: configuration.password,
     },
     connectionTimeout: 10_000,
@@ -83,7 +88,7 @@ async function sendNotification(
     await transporter.sendMail({
       from: {
         name: configuration.fromName,
-        address: configuration.user,
+        address: configuration.fromAddress,
       },
       to: configuration.notificationTo,
       replyTo,
