@@ -19,6 +19,7 @@ import {
   PanelBottom,
   PanelTop,
   ShieldCheck,
+  Sparkles,
   UserRoundCheck,
   UsersRound,
   X,
@@ -39,6 +40,11 @@ const navigation = [
     label: "Etkinlikler",
     href: "/admin/etkinlikler",
     icon: CalendarDays,
+  },
+  {
+    label: "Etkinlik Modu",
+    href: "/admin/etkinlik-modu",
+    icon: Sparkles,
   },
   {
     label: "Üyeler",
