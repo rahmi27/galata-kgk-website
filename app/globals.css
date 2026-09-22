@@ -155,6 +155,19 @@
   }
 }
 
+@keyframes event-mode-nav-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(232, 93, 44, 0.15), 0 10px 24px -16px rgba(232, 93, 44, 0.7); }
+  50% { box-shadow: 0 0 22px rgba(232, 93, 44, 0.32), 0 14px 30px -16px rgba(232, 93, 44, 0.95); }
+}
+
+.event-mode-nav-button {
+  animation: event-mode-nav-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-mode-nav-button { animation: none; }
+}
+
 @keyframes ambient-field-a {
   0%,
   100% {

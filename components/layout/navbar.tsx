@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight, ChevronDown, Handshake, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Handshake, Menu, PartyPopper, X } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const partnerRouteHrefs = ["/sponsorlar", "/is-birlikleri"] as const;
 
-export function Navbar({ content }: { content: SiteChromeContent }) {
+export function Navbar({ content, activeEventSession }: { content: SiteChromeContent; activeEventSession: { id: number; title: string } | null }) {
   const t = useTranslations("nav");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -193,6 +193,14 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          {activeEventSession ? (
+            <Button asChild className="event-mode-nav-button hidden lg:inline-flex" variant="secondary">
+              <Link href="/etkinlik" locale={locale}>
+                <PartyPopper className="size-4" aria-hidden="true" />
+                <span className="max-w-36 truncate">{activeEventSession.title}</span>
+              </Link>
+            </Button>
+          ) : null}
           <LanguageSwitcher />
           <ThemeToggle ariaLabel={common("themeToggle")} />
           <Button
@@ -237,6 +245,14 @@ export function Navbar({ content }: { content: SiteChromeContent }) {
             className="mx-auto flex max-w-7xl flex-col gap-1"
             aria-label={navigation.mobileAriaLabel}
           >
+            {activeEventSession ? (
+              <Button asChild className="event-mode-nav-button mb-3 w-full" variant="secondary">
+                <Link href="/etkinlik" locale={locale} onClick={() => setIsMenuOpen(false)}>
+                  <PartyPopper className="size-4" aria-hidden="true" />
+                  {activeEventSession.title}
+                </Link>
+              </Button>
+            ) : null}
             {navigation.items.map((item) => {
               if (item.id === "ortaklarimiz") {
                 const isActive = partnerLinks.some((link) =>

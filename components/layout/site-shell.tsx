@@ -14,9 +14,10 @@ import type { SiteChromeContent } from "@/lib/site-content";
 type SiteShellProps = {
   children: React.ReactNode;
   content: SiteChromeContent;
+  activeEventSession: { id: number; title: string } | null;
 };
 
-export function SiteShell({ children, content }: SiteShellProps) {
+export function SiteShell({ children, content, activeEventSession }: SiteShellProps) {
   const pathname = usePathname();
   const contentRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
@@ -60,7 +61,7 @@ export function SiteShell({ children, content }: SiteShellProps) {
         variant={particleVariant}
         className="ambient-particles--global"
       />
-      <Navbar content={content} />
+      <Navbar content={content} activeEventSession={activeEventSession} />
       <div
         id="site-content"
         ref={contentRef}
