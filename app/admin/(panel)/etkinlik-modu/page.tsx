@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle2, Download, Radio, UsersRound } from "lucide-react";
+import { BarChart3, CheckCircle2, Download, Gift, MessageSquareText, Presentation, Radio, Sparkles, UsersRound } from "lucide-react";
 
 import {
   saveEventSessionAction,
@@ -55,6 +55,14 @@ export default async function EventModeAdminPage({
           Değişiklik başarıyla kaydedildi.
         </p>
       ) : null}
+
+      <nav className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5" aria-label="Etkinlik modu yönetim bölümleri">
+        <AdminShortcut href="/admin/etkinlik-modu/quiz" label="Quiz" icon={Sparkles} />
+        <AdminShortcut href="/admin/etkinlik-modu/cekilis" label="Çekiliş" icon={Gift} />
+        <AdminShortcut href="/admin/etkinlik-modu/anket" label="Anket" icon={BarChart3} />
+        <AdminShortcut href="/admin/etkinlik-modu/geri-bildirim" label="Geri bildirim" icon={MessageSquareText} />
+        <AdminShortcut href="/etkinlik/ekran" label="Sahne ekranı" icon={Presentation} external />
+      </nav>
 
       <div className="mt-8 grid gap-7 xl:grid-cols-[minmax(0,1fr)_26rem]">
         <section className="space-y-5">
@@ -130,4 +138,8 @@ function Toggle({ name, label, defaultChecked }: { name: string; label: string; 
 
 function EmptyState() {
   return <div className="rounded-3xl border border-dashed border-primary-200 p-12 text-center"><UsersRound className="mx-auto size-8 text-primary-300" /><p className="mt-3 font-semibold">Henüz etkinlik oturumu yok.</p></div>;
+}
+
+function AdminShortcut({ href, label, icon: Icon, external = false }: { href: string; label: string; icon: typeof Sparkles; external?: boolean }) {
+  return <Button asChild variant="outline" className="h-auto justify-start gap-3 rounded-2xl px-4 py-3"><Link href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}><Icon className="size-5 text-accent" />{label}</Link></Button>;
 }

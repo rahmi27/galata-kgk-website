@@ -1,4 +1,5 @@
 import { getCurrentEventParticipant } from "@/lib/event-participant-session";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 async function currentPoll() {
@@ -21,6 +22,12 @@ export async function POST(request: Request) {
   const option = await prisma.pollOption.findFirst({ where: { id: pollOptionId, poll: { eventSessionId: participant.eventSessionId, isActive: true } }, select: { id: true, pollId: true } });
   if (!option) return Response.json({ error: "Seçenek bulunamadı." }, { status: 404 });
   const existing = await prisma.pollVote.findUnique({ where: { pollId_participantId: { pollId: option.pollId, participantId: participant.id } }, select: { id: true } });
-  if (!existing) await prisma.pollVote.create({ data: { pollId: option.pollId, pollOptionId: option.id, participantId: participant.id } });
+  if (!existing) {
+    try {
+      await prisma.pollVote.create({ data: { pollId: option.pollId, pollOptionId: option.id, participantId: participant.id } });
+    } catch (error) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002")) throw error;
+    }
+  }
   return Response.json({ success: true });
 }

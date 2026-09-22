@@ -1,4 +1,5 @@
 import { getCurrentEventParticipant } from "@/lib/event-participant-session";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -23,6 +24,14 @@ export async function POST(request: Request) {
   if (existing) return Response.json({ isCorrect: existing.isCorrect, alreadyAnswered: true });
 
   const isCorrect = question.correctOptionIndex === selectedOptionIndex;
-  await prisma.quizAnswer.create({ data: { participantId: participant.id, questionId, selectedOptionIndex, isCorrect } });
+  try {
+    await prisma.quizAnswer.create({ data: { participantId: participant.id, questionId, selectedOptionIndex, isCorrect } });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      const saved = await prisma.quizAnswer.findUnique({ where: { participantId_questionId: { participantId: participant.id, questionId } }, select: { isCorrect: true } });
+      return Response.json({ isCorrect: saved?.isCorrect ?? false, alreadyAnswered: true });
+    }
+    throw error;
+  }
   return Response.json({ isCorrect, alreadyAnswered: false });
 }

@@ -3,6 +3,7 @@ import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 import { EVENT_PARTICIPANT_COOKIE } from "@/lib/event-mode";
 import { prisma } from "@/lib/prisma";
@@ -52,7 +53,7 @@ export async function setParticipantSession(participantId: number, eventSessionI
   });
 }
 
-export async function getCurrentEventParticipant() {
+export const getCurrentEventParticipant = cache(async function getCurrentEventParticipant() {
   const store = await cookies();
   const token = store.get(EVENT_PARTICIPANT_COOKIE)?.value;
   const decoded = token ? decodeToken(token) : null;
@@ -65,7 +66,7 @@ export async function getCurrentEventParticipant() {
     },
     include: { eventSession: true },
   });
-}
+});
 
 export async function requireEventParticipant(locale = "tr") {
   const participant = await getCurrentEventParticipant();
