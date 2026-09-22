@@ -25,7 +25,10 @@ export const getActiveEventSession = unstable_cache(
       },
     }),
   ["active-event-session"],
-  { revalidate: 300, tags: [EVENT_MODE_CACHE_TAG] },
+  // Admin mutations invalidate this tag immediately. The daily fallback only
+  // covers out-of-band database edits and must not shorten every public page's
+  // ISR lifetime merely because the navbar consumes this value.
+  { revalidate: 86400, tags: [EVENT_MODE_CACHE_TAG] },
 );
 
 export function normalizeEventEmail(value: FormDataEntryValue | null) {

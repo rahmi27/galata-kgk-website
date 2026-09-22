@@ -31,9 +31,12 @@ test("public routes use a daily ISR fallback instead of five-minute rewrites", (
     "app/[locale]/etkinliklerimiz/page.tsx",
     "lib/site-content.ts",
     "lib/club-social-links.ts",
+    "lib/event-mode.ts",
   ]) {
     assert.doesNotMatch(read(file), /revalidate:\s*300\b/);
   }
+
+  assert.match(read("lib/event-mode.ts"), /revalidate:\s*86400\b/);
 });
 
 test("collaboration item mutations invalidate only their detail page", () => {
