@@ -164,6 +164,15 @@
   animation: event-mode-nav-pulse 2.4s ease-in-out infinite;
 }
 
+@keyframes event-winner-mix {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.025); opacity: .72; }
+}
+
+.event-winner-mixing {
+  animation: event-winner-mix 180ms ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .event-mode-nav-button { animation: none; }
 }
