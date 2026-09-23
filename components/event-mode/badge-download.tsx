@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import confetti from "canvas-confetti";
-import { Download, Instagram, PartyPopper } from "lucide-react";
+import { Download, PartyPopper, Share2 } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,6 @@ export function BadgeDownload({ participantName, eventTitle, locale }: { partici
       <p className="mt-3 leading-7 text-muted-foreground">{en ? `Show everyone you were part of ${eventTitle}—share it in your story!` : `${eventTitle}'na katıldığını göster, story'nde paylaş!`}</p>
     </header>
     <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary-950 via-primary to-accent p-8 text-white shadow-2xl sm:p-12"><div className="absolute -right-20 -top-20 size-64 rounded-full bg-white/10" /><BrandLogo className="size-16 ring-white/20" /><p className="mt-16 text-sm font-bold uppercase tracking-[.2em] text-accent-200">{en ? "Event badge" : "Etkinlik rozeti"}</p><h2 className="mt-4 font-heading text-3xl font-bold sm:text-5xl">{participantName}</h2><p className="mt-4 text-lg text-white/80">{eventTitle}</p><p className="absolute bottom-8 left-8 text-xs text-white/60 sm:bottom-12 sm:left-12">galatakariyervegirisimcilik.com</p></div>
-    {!badgeBlob ? <Button type="button" onClick={generate} disabled={pending} size="lg" className="mt-6 w-full"><PartyPopper />{pending ? (en ? "Creating your badge..." : "Rozetin hazırlanıyor...") : (en ? "Create My Digital Badge" : "Dijital Rozetimi Oluştur")}</Button> : <div className="mt-6 grid gap-3 sm:grid-cols-2"><Button type="button" onClick={share} size="lg"><Instagram />{en ? "Share on Instagram 📸" : "Instagram'da Paylaş 📸"}</Button><Button type="button" onClick={() => downloadBlob(badgeBlob)} size="lg" variant="outline"><Download />{en ? "Download" : "İndir"}</Button></div>}
+    {!badgeBlob ? <Button type="button" onClick={generate} disabled={pending} size="lg" className="mt-6 w-full"><PartyPopper />{pending ? (en ? "Creating your badge..." : "Rozetin hazırlanıyor...") : (en ? "Create My Digital Badge" : "Dijital Rozetimi Oluştur")}</Button> : <div className="mt-6 grid gap-3 sm:grid-cols-2"><Button type="button" onClick={share} size="lg"><Share2 />{en ? "Share on Instagram 📸" : "Instagram'da Paylaş 📸"}</Button><Button type="button" onClick={() => downloadBlob(badgeBlob)} size="lg" variant="outline"><Download />{en ? "Download" : "İndir"}</Button></div>}
   </div>;
 }
