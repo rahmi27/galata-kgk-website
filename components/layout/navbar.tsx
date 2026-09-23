@@ -71,11 +71,11 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
           : "border-transparent bg-background/75 backdrop-blur-md",
       )}
     >
-      <div className="mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-[5.5rem] max-w-[90rem] items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-10">
         <Link
           href="/"
           locale={locale}
-          className="group inline-flex min-w-0 max-w-[11.25rem] items-center gap-3 font-heading text-[0.78rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[20.5rem] sm:text-[0.95rem] dark:text-primary-100"
+          className="group inline-flex min-w-0 max-w-[11.25rem] items-center gap-3 font-heading text-[0.78rem] font-bold leading-[1.2] tracking-[-0.02em] text-primary sm:max-w-[20.5rem] sm:text-[0.95rem] lg:w-[20.5rem] lg:shrink-0 dark:text-primary-100"
           aria-label={brand.homeAriaLabel}
         >
           <BrandLogo
@@ -87,7 +87,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
         </Link>
 
         <nav
-          className="hidden items-center gap-6 xl:flex"
+          className="hidden items-center gap-5 2xl:flex"
           aria-label={navigation.desktopAriaLabel}
         >
           {navigation.items.map((item) => {
@@ -192,7 +192,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
           })}
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex shrink-0 items-center gap-2.5">
           {activeEventSession ? (
             <Button asChild className="event-mode-nav-button hidden lg:inline-flex" variant="secondary">
               <Link href="/etkinlik" locale={locale}>
@@ -217,7 +217,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
             type="button"
             variant="ghost"
             size="icon"
-            className="rounded-full text-primary hover:bg-primary-50 xl:hidden dark:text-primary-100 dark:hover:bg-white/10"
+            className="rounded-full text-primary hover:bg-primary-50 2xl:hidden dark:text-primary-100 dark:hover:bg-white/10"
             onClick={() => setIsMenuOpen((current) => !current)}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
@@ -239,7 +239,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
       {isMenuOpen ? (
         <div
           id="mobile-navigation"
-          className="border-t border-primary/10 bg-background/95 px-5 py-5 backdrop-blur-xl xl:hidden dark:border-white/10"
+          className="border-t border-primary/10 bg-background/95 px-5 py-5 backdrop-blur-xl 2xl:hidden dark:border-white/10"
         >
           <nav
             className="mx-auto flex max-w-7xl flex-col gap-1"
