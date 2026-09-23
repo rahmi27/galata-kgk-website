@@ -19,7 +19,8 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
   useEffect(() => {
     if (window.sessionStorage.getItem(storageKey)) return;
     window.sessionStorage.setItem(storageKey, "shown");
-    setOpen(true);
+    const timer = window.setTimeout(() => setOpen(true), 0);
+    return () => window.clearTimeout(timer);
   }, [storageKey]);
 
   useEffect(() => {
