@@ -24,7 +24,7 @@ export const getActiveEventSession = unstable_cache(
         linkedEventId: true,
       },
     }),
-  ["active-event-session"],
+  ["active-event-session-v4"],
   // Admin mutations invalidate this tag immediately. The daily fallback only
   // covers out-of-band database edits and must not shorten every public page's
   // ISR lifetime merely because the navbar consumes this value.

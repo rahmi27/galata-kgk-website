@@ -63,6 +63,26 @@ test("quiz ve anket yazma API'leri oturum, ilişki ve tekrar kontrolü yapar", a
   assert.match(poll, /error\.code\s*===\s*"P2002"/);
 });
 
+test("çekiliş katılımı quiz açıkken sunucuda tamamlanma şartını uygular", async () => {
+  const [action, gate] = await Promise.all([
+    read("app", "[locale]", "etkinlik", "panel", "cekilis", "actions.ts"),
+    read("lib", "event-mode-quiz.ts"),
+  ]);
+  assert.match(action, /await getQuizGateStatus\(participant\.eventSessionId, participant\.id\)/);
+  assert.match(action, /quizGate\.required && !quizGate\.completed/);
+  assert.match(gate, /quizEnabled/);
+  assert.match(gate, /totalQuestions > 0 && answeredQuestions === totalQuestions/);
+});
+
+test("admin canlı sayaç API'si yönetici oturumu olmadan veri döndürmez", async () => {
+  const source = await read("app", "api", "admin", "event-mode", "stats", "route.ts");
+  const guard = source.indexOf("getCurrentAdmin()");
+  const stats = source.indexOf("getEventModeStats(active.id)");
+  assert.ok(guard >= 0 && stats > guard);
+  assert.match(source, /status:\s*401/);
+  assert.match(source, /private, no-store/);
+});
+
 test("halka açık canlı veriler kişisel e-posta ve bölüm alanlarını seçmez", async () => {
   const [stage, leaderboard] = await Promise.all([
     read("app", "api", "event-mode", "stage", "route.ts"),
@@ -74,6 +94,20 @@ test("halka açık canlı veriler kişisel e-posta ve bölüm alanlarını seçm
     assert.match(source, /publicParticipantName/);
     assert.match(source, /Cache-Control/);
   }
+});
+
+test("canlı ekran polling aralıkları ölçülü ve popup oturum başına tektir", async () => {
+  const [stage, leaderboard, adminStats, poster] = await Promise.all([
+    read("components", "event-mode", "stage-dashboard.tsx"),
+    read("components", "event-mode", "live-leaderboard.tsx"),
+    read("components", "admin", "event-mode-live-stats.tsx"),
+    read("components", "event-mode", "event-poster-modal.tsx"),
+  ]);
+  assert.match(stage, /setInterval\(refresh, 3000\)/);
+  assert.match(leaderboard, /refreshMs = 4000/);
+  assert.match(adminStats, /setInterval\(refresh, 5000\)/);
+  assert.match(poster, /sessionStorage\.getItem/);
+  assert.match(poster, /sessionStorage\.setItem/);
 });
 
 test("veritabanı tekrar katılımı ve tek aktif oturumu kısıtlar", async () => {
