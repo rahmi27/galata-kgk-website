@@ -173,6 +173,17 @@
   animation: event-winner-mix 180ms ease-in-out infinite;
 }
 
+@keyframes event-answer-pop {
+  0% { transform: scale(.985); opacity: .78; }
+  55% { transform: scale(1.012); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.event-answer-correct,
+.event-answer-wrong {
+  animation: event-answer-pop 320ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .event-mode-nav-button { animation: none; }
 }
