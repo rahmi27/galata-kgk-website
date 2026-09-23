@@ -59,6 +59,9 @@ model EventSession {
   linkedEventId     Int?
   title             String
   posterImageUrl    String?
+  badgeTemplateUrl  String?
+  namePositionYPercent       Int @default(60)
+  eventTitlePositionYPercent Int @default(72)
   quizEnabled       Boolean            @default(false)
   raffleEnabled     Boolean            @default(false)
   joinButtonEnabled Boolean            @default(false)

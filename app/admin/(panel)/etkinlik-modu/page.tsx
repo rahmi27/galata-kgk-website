@@ -118,7 +118,7 @@ export default async function EventModeAdminPage({
   );
 }
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
@@ -127,6 +127,14 @@ function SessionForm({ events, session }: { events: { id: number; title: string 
       <div className="rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`poster-${session?.id ?? "new"}`} name="posterImage" label="Giriş afişi" defaultImageUrl={session?.posterImageUrl ?? undefined} removeName="removePosterImage" />
         <p className="mt-2 text-xs leading-5 text-primary-500">Önerilen dikey boyut: 1080 × 1350 px. Etkinlik aktifken ziyaretçiye tarayıcı oturumunda bir kez gösterilir.</p>
+      </div>
+      <div className="space-y-4 rounded-2xl border border-primary-100 p-4 dark:border-white/10">
+        <ImageUploadField id={`badge-template-${session?.id ?? "new"}`} name="badgeTemplateImage" label="Rozet arka plan şablonu" defaultImageUrl={session?.badgeTemplateUrl ?? undefined} removeName="removeBadgeTemplateImage" />
+        <p className="text-xs leading-5 text-primary-500">Önerilen boyut: 1080 × 1350 px. Şablon yoksa Galata KGK&apos;nin varsayılan rozet tasarımı kullanılır.</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm font-semibold">Katılımcı adı dikey konumu (%)<Input type="number" name="namePositionYPercent" min={0} max={100} defaultValue={session?.namePositionYPercent ?? 60} required className="mt-2" /></label>
+          <label className="block text-sm font-semibold">Etkinlik adı dikey konumu (%)<Input type="number" name="eventTitlePositionYPercent" min={0} max={100} defaultValue={session?.eventTitlePositionYPercent ?? 72} required className="mt-2" /></label>
+        </div>
       </div>
       <div className="grid gap-2 sm:grid-cols-2">
         <Toggle name="isActive" label="Oturum aktif" defaultChecked={session?.isActive} />

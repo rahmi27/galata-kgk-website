@@ -19,6 +19,11 @@ function flag(formData: FormData, key: string) {
   return formData.get(key) === "on";
 }
 
+function percentage(formData: FormData, key: string, fallback: number) {
+  const value = Number(formData.get(key));
+  return Number.isInteger(value) && value >= 0 && value <= 100 ? value : fallback;
+}
+
 async function refreshEventMode() {
   revalidateTag(EVENT_MODE_CACHE_TAG, "max");
   revalidatePath("/admin/etkinlik-modu");
@@ -47,18 +52,28 @@ export async function saveEventSessionAction(formData: FormData) {
 
   const existingSession = id ? await prisma.eventSession.findUnique({
     where: { id },
-    select: { id: true, posterImageUrl: true },
+    select: { id: true, posterImageUrl: true, badgeTemplateUrl: true },
   }) : null;
   if (id && !existingSession) throw new Error("Oturum bulunamadı.");
 
   const posterUpload = await saveImageUpload(formData.get("posterImage"), "event-mode");
   if (!posterUpload.success) redirect("/admin/etkinlik-modu?durum=gorsel-hatasi");
+  const badgeUpload = await saveImageUpload(formData.get("badgeTemplateImage"), "event-mode");
+  if (!badgeUpload.success) {
+    await deleteUploadedImage(posterUpload.path);
+    redirect("/admin/etkinlik-modu?durum=gorsel-hatasi");
+  }
   const removePoster = formData.get("removePosterImage") === "true";
   const posterImageUrl = posterUpload.path ?? (removePoster ? null : existingSession?.posterImageUrl ?? null);
+  const removeBadgeTemplate = formData.get("removeBadgeTemplateImage") === "true";
+  const badgeTemplateUrl = badgeUpload.path ?? (removeBadgeTemplate ? null : existingSession?.badgeTemplateUrl ?? null);
 
   const data = {
     title,
     posterImageUrl,
+    badgeTemplateUrl,
+    namePositionYPercent: percentage(formData, "namePositionYPercent", 60),
+    eventTitlePositionYPercent: percentage(formData, "eventTitlePositionYPercent", 72),
     linkedEventId,
     isActive,
     quizEnabled: flag(formData, "quizEnabled"),
@@ -82,11 +97,15 @@ export async function saveEventSessionAction(formData: FormData) {
     });
   } catch (error) {
     await deleteUploadedImage(posterUpload.path);
+    await deleteUploadedImage(badgeUpload.path);
     throw error;
   }
 
   if (existingSession?.posterImageUrl && existingSession.posterImageUrl !== posterImageUrl) {
     await deleteUploadedImage(existingSession.posterImageUrl);
+  }
+  if (existingSession?.badgeTemplateUrl && existingSession.badgeTemplateUrl !== badgeTemplateUrl) {
+    await deleteUploadedImage(existingSession.badgeTemplateUrl);
   }
 
   await refreshEventMode();
