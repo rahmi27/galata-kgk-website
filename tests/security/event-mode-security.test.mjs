@@ -121,6 +121,15 @@ test("etkinlik oturumu kaydı popup verisini bekletmeden yeniler ve yükleme hat
   assert.match(page, /Görsel kaydedilemedi/);
 });
 
+test("rozet paylaşımı dosya desteğini denetler ve destek yoksa açıklamalı indirmeye düşer", async () => {
+  const source = await read("components", "event-mode", "badge-download.tsx");
+  assert.match(source, /typeof navigator\.canShare === "function"/);
+  assert.match(source, /navigator\.canShare\(\{ files: \[file\] \}\)/);
+  assert.match(source, /await navigator\.share/);
+  assert.match(source, /fallbackToDownload/);
+  assert.match(source, /Tarayıcın doğrudan görsel paylaşımını desteklemiyor/);
+});
+
 test("veritabanı tekrar katılımı ve tek aktif oturumu kısıtlar", async () => {
   const [schema, migration] = await Promise.all([
     read("prisma", "schema.prisma"),

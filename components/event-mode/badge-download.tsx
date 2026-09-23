@@ -96,6 +96,7 @@ export function BadgeDownload(props: BadgeDownloadProps) {
   const { participantName, eventTitle, locale, templateUrl, namePositionYPercent, eventTitlePositionYPercent } = props;
   const [badgeBlob, setBadgeBlob] = useState<Blob | null>(null);
   const [pending, setPending] = useState(false);
+  const [shareNotice, setShareNotice] = useState("");
   const en = locale === "en";
 
   async function generate() {
@@ -113,12 +114,35 @@ export function BadgeDownload(props: BadgeDownloadProps) {
 
   async function share() {
     if (!badgeBlob) return;
+    setShareNotice("");
     const file = new File([badgeBlob], "galata-kgk-etkinlik-rozeti.png", { type: "image/png" });
-    if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
-      await navigator.share({ title: eventTitle, text: en ? `I joined ${eventTitle}!` : `${eventTitle} etkinliğine katıldım!`, files: [file] });
+    const fallbackToDownload = () => {
+      downloadBlob(badgeBlob);
+      setShareNotice(en
+        ? "Your browser cannot share image files directly. The badge was downloaded—upload it to Instagram manually."
+        : "Tarayıcın doğrudan görsel paylaşımını desteklemiyor. Rozet indirildi; Instagram'a elle yükleyebilirsin.");
+    };
+
+    let canShareFile = false;
+    try {
+      canShareFile = typeof navigator.share === "function"
+        && typeof navigator.canShare === "function"
+        && navigator.canShare({ files: [file] });
+    } catch {
+      canShareFile = false;
+    }
+
+    if (!canShareFile) {
+      fallbackToDownload();
       return;
     }
-    downloadBlob(badgeBlob);
+
+    try {
+      await navigator.share({ title: eventTitle, text: en ? `I joined ${eventTitle}!` : `${eventTitle} etkinliğine katıldım!`, files: [file] });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      fallbackToDownload();
+    }
   }
 
   return <div>
@@ -129,5 +153,6 @@ export function BadgeDownload(props: BadgeDownloadProps) {
       <p className="absolute left-1/2 w-[88%] -translate-x-1/2 -translate-y-1/2 text-center text-lg font-semibold [text-shadow:0_2px_10px_rgba(7,12,32,.9)] sm:text-2xl" style={{ top: `${eventTitlePositionYPercent}%` }}>{eventTitle}</p>
     </div>
     {!badgeBlob ? <Button type="button" onClick={generate} disabled={pending} size="lg" className="mt-6 w-full"><PartyPopper />{pending ? (en ? "Creating your badge..." : "Rozetin hazırlanıyor...") : (en ? "Create My Digital Badge" : "Dijital Rozetimi Oluştur")}</Button> : <div className="mt-6 grid gap-3 sm:grid-cols-2"><Button type="button" onClick={share} size="lg"><Share2 />{en ? "Share on Instagram 📸" : "Instagram'da Paylaş 📸"}</Button><Button type="button" onClick={() => downloadBlob(badgeBlob)} size="lg" variant="outline"><Download />{en ? "Download" : "İndir"}</Button></div>}
+    {shareNotice ? <p role="status" className="mt-4 rounded-xl border border-primary-200 bg-primary-50 px-4 py-3 text-sm font-semibold text-primary-900 dark:border-white/15 dark:bg-white/[.07] dark:text-primary-50">{shareNotice}</p> : null}
   </div>;
 }
