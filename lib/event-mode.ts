@@ -14,6 +14,7 @@ export const getActiveEventSession = unstable_cache(
       select: {
         id: true,
         title: true,
+        posterImageUrl: true,
         quizEnabled: true,
         raffleEnabled: true,
         joinButtonEnabled: true,

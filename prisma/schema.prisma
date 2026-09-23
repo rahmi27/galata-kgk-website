@@ -58,6 +58,7 @@ model EventSession {
   isActive          Boolean            @default(false)
   linkedEventId     Int?
   title             String
+  posterImageUrl    String?
   quizEnabled       Boolean            @default(false)
   raffleEnabled     Boolean            @default(false)
   joinButtonEnabled Boolean            @default(false)

@@ -7,6 +7,7 @@ import {
 } from "@/app/admin/(panel)/etkinlik-modu/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { EventModeQrDownload } from "@/components/admin/event-mode-qr-download";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
@@ -117,12 +118,16 @@ export default async function EventModeAdminPage({
   );
 }
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
       <label className="block text-sm font-semibold">Oturum adı<Input name="title" defaultValue={session?.title} minLength={3} maxLength={120} required className="mt-2" /></label>
       <label className="block text-sm font-semibold">Bağlı etkinlik<select name="linkedEventId" defaultValue={session?.linkedEventId ?? ""} className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"><option value="">Bağlantı yok</option>{events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}</select></label>
+      <div className="rounded-2xl border border-primary-100 p-4 dark:border-white/10">
+        <ImageUploadField id={`poster-${session?.id ?? "new"}`} name="posterImage" label="Giriş afişi" defaultImageUrl={session?.posterImageUrl ?? undefined} removeName="removePosterImage" />
+        <p className="mt-2 text-xs leading-5 text-primary-500">Önerilen dikey boyut: 1080 × 1350 px. Etkinlik aktifken ziyaretçiye tarayıcı oturumunda bir kez gösterilir.</p>
+      </div>
       <div className="grid gap-2 sm:grid-cols-2">
         <Toggle name="isActive" label="Oturum aktif" defaultChecked={session?.isActive} />
         {featureFields.map(([name, label]) => <Toggle key={name} name={name} label={label} defaultChecked={session?.[name]} />)}
