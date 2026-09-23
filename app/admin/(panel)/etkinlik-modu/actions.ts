@@ -82,6 +82,7 @@ export async function saveEventSessionAction(formData: FormData) {
     feedbackEnabled: flag(formData, "feedbackEnabled"),
     badgeEnabled: flag(formData, "badgeEnabled"),
     pollEnabled: flag(formData, "pollEnabled"),
+    showLiveCountersPublicly: flag(formData, "showLiveCountersPublicly"),
   };
 
   try {

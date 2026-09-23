@@ -62,6 +62,7 @@ model EventSession {
   badgeTemplateUrl  String?
   namePositionYPercent       Int @default(60)
   eventTitlePositionYPercent Int @default(72)
+  showLiveCountersPublicly   Boolean @default(false)
   quizEnabled       Boolean            @default(false)
   raffleEnabled     Boolean            @default(false)
   joinButtonEnabled Boolean            @default(false)

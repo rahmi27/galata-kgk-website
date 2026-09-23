@@ -7,6 +7,7 @@ import {
 } from "@/app/admin/(panel)/etkinlik-modu/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { EventModeQrDownload } from "@/components/admin/event-mode-qr-download";
+import { EventModeLiveStats } from "@/components/admin/event-mode-live-stats";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,6 +65,7 @@ export default async function EventModeAdminPage({
         <AdminShortcut href="/admin/etkinlik-modu/geri-bildirim" label="Geri bildirim" icon={MessageSquareText} />
         <AdminShortcut href="/etkinlik/ekran" label="Sahne ekranı" icon={Presentation} external />
       </nav>
+      <EventModeLiveStats />
 
       <div className="mt-8 grid gap-7 xl:grid-cols-[minmax(0,1fr)_26rem]">
         <section className="space-y-5">
@@ -118,7 +120,7 @@ export default async function EventModeAdminPage({
   );
 }
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
@@ -139,6 +141,7 @@ function SessionForm({ events, session }: { events: { id: number; title: string 
       <div className="grid gap-2 sm:grid-cols-2">
         <Toggle name="isActive" label="Oturum aktif" defaultChecked={session?.isActive} />
         {featureFields.map(([name, label]) => <Toggle key={name} name={name} label={label} defaultChecked={session?.[name]} />)}
+        <Toggle name="showLiveCountersPublicly" label="Katılımcı sayılarını sahne ekranında göster" defaultChecked={session?.showLiveCountersPublicly} />
       </div>
       <Button type="submit" size="sm">Kaydet</Button>
     </form>
