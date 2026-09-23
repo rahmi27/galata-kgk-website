@@ -7,14 +7,17 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   CalendarDays,
+  Gift,
   Handshake,
   House,
   Inbox,
   Info,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   MapPin,
   Menu,
+  MessageSquareText,
   Network,
   PanelBottom,
   PanelTop,
@@ -111,6 +114,29 @@ const appearanceNavigation = [
   },
 ] as const;
 
+const eventModeNavigation = [
+  {
+    label: "Quiz",
+    href: "/admin/etkinlik-modu/quiz",
+    icon: ListChecks,
+  },
+  {
+    label: "Çekiliş",
+    href: "/admin/etkinlik-modu/cekilis",
+    icon: Gift,
+  },
+  {
+    label: "Anket",
+    href: "/admin/etkinlik-modu/anket",
+    icon: BarChart3,
+  },
+  {
+    label: "Geri Bildirim",
+    href: "/admin/etkinlik-modu/geri-bildirim",
+    icon: MessageSquareText,
+  },
+] as const;
+
 type AdminShellProps = {
   children: React.ReactNode;
   userName: string;
@@ -125,7 +151,7 @@ function AdminNavigation({
   onNavigate?: () => void;
 }) {
   function renderNavigationItem(
-    item: (typeof navigation)[number] | (typeof appearanceNavigation)[number],
+    item: (typeof navigation)[number] | (typeof appearanceNavigation)[number] | (typeof eventModeNavigation)[number],
   ) {
     const Icon = item.icon;
     const isActive =
@@ -161,8 +187,17 @@ function AdminNavigation({
   }
 
   return (
-    <nav className="mt-8 space-y-1" aria-label="Yönetim menüsü">
-      {navigation.map(renderNavigationItem)}
+    <nav className="mt-8 min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable]" aria-label="Yönetim menüsü">
+      {navigation.map((item) => (
+        <div key={item.href}>
+          {renderNavigationItem(item)}
+          {item.href === "/admin/etkinlik-modu" ? (
+            <div className="mb-2 ml-5 space-y-1 border-l border-white/15 pl-2">
+              {eventModeNavigation.map(renderNavigationItem)}
+            </div>
+          ) : null}
+        </div>
+      ))}
       <p className="px-3.5 pb-2 pt-7 font-heading text-[0.68rem] font-bold uppercase tracking-[0.18em] text-accent-200">
         Görünüm Yönetimi
       </p>
