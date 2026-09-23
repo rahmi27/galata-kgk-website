@@ -43,6 +43,7 @@ export default async function EventModeAdminPage({
   ]);
   const active = sessions.find((session) => session.isActive);
   const publicUrl = new URL("/etkinlik", siteUrl).href;
+  const status = durum ? eventModeStatus[durum] : null;
 
   return (
     <>
@@ -52,9 +53,9 @@ export default async function EventModeAdminPage({
         description="Etkinlik oturumunu açın, katılımcıları izleyin ve canlı özellikleri tek tek yönetin. Aynı anda yalnızca bir oturum aktif olabilir."
         actions={<EventModeQrDownload url={publicUrl} />}
       />
-      {durum ? (
-        <p className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800" role="status">
-          Değişiklik başarıyla kaydedildi.
+      {status ? (
+        <p className={`mt-6 rounded-xl border px-4 py-3 text-sm font-semibold ${status.className}`} role={status.error ? "alert" : "status"}>
+          {status.message}
         </p>
       ) : null}
 
@@ -119,6 +120,32 @@ export default async function EventModeAdminPage({
     </>
   );
 }
+
+const eventModeStatus: Record<string, { message: string; className: string; error?: boolean }> = {
+  kaydedildi: {
+    message: "Değişiklik başarıyla kaydedildi.",
+    className: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-700/60 dark:bg-emerald-950/60 dark:text-emerald-100",
+  },
+  aktif: {
+    message: "Etkinlik oturumu aktif hale getirildi.",
+    className: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-700/60 dark:bg-emerald-950/60 dark:text-emerald-100",
+  },
+  gecersiz: {
+    message: "Oturum adı veya gönderilen bilgiler geçersiz.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gecersiz-etkinlik": {
+    message: "Seçilen bağlı etkinlik bulunamadı.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gorsel-hatasi": {
+    message: "Görsel kaydedilemedi. Dosya biçimini/boyutunu ve Vercel Blob bağlantısını kontrol edip tekrar deneyin.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+};
 
 function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (

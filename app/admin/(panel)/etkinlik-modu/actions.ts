@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin-auth";
@@ -25,7 +25,10 @@ function percentage(formData: FormData, key: string, fallback: number) {
 }
 
 async function refreshEventMode() {
-  revalidateTag(EVENT_MODE_CACHE_TAG, "max");
+  // This action changes chrome-level data used by every public route. `updateTag`
+  // expires it immediately so the first request after saving cannot receive the
+  // stale poster/session value while a background refresh is running.
+  updateTag(EVENT_MODE_CACHE_TAG);
   revalidatePath("/admin/etkinlik-modu");
   revalidatePublicPath("/etkinlik");
 }

@@ -110,6 +110,17 @@ test("canlı ekran polling aralıkları ölçülü ve popup oturum başına tekt
   assert.match(poster, /sessionStorage\.setItem/);
 });
 
+test("etkinlik oturumu kaydı popup verisini bekletmeden yeniler ve yükleme hatasını başarı saymaz", async () => {
+  const [action, page] = await Promise.all([
+    read("app", "admin", "(panel)", "etkinlik-modu", "actions.ts"),
+    read("app", "admin", "(panel)", "etkinlik-modu", "page.tsx"),
+  ]);
+  assert.match(action, /updateTag\(EVENT_MODE_CACHE_TAG\)/);
+  assert.doesNotMatch(action, /revalidateTag\(EVENT_MODE_CACHE_TAG,\s*"max"\)/);
+  assert.match(page, /"gorsel-hatasi"/);
+  assert.match(page, /Görsel kaydedilemedi/);
+});
+
 test("veritabanı tekrar katılımı ve tek aktif oturumu kısıtlar", async () => {
   const [schema, migration] = await Promise.all([
     read("prisma", "schema.prisma"),
