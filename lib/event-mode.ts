@@ -5,7 +5,6 @@ import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 export const EVENT_MODE_CACHE_TAG = "event-mode-active";
-export const EVENT_PARTICIPANT_COOKIE = "galata-event-participant";
 
 export const getActiveEventSession = unstable_cache(
   async () =>

@@ -7,17 +7,22 @@ const root = process.cwd();
 const read = (...parts) => readFile(path.join(root, ...parts), "utf8");
 
 test("katılımcı panelinin tamamı imzalı oturum kontrolüyle korunur", async () => {
-  const [layout, session] = await Promise.all([
+  const [layout, session, token, proxy] = await Promise.all([
     read("app", "[locale]", "etkinlik", "panel", "layout.tsx"),
     read("lib", "event-participant-session.ts"),
+    read("lib", "event-participant-token.ts"),
+    read("proxy.ts"),
   ]);
 
   assert.match(layout, /await\s+requireEventParticipant\(locale\)/);
-  assert.match(session, /createHmac\("sha256"/);
-  assert.match(session, /timingSafeEqual/);
+  assert.match(token, /createHmac\("sha256"/);
+  assert.match(token, /timingSafeEqual/);
   assert.match(session, /httpOnly:\s*true/);
   assert.match(session, /sameSite:\s*"lax"/);
   assert.match(session, /eventSession:\s*\{\s*isActive:\s*true\s*\}/);
+  assert.match(proxy, /verifyParticipantToken\(token\)/);
+  assert.match(proxy, /NextResponse\.redirect/);
+  assert.match(proxy, /request\.method\s*===\s*"GET"/);
 });
 
 test("etkinlik admin işlemleri veri erişiminden önce yönetici doğrular", async () => {
