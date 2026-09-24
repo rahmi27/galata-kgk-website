@@ -90,8 +90,8 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
           <X className="size-4" aria-hidden="true" />
         </button>
 
-        <div className={landscape ? "lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(17rem,.75fr)]" : ""}>
-          <div className={`relative overflow-hidden bg-primary-950 ${landscape ? "h-[min(56dvh,36rem)] lg:h-[min(76dvh,46rem)]" : "h-[min(68dvh,48rem)]"}`}>
+        <div className={landscape ? "lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(14rem,1fr)]" : ""}>
+          <div className={`relative overflow-hidden bg-primary-950 ${landscape ? "aspect-video lg:aspect-auto lg:h-[min(76dvh,46rem)]" : "h-[min(68dvh,48rem)]"}`}>
             <Image
               src={eventSession.posterImageUrl}
               alt={`${eventSession.title} ${en ? "event poster" : "etkinlik afişi"}`}
@@ -102,18 +102,28 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
             />
           </div>
 
-          <div className={`flex flex-col justify-center border-primary-100 p-5 dark:border-white/10 sm:p-7 ${landscape ? "border-t lg:border-l lg:border-t-0 lg:p-8" : "border-t"}`}>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-              {en ? "Live at Galata KGK" : "Galata KGK'de canlı"}
-            </p>
-            <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-primary-950 dark:text-white sm:text-3xl">
-              {eventSession.title}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-primary-600 dark:text-primary-200">
-              {en
-                ? "Step into the live experience and explore everything prepared for the event."
-                : "Canlı deneyime katıl, etkinlik için hazırlanan tüm içerikleri keşfet."}
-            </p>
+          <div className={`flex flex-col justify-center border-primary-100 p-5 dark:border-white/10 sm:p-7 ${landscape ? "border-t lg:border-l lg:border-t-0 lg:p-6" : "border-t"}`}>
+            {landscape ? (
+              <p className="text-sm font-semibold leading-6 text-primary-700 dark:text-primary-100">
+                {en
+                  ? "Quizzes, raffles and surprises are waiting for you 🎉"
+                  : "Quizler, çekilişler ve sürprizler seni bekliyor 🎉"}
+              </p>
+            ) : (
+              <>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
+                  {en ? "Live at Galata KGK" : "Galata KGK'de canlı"}
+                </p>
+                <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-primary-950 dark:text-white sm:text-3xl">
+                  {eventSession.title}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-primary-600 dark:text-primary-200">
+                  {en
+                    ? "Step into the live experience and explore everything prepared for the event."
+                    : "Canlı deneyime katıl, etkinlik için hazırlanan tüm içerikleri keşfet."}
+                </p>
+              </>
+            )}
             <div className="event-poster-cta-pulse mt-5">
               <Button
                 asChild
