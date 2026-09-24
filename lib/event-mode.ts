@@ -24,7 +24,10 @@ export const getActiveEventSession = unstable_cache(
         linkedEventId: true,
       },
     }),
-  ["active-event-session-v4"],
+  // v5 retires entries left stale by the former stale-while-revalidate
+  // invalidation, so the first deployment with immediate `updateTag` starts
+  // from the current database state.
+  ["active-event-session-v5"],
   // Admin mutations invalidate this tag immediately. The daily fallback only
   // covers out-of-band database edits and must not shorten every public page's
   // ISR lifetime merely because the navbar consumes this value.
