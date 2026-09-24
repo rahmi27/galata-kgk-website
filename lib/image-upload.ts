@@ -61,14 +61,23 @@ type ImageUploadResult =
 function getBlobAuthOptions() {
   const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 
-  if (token) {
+  if (token && token !== "[SENSITIVE]") {
     return { token };
   }
 
   const oidcToken = process.env.VERCEL_OIDC_TOKEN?.trim();
   const storeId = process.env.BLOB_STORE_ID?.trim();
 
-  return oidcToken && storeId ? { oidcToken, storeId } : null;
+  if (
+    oidcToken &&
+    storeId &&
+    oidcToken !== "[SENSITIVE]" &&
+    storeId !== "[SENSITIVE]"
+  ) {
+    return { oidcToken, storeId };
+  }
+
+  return null;
 }
 
 function sanitizeFileName(fileName: string) {
