@@ -117,10 +117,13 @@ export function BadgeDownload(props: BadgeDownloadProps) {
     setShareNotice("");
     const file = new File([badgeBlob], "galata-kgk-etkinlik-rozeti.png", { type: "image/png" });
     const fallbackToDownload = () => {
-      downloadBlob(badgeBlob);
       setShareNotice(en
         ? "Your browser cannot share image files directly. The badge was downloaded—upload it to Instagram manually."
         : "Tarayıcın doğrudan görsel paylaşımını desteklemiyor. Rozet indirildi; Instagram'a elle yükleyebilirsin.");
+      // Let React paint the explanation before the browser starts its download
+      // flow. Some desktop browsers suspend the current task while handling a
+      // generated-file download.
+      window.setTimeout(() => downloadBlob(badgeBlob), 0);
     };
 
     let canShareFile = false;
