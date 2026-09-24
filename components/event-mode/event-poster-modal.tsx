@@ -59,7 +59,7 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
 
   return <div role="dialog" aria-modal="true" aria-label={eventSession.title} className="fixed inset-0 z-[100] flex items-center justify-center bg-primary-950/80 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget) dismiss(); }}>
     <div className="relative w-full max-w-xl overflow-hidden rounded-[2rem] border border-white/15 bg-primary-950 p-3 shadow-2xl">
-      <button type="button" onClick={dismiss} aria-label={en ? "Close poster" : "Afişi kapat"} className="absolute right-5 top-5 z-10 flex size-11 items-center justify-center rounded-full bg-black/65 text-white transition-transform hover:scale-105"><X /></button>
+      <button type="button" onClick={dismiss} aria-label={en ? "Close poster" : "Afişi kapat"} className="absolute right-5 top-5 z-10 flex size-11 items-center justify-center rounded-full bg-primary-950 text-white shadow-lg ring-1 ring-white/35 transition-transform hover:scale-105 hover:bg-primary-800"><X /></button>
       <div className="relative aspect-[4/5] overflow-hidden rounded-[1.4rem] bg-primary-900"><Image src={eventSession.posterImageUrl} alt={`${eventSession.title} ${en ? "event poster" : "etkinlik afişi"}`} fill priority sizes="(max-width: 640px) 94vw, 560px" className="object-contain" /></div>
       <Button asChild size="lg" className="mt-3 w-full"><Link href="/etkinlik" locale={locale} onClick={dismiss}>{en ? "Join the Event ✨" : "Etkinliğe Katıl ✨"}</Link></Button>
     </div>
