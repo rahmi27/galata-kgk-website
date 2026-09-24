@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Yatay etkinlik afişi ölçü taslağı — 1600 × 900 piksel</title>
+  <desc id="desc">Izgara, köşe işaretleri, 96 ve 72 piksellik önerilen güvenli alan ve afişin altındaki modal bilgi bandı açıklaması.</desc>
+  <defs>
+    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0H0V100" fill="none" stroke="#5c719a" stroke-width="2" opacity=".34"/></pattern>
+    <pattern id="hatch" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="18" height="18" fill="#ec6c3b" opacity=".10"/><path d="M0 0V18" stroke="#ff9a67" stroke-width="4" opacity=".35"/></pattern>
+    <linearGradient id="base" x2="1" y2="1"><stop stop-color="#101b3b"/><stop offset="1" stop-color="#283a6a"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#base)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <path d="M0 0H1600V72H0ZM0 828H1600V900H0ZM0 72H96V828H0ZM1504 72H1600V828H1504Z" fill="url(#hatch)"/>
+  <rect x="96" y="72" width="1408" height="756" fill="none" stroke="#ff9a67" stroke-width="4" stroke-dasharray="18 12"/>
+  <g fill="none" stroke="#ff8b55" stroke-width="9"><path d="M18 94V18H94M1506 18h76v76M18 806v76h76M1506 882h76v-76"/></g>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#fff">
+    <text x="800" y="206" font-size="27" font-weight="700" letter-spacing="7" fill="#ffad7d">GALATA KGK · TEKNİK TASLAK</text>
+    <text x="800" y="386" font-size="72" font-weight="800">YATAY AFİŞ ALANI</text>
+    <text x="800" y="467" font-size="52" font-weight="700" fill="#ffad7d">1600 × 900 px · 16:9</text>
+    <text x="800" y="524" font-size="28">Tüm afiş object-contain ile görünür; otomatik kırpma yok.</text>
+  </g>
+  <rect x="208" y="592" width="1184" height="170" rx="8" fill="#101a36" stroke="#ff8b55" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#fff">
+    <text x="800" y="644" font-size="27" font-weight="700" fill="#ffad7d">MODAL YERLEŞİM NOTU · AFİŞİN ALTINDAKİ AYRI BANT</text>
+    <text x="800" y="688" font-size="25">Masaüstü: kısa metin solda; CTA butonu sağda, 48 px yüksek.</text>
+    <text x="800" y="731" font-size="25">Mobil: kısa metin üstte; CTA altta tam genişlik, 48 px yüksek.</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#ffd0ad"><text x="116" y="50">ÜST: 72 px</text><text x="116" y="862">ALT: 72 px</text><text x="1420" y="50">SAĞ: 96 px</text></g>
+</svg>
