@@ -23,6 +23,12 @@ function flag(formData: FormData, key: string) {
   return formData.get(key) === "on";
 }
 
+function posterOrientation(formData: FormData) {
+  return formData.get("posterOrientation") === "landscape"
+    ? "landscape" as const
+    : "portrait" as const;
+}
+
 function percentage(formData: FormData, key: string, fallback: number) {
   const value = Number(formData.get(key));
   return Number.isInteger(value) && value >= 0 && value <= 100 ? value : fallback;
@@ -92,6 +98,7 @@ export async function saveEventSessionAction(formData: FormData) {
   const data = {
     title,
     posterImageUrl,
+    posterOrientation: posterOrientation(formData),
     badgeTemplateUrl,
     namePositionYPercent: percentage(formData, "namePositionYPercent", 60),
     eventTitlePositionYPercent: percentage(formData, "eventTitlePositionYPercent", 72),

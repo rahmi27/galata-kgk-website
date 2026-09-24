@@ -13,6 +13,11 @@ enum SiteContentType {
   image
 }
 
+enum PosterOrientation {
+  portrait
+  landscape
+}
+
 model AdminUser {
   id           Int      @id @default(autoincrement())
   username     String   @unique
@@ -54,29 +59,30 @@ model Event {
 }
 
 model EventSession {
-  id                Int                @id @default(autoincrement())
-  isActive          Boolean            @default(false)
-  linkedEventId     Int?
-  title             String
-  posterImageUrl    String?
-  badgeTemplateUrl  String?
-  namePositionYPercent       Int @default(60)
-  eventTitlePositionYPercent Int @default(72)
-  showLiveCountersPublicly   Boolean @default(false)
-  quizEnabled       Boolean            @default(false)
-  raffleEnabled     Boolean            @default(false)
-  joinButtonEnabled Boolean            @default(false)
-  feedbackEnabled   Boolean            @default(false)
-  badgeEnabled      Boolean            @default(false)
-  pollEnabled       Boolean            @default(false)
-  createdAt         DateTime           @default(now())
-  linkedEvent       Event?             @relation(fields: [linkedEventId], references: [id], onDelete: SetNull)
-  participants      EventParticipant[]
-  quizzes           Quiz[]
-  raffleEntries     RaffleEntry[]
-  raffleWinners     RaffleWinner[]
-  feedback          Feedback[]
-  polls             Poll[]
+  id                         Int                @id @default(autoincrement())
+  isActive                   Boolean            @default(false)
+  linkedEventId              Int?
+  title                      String
+  posterImageUrl             String?
+  posterOrientation          PosterOrientation  @default(portrait)
+  badgeTemplateUrl           String?
+  namePositionYPercent       Int                @default(60)
+  eventTitlePositionYPercent Int                @default(72)
+  showLiveCountersPublicly   Boolean            @default(false)
+  quizEnabled                Boolean            @default(false)
+  raffleEnabled              Boolean            @default(false)
+  joinButtonEnabled          Boolean            @default(false)
+  feedbackEnabled            Boolean            @default(false)
+  badgeEnabled               Boolean            @default(false)
+  pollEnabled                Boolean            @default(false)
+  createdAt                  DateTime           @default(now())
+  linkedEvent                Event?             @relation(fields: [linkedEventId], references: [id], onDelete: SetNull)
+  participants               EventParticipant[]
+  quizzes                    Quiz[]
+  raffleEntries              RaffleEntry[]
+  raffleWinners              RaffleWinner[]
+  feedback                   Feedback[]
+  polls                      Poll[]
 
   @@index([isActive])
   @@index([linkedEventId])

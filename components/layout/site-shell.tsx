@@ -15,7 +15,7 @@ import type { SiteChromeContent } from "@/lib/site-content";
 type SiteShellProps = {
   children: React.ReactNode;
   content: SiteChromeContent;
-  activeEventSession: { id: number; title: string; posterImageUrl: string | null } | null;
+  activeEventSession: { id: number; title: string; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape" } | null;
 };
 
 export function SiteShell({ children, content, activeEventSession }: SiteShellProps) {
@@ -62,7 +62,7 @@ export function SiteShell({ children, content, activeEventSession }: SiteShellPr
         variant={particleVariant}
         className="ambient-particles--global"
       />
-      {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
+      {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl, posterOrientation: activeEventSession.posterOrientation }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
       <Navbar content={content} activeEventSession={activeEventSession} />
       <div
         id="site-content"

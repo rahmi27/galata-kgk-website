@@ -160,6 +160,27 @@
   50% { box-shadow: 0 0 22px rgba(232, 93, 44, 0.32), 0 14px 30px -16px rgba(232, 93, 44, 0.95); }
 }
 
+@keyframes event-poster-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes event-poster-card-in {
+  from { opacity: 0; transform: scale3d(.95, .95, 1); }
+  to { opacity: 1; transform: scale3d(1, 1, 1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .event-poster-overlay {
+    animation: event-poster-overlay-in 260ms ease-out both;
+  }
+
+  .event-poster-card {
+    animation: event-poster-card-in 280ms cubic-bezier(.22, 1, .36, 1) both;
+    will-change: transform, opacity;
+  }
+}
+
 .event-mode-nav-button {
   animation: event-mode-nav-pulse 2.4s ease-in-out infinite;
 }

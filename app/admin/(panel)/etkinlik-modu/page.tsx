@@ -172,7 +172,7 @@ const eventModeStatus: Record<string, { message: string; className: string; erro
   },
 };
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
@@ -180,7 +180,20 @@ function SessionForm({ events, session }: { events: { id: number; title: string 
       <label className="block text-sm font-semibold">Bağlı etkinlik<select name="linkedEventId" defaultValue={session?.linkedEventId ?? ""} className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"><option value="">Bağlantı yok</option>{events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}</select></label>
       <div className="rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`poster-${session?.id ?? "new"}`} name="posterImage" label="Giriş afişi" defaultImageUrl={session?.posterImageUrl ?? undefined} removeName="removePosterImage" />
-        <p className="mt-2 text-xs leading-5 text-primary-500">Önerilen dikey boyut: 1080 × 1350 px. Etkinlik aktifken ziyaretçiye tarayıcı oturumunda bir kez gösterilir.</p>
+        <fieldset className="mt-4">
+          <legend className="text-sm font-semibold">Afiş yönü</legend>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-primary-100 p-3 text-sm transition-colors has-[:checked]:border-accent-500 has-[:checked]:bg-accent-50 dark:border-white/10 dark:has-[:checked]:border-accent-300 dark:has-[:checked]:bg-accent-900/30">
+              <input type="radio" name="posterOrientation" value="portrait" defaultChecked={(session?.posterOrientation ?? "portrait") === "portrait"} className="mt-1 accent-orange-600" />
+              <span><strong className="block">Dikey</strong><span className="mt-0.5 block text-xs text-primary-500 dark:text-primary-200">Önerilen: 1080 × 1350 px</span></span>
+            </label>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-primary-100 p-3 text-sm transition-colors has-[:checked]:border-accent-500 has-[:checked]:bg-accent-50 dark:border-white/10 dark:has-[:checked]:border-accent-300 dark:has-[:checked]:bg-accent-900/30">
+              <input type="radio" name="posterOrientation" value="landscape" defaultChecked={session?.posterOrientation === "landscape"} className="mt-1 accent-orange-600" />
+              <span><strong className="block">Yatay</strong><span className="mt-0.5 block text-xs text-primary-500 dark:text-primary-200">Önerilen: 1600 × 900 px</span></span>
+            </label>
+          </div>
+        </fieldset>
+        <p className="mt-3 text-xs leading-5 text-primary-500">Etkinlik aktifken ziyaretçiye tarayıcı oturumunda bir kez gösterilir. Görsel seçilen yönde bozulmadan yerleştirilir.</p>
       </div>
       <div className="space-y-4 rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`badge-template-${session?.id ?? "new"}`} name="badgeTemplateImage" label="Rozet arka plan şablonu" defaultImageUrl={session?.badgeTemplateUrl ?? undefined} removeName="removeBadgeTemplateImage" />
