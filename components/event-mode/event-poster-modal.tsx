@@ -79,13 +79,13 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
       }}
     >
       <div
-        className={`event-poster-card relative my-auto max-h-[calc(100dvh-1.5rem)] w-[min(92vw,76rem)] overflow-y-auto rounded-[1.75rem] bg-white shadow-[0_32px_110px_-30px_rgba(0,0,0,.82)] dark:bg-primary-950 sm:max-h-[calc(100dvh-3rem)] sm:rounded-[2rem] ${landscape ? "max-w-6xl" : "max-w-2xl"}`}
+        className={`event-poster-card relative my-auto max-h-[calc(100dvh-1.5rem)] w-[min(92vw,76rem)] overflow-y-auto rounded-[2px] bg-white shadow-[0_32px_110px_-30px_rgba(0,0,0,.82)] dark:bg-primary-950 sm:max-h-[calc(100dvh-3rem)] ${landscape ? "max-w-6xl" : "max-w-2xl"}`}
       >
         <button
           type="button"
           onClick={dismiss}
           aria-label={en ? "Close poster" : "Afişi kapat"}
-          className="absolute right-3 top-3 z-20 flex size-9 items-center justify-center rounded-full bg-black/45 text-white shadow-sm ring-1 ring-white/25 backdrop-blur transition-[transform,background-color] hover:scale-105 hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 sm:right-4 sm:top-4"
+          className="absolute right-3 top-3 z-20 flex size-9 items-center justify-center rounded-[2px] bg-black/45 text-white shadow-sm ring-1 ring-white/25 backdrop-blur transition-[transform,background-color] hover:scale-105 hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 sm:right-4 sm:top-4"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
