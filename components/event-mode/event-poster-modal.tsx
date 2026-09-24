@@ -114,11 +114,18 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
                 ? "Step into the live experience and explore everything prepared for the event."
                 : "Canlı deneyime katıl, etkinlik için hazırlanan tüm içerikleri keşfet."}
             </p>
-            <Button asChild size="lg" className="mt-5 w-full rounded-xl">
-              <Link href="/etkinlik" locale={locale} onClick={dismiss}>
-                {en ? "Join the Event" : "Etkinliğe Katıl"}
-              </Link>
-            </Button>
+            <div className="event-poster-cta-pulse mt-5">
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="h-14 w-full rounded-[2px] px-8 text-base shadow-[0_18px_42px_-16px_rgba(232,93,44,.95)] hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_22px_48px_-14px_rgba(232,93,44,1)] sm:text-lg"
+              >
+                <Link href="/etkinlik" locale={locale} onClick={dismiss}>
+                  {en ? "Join Now 🚀" : "Hemen Katıl 🚀"}
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
