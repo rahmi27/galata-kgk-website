@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,9 @@ const shownWithoutSessionStorage = new Set<string>();
 
 export function EventPosterModal({ eventSession, locale }: EventPosterModalProps) {
   const [open, setOpen] = useState(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState(
+    eventSession.posterOrientation === "landscape" ? 1.5 : 0.8,
+  );
   // v4 clears the early "shown" marker written by the original implementation
   // before the visitor had actually dismissed the poster.
   const storageKey = `galata-event-poster-v4:${eventSession.id}`;
@@ -67,6 +70,7 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
   if (!open) return null;
   const en = locale === "en";
   const landscape = eventSession.posterOrientation === "landscape";
+  const maxWidth = landscape ? "72rem" : "34rem";
 
   return (
     <div
@@ -79,63 +83,53 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
       }}
     >
       <div
-        className={`event-poster-card relative my-auto max-h-[calc(100dvh-1.5rem)] w-[min(92vw,76rem)] overflow-y-auto rounded-[2px] bg-white shadow-[0_32px_110px_-30px_rgba(0,0,0,.82)] dark:bg-primary-950 sm:max-h-[calc(100dvh-3rem)] ${landscape ? "max-w-6xl" : "max-w-2xl"}`}
+        className="event-poster-card relative my-auto max-h-[calc(100dvh-1.5rem)] max-w-full overflow-y-auto rounded-[2px] bg-primary-950 shadow-[0_32px_110px_-30px_rgba(0,0,0,.82)] sm:max-h-[calc(100dvh-3rem)]"
+        style={{ width: `min(94vw, ${maxWidth}, ${70 * imageAspectRatio}dvh)` }}
       >
         <button
           type="button"
           onClick={dismiss}
           aria-label={en ? "Close poster" : "Afişi kapat"}
-          className="absolute right-3 top-3 z-20 flex size-9 items-center justify-center rounded-[2px] bg-black/45 text-white shadow-sm ring-1 ring-white/25 backdrop-blur transition-[transform,background-color] hover:scale-105 hover:bg-black/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 sm:right-4 sm:top-4"
+          className="absolute right-3 top-3 z-20 flex size-9 items-center justify-center rounded-[2px] bg-black/65 text-white shadow-sm ring-1 ring-white/25 backdrop-blur transition-colors hover:bg-black/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 sm:right-4 sm:top-4"
         >
           <X className="size-4" aria-hidden="true" />
         </button>
 
-        <div className={landscape ? "lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(14rem,1fr)]" : ""}>
-          <div className={`relative overflow-hidden bg-primary-950 ${landscape ? "aspect-video lg:aspect-auto lg:h-[min(76dvh,46rem)]" : "h-[min(68dvh,48rem)]"}`}>
+        <div>
+          <div className="relative w-full overflow-hidden bg-primary-950" style={{ aspectRatio: imageAspectRatio }}>
             <Image
               src={eventSession.posterImageUrl}
               alt={`${eventSession.title} ${en ? "event poster" : "etkinlik afişi"}`}
               fill
               priority
-              sizes={landscape ? "(max-width: 1023px) 92vw, 65vw" : "(max-width: 640px) 92vw, 672px"}
+              sizes={landscape ? "(max-width: 640px) 94vw, 72rem" : "(max-width: 640px) 94vw, 34rem"}
               className="object-contain"
+              onLoad={(event) => {
+                const image = event.currentTarget;
+                if (image.naturalWidth && image.naturalHeight) {
+                  setImageAspectRatio(image.naturalWidth / image.naturalHeight);
+                }
+              }}
             />
           </div>
 
-          <div className={`flex flex-col justify-center border-primary-100 p-5 dark:border-white/10 sm:p-7 ${landscape ? "border-t lg:border-l lg:border-t-0 lg:p-6" : "border-t"}`}>
-            {landscape ? (
-              <p className="text-sm font-semibold leading-6 text-primary-700 dark:text-primary-100">
-                {en
-                  ? "Quizzes, raffles and surprises are waiting for you 🎉"
-                  : "Quizler, çekilişler ve sürprizler seni bekliyor 🎉"}
-              </p>
-            ) : (
-              <>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                  {en ? "Live at Galata KGK" : "Galata KGK'de canlı"}
-                </p>
-                <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-primary-950 dark:text-white sm:text-3xl">
-                  {eventSession.title}
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-primary-600 dark:text-primary-200">
-                  {en
-                    ? "Step into the live experience and explore everything prepared for the event."
-                    : "Canlı deneyime katıl, etkinlik için hazırlanan tüm içerikleri keşfet."}
-                </p>
-              </>
-            )}
-            <div className="event-poster-cta-pulse mt-5">
-              <Button
-                asChild
-                size="lg"
-                variant="secondary"
-                className="h-14 w-full rounded-[2px] px-8 text-base shadow-[0_18px_42px_-16px_rgba(232,93,44,.95)] hover:scale-[1.02] hover:brightness-110 hover:shadow-[0_22px_48px_-14px_rgba(232,93,44,1)] sm:text-lg"
-              >
-                <Link href="/etkinlik" locale={locale} onClick={dismiss}>
-                  {en ? "Join Now 🚀" : "Hemen Katıl 🚀"}
-                </Link>
-              </Button>
-            </div>
+          <div className="flex flex-col gap-2 border-t border-white/10 bg-primary-950 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-5">
+            <p className="text-[13px] leading-5 text-primary-100 sm:text-sm">
+              {en
+                ? "Quizzes, raffles and more await."
+                : "Quiz, çekiliş ve sürprizler bir arada."}
+            </p>
+            <Button
+              asChild
+              size="sm"
+              variant="secondary"
+              className="h-10 w-full shrink-0 rounded-[2px] px-5 text-sm shadow-none hover:translate-y-0 hover:bg-accent-700 hover:text-white sm:w-auto"
+            >
+              <Link href="/etkinlik" locale={locale} onClick={dismiss}>
+                {en ? "Join the Event" : "Etkinliğe Katıl"}
+                <ArrowUpRight aria-hidden="true" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
