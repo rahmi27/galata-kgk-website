@@ -10,6 +10,7 @@ export async function GET() {
     select: {
       id: true,
       title: true,
+      raffleName: true,
       showLiveCountersPublicly: true,
       quizzes: { where: { isActive: true }, take: 1, select: { id: true } },
       polls: { where: { isActive: true }, take: 1, include: { options: { orderBy: { order: "asc" }, include: { _count: { select: { votes: true } } } }, _count: { select: { votes: true } } } },
@@ -26,5 +27,5 @@ export async function GET() {
   const total = poll?._count.votes ?? 0;
   const winner = active.raffleWinners[0];
   const counters = active.showLiveCountersPublicly ? await getEventModeStats(active.id) : null;
-  return Response.json({ session: { title: active.title, leaderboard, poll: poll ? { question: poll.question, total, options: poll.options.map((option) => ({ text: option.text, votes: option._count.votes, percent: total ? Math.round(option._count.votes / total * 100) : 0 })) } : null, counters, raffleNames: active.raffleEntries.map((entry) => publicParticipantName(entry.participant.fullName)), winner: winner ? { id: winner.id, name: publicParticipantName(winner.raffleEntry.participant.fullName), drawnAt: winner.drawnAt.toISOString() } : null } }, { headers: { "Cache-Control": "no-store, max-age=0" } });
+  return Response.json({ session: { title: active.title, raffleName: active.raffleName, leaderboard, poll: poll ? { question: poll.question, total, options: poll.options.map((option) => ({ text: option.text, votes: option._count.votes, percent: total ? Math.round(option._count.votes / total * 100) : 0 })) } : null, counters, raffleNames: active.raffleEntries.map((entry) => publicParticipantName(entry.participant.fullName)), winner: winner ? { id: winner.id, name: publicParticipantName(winner.raffleEntry.participant.fullName), drawnAt: winner.drawnAt.toISOString() } : null } }, { headers: { "Cache-Control": "no-store, max-age=0" } });
 }

@@ -71,6 +71,7 @@ model EventSession {
   showLiveCountersPublicly   Boolean            @default(false)
   quizEnabled                Boolean            @default(false)
   raffleEnabled              Boolean            @default(false)
+  raffleName                 String             @default("Etkinlik Çekilişi")
   joinButtonEnabled          Boolean            @default(false)
   feedbackEnabled            Boolean            @default(false)
   badgeEnabled               Boolean            @default(false)
