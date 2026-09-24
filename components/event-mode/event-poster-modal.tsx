@@ -69,22 +69,22 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
 
   if (!open) return null;
   const en = locale === "en";
-  const landscape = eventSession.posterOrientation === "landscape";
-  const maxWidth = landscape ? "72rem" : "34rem";
+  const widePoster = imageAspectRatio >= 1;
+  const maxWidth = widePoster ? "90rem" : "42rem";
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={eventSession.title}
-      className="event-poster-overlay fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-md sm:p-6"
+      className="event-poster-overlay fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto p-0 backdrop-blur-md sm:p-3"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) dismiss();
       }}
     >
       <div
-        className="event-poster-card relative my-auto max-h-[calc(100dvh-1.5rem)] max-w-full overflow-y-auto rounded-[2px] bg-primary-950 shadow-[0_32px_110px_-30px_rgba(0,0,0,.82)] sm:max-h-[calc(100dvh-3rem)]"
-        style={{ width: `min(94vw, ${maxWidth}, ${70 * imageAspectRatio}dvh)` }}
+        className="event-poster-card relative my-auto max-h-dvh max-w-full overflow-y-auto rounded-[2px] p-[2px] sm:max-h-[calc(100dvh-1.5rem)]"
+        style={{ width: `min(100vw, ${maxWidth}, ${84 * imageAspectRatio}dvh)` }}
       >
         <button
           type="button"
@@ -95,14 +95,14 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
           <X className="size-4" aria-hidden="true" />
         </button>
 
-        <div>
+        <div className="bg-primary-950">
           <div className="relative w-full overflow-hidden bg-primary-950" style={{ aspectRatio: imageAspectRatio }}>
             <Image
               src={eventSession.posterImageUrl}
               alt={`${eventSession.title} ${en ? "event poster" : "etkinlik afişi"}`}
               fill
               priority
-              sizes={landscape ? "(max-width: 640px) 94vw, 72rem" : "(max-width: 640px) 94vw, 34rem"}
+              sizes={widePoster ? "(max-width: 640px) 100vw, 90rem" : "(max-width: 640px) 100vw, 42rem"}
               className="object-contain"
               onLoad={(event) => {
                 const image = event.currentTarget;
@@ -113,8 +113,8 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
             />
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-white/10 bg-primary-950 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:px-5">
-            <p className="text-[13px] leading-5 text-primary-100 sm:text-sm">
+          <div className="event-poster-footer flex flex-col gap-2 border-t border-white/15 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-4">
+            <p className="text-[13px] font-medium leading-5 text-white sm:text-base">
               {en
                 ? "Quizzes, raffles and more await."
                 : "Quiz, çekiliş ve sürprizler bir arada."}
@@ -123,7 +123,7 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
               asChild
               size="sm"
               variant="secondary"
-              className="h-10 w-full shrink-0 rounded-[2px] px-5 text-sm shadow-none hover:translate-y-0 hover:bg-accent-700 hover:text-white sm:w-auto"
+              className="event-poster-join h-12 w-full shrink-0 rounded-[2px] px-7 text-sm font-bold hover:scale-[1.03] hover:brightness-110 sm:w-auto sm:text-base"
             >
               <Link href="/etkinlik" locale={locale} onClick={dismiss}>
                 {en ? "Join the Event" : "Etkinliğe Katıl"}

@@ -170,6 +170,24 @@
   to { opacity: 1; transform: scale3d(1, 1, 1); }
 }
 
+.event-poster-overlay {
+  background: radial-gradient(circle at 50% 40%, rgba(232, 93, 44, .26), rgba(7, 10, 22, .82) 66%);
+}
+
+.event-poster-card {
+  background: linear-gradient(135deg, #ff925e, #334981 46%, #f36a35);
+  box-shadow: 0 36px 110px rgba(0, 0, 0, .82), 0 0 76px rgba(232, 93, 44, .32);
+}
+
+.event-poster-footer {
+  background: linear-gradient(105deg, #111a34, #1b2850 70%, #382436);
+}
+
+.event-poster-join {
+  background-image: linear-gradient(105deg, #ff8951, #f06834);
+  box-shadow: 0 12px 30px rgba(232, 93, 44, .36);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .event-poster-overlay {
     animation: event-poster-overlay-in 260ms ease-out both;
