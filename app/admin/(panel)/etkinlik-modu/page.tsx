@@ -145,6 +145,31 @@ const eventModeStatus: Record<string, { message: string; className: string; erro
     className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
     error: true,
   },
+  "gorsel-boyut": {
+    message: "Görsel kaydedilemedi: dosya boyutu 5 MB sınırını aşıyor.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gorsel-format": {
+    message: "Görsel kaydedilemedi: yalnızca JPG, PNG veya WebP dosyaları kabul edilir.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gorsel-gecersiz": {
+    message: "Görsel kaydedilemedi: dosya uzantısı ile gerçek görsel biçimi eşleşmiyor veya dosya bozuk.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gorsel-yapilandirma": {
+    message: "Görsel kaydedilemedi: canlı ortamda Vercel Blob bağlantısı bulunamadı.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
+  "gorsel-yukleme": {
+    message: "Görsel yükleme servisi isteği tamamlayamadı. Lütfen kısa bir süre sonra tekrar deneyin.",
+    className: "border-red-200 bg-red-50 text-red-900 dark:border-red-700/60 dark:bg-red-950/60 dark:text-red-100",
+    error: true,
+  },
 };
 
 function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {

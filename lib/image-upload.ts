@@ -40,6 +40,13 @@ const imageTypes = {
 
 type ImageType = keyof typeof imageTypes;
 
+export type ImageUploadErrorCode =
+  | "too-large"
+  | "unsupported-type"
+  | "invalid-image"
+  | "missing-blob-config"
+  | "upload-failed";
+
 type ImageUploadResult =
   | {
       success: true;
@@ -47,6 +54,7 @@ type ImageUploadResult =
     }
   | {
       success: false;
+      code: ImageUploadErrorCode;
       error: string;
     };
 
@@ -89,6 +97,7 @@ export async function saveImageUpload(
   if (value.size > MAX_IMAGE_SIZE) {
     return {
       success: false,
+      code: "too-large",
       error: "Görsel dosyası en fazla 5 MB olabilir.",
     };
   }
@@ -96,6 +105,7 @@ export async function saveImageUpload(
   if (!(value.type in imageTypes)) {
     return {
       success: false,
+      code: "unsupported-type",
       error: "Yalnızca JPG, PNG veya WebP görselleri yükleyebilirsiniz.",
     };
   }
@@ -106,22 +116,24 @@ export async function saveImageUpload(
   if (!imageType.matchesSignature(buffer)) {
     return {
       success: false,
+      code: "invalid-image",
       error: "Dosyanın içeriği geçerli bir görsel formatıyla eşleşmiyor.",
     };
   }
 
   const blobAuth = getBlobAuthOptions();
 
+  const safeBaseName = sanitizeFileName(value.name) || "gorsel";
+  const uniqueName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeBaseName}.${imageType.extension}`;
+
   if (!blobAuth) {
     return {
       success: false,
+      code: "missing-blob-config",
       error:
         "Görsel yükleme servisi yapılandırılmamış. Lütfen yöneticiyle iletişime geçin.",
     };
   }
-
-  const safeBaseName = sanitizeFileName(value.name) || "gorsel";
-  const uniqueName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeBaseName}.${imageType.extension}`;
 
   try {
     const blob = await put(`uploads/${directory}/${uniqueName}`, buffer, {
@@ -140,6 +152,7 @@ export async function saveImageUpload(
 
     return {
       success: false,
+      code: "upload-failed",
       error: "Görsel yüklenemedi. Lütfen tekrar deneyin.",
     };
   }

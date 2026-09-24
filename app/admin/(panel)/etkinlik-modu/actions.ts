@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin-auth";
 import { EVENT_MODE_CACHE_TAG, cleanEventText } from "@/lib/event-mode";
-import { deleteUploadedImage, saveImageUpload } from "@/lib/image-upload";
+import {
+  deleteUploadedImage,
+  type ImageUploadErrorCode,
+  saveImageUpload,
+} from "@/lib/image-upload";
 import { prisma } from "@/lib/prisma";
 import { revalidatePublicPath } from "@/lib/revalidate-public";
 
@@ -22,6 +26,18 @@ function flag(formData: FormData, key: string) {
 function percentage(formData: FormData, key: string, fallback: number) {
   const value = Number(formData.get(key));
   return Number.isInteger(value) && value >= 0 && value <= 100 ? value : fallback;
+}
+
+function imageUploadStatus(code: ImageUploadErrorCode) {
+  const statuses: Record<ImageUploadErrorCode, string> = {
+    "too-large": "gorsel-boyut",
+    "unsupported-type": "gorsel-format",
+    "invalid-image": "gorsel-gecersiz",
+    "missing-blob-config": "gorsel-yapilandirma",
+    "upload-failed": "gorsel-yukleme",
+  };
+
+  return statuses[code];
 }
 
 async function refreshEventMode() {
@@ -60,11 +76,13 @@ export async function saveEventSessionAction(formData: FormData) {
   if (id && !existingSession) throw new Error("Oturum bulunamadı.");
 
   const posterUpload = await saveImageUpload(formData.get("posterImage"), "event-mode");
-  if (!posterUpload.success) redirect("/admin/etkinlik-modu?durum=gorsel-hatasi");
+  if (!posterUpload.success) {
+    redirect(`/admin/etkinlik-modu?durum=${imageUploadStatus(posterUpload.code)}`);
+  }
   const badgeUpload = await saveImageUpload(formData.get("badgeTemplateImage"), "event-mode");
   if (!badgeUpload.success) {
     await deleteUploadedImage(posterUpload.path);
-    redirect("/admin/etkinlik-modu?durum=gorsel-hatasi");
+    redirect(`/admin/etkinlik-modu?durum=${imageUploadStatus(badgeUpload.code)}`);
   }
   const removePoster = formData.get("removePosterImage") === "true";
   const posterImageUrl = posterUpload.path ?? (removePoster ? null : existingSession?.posterImageUrl ?? null);
