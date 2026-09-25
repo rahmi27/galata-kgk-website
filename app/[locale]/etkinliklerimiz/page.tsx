@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
 
+export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {

@@ -119,7 +119,8 @@ test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", 
 
   assert.match(proxy, /pathname\.startsWith\("\/admin"\)/);
   assert.match(proxy, /return NextResponse\.next\(\)/);
-  assert.match(localeLayout, /export const dynamic = "force-static"/);
+  assert.match(localeLayout, /export const revalidate = 86400/);
+  assert.doesNotMatch(localeLayout, /export const dynamic = "force-static"/);
   assert.match(localeLayout, /routing\.locales\.map/);
   assert.match(localeLayout, /<RootDocument locale=\{locale\}>/);
   assert.match(localeLayout, /clientMessageNamespaces/);
@@ -127,6 +128,17 @@ test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", 
   assert.match(rootDocument, /<html lang=\{locale\}/);
   assert.match(revalidation, /for \(const locale of routing\.locales\)/);
   assert.match(revalidation, /`\/\$\{locale\}\$\{normalizedPath\}`/);
+
+  for (const path of [
+    ["ekibimiz", "page.tsx"],
+    ["sponsorlar", "page.tsx"],
+    ["etkinliklerimiz", "page.tsx"],
+    ["etkinliklerimiz", "[slug]", "page.tsx"],
+  ]) {
+    const page = await read("app", "[locale]", ...path);
+    assert.match(page, /export const dynamic = "force-static"/);
+    assert.match(page, /export const revalidate = 86400/);
+  }
 });
 
 test("404 ve hata ekranları locale mesajlarını sunucu/istemci kataloglarından okur", async () => {

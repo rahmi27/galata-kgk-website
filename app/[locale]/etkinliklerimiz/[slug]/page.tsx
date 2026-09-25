@@ -32,6 +32,7 @@ const getEventBySlug = cache((slug: string) =>
   }),
 );
 
+export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export async function generateStaticParams() {

@@ -331,6 +331,10 @@
     radial-gradient(circle at 91% 56%, rgb(245 132 91 / 0.7) 0 1px, transparent 2px);
 }
 
+.site-public-shell {
+  overflow-x: clip;
+}
+
 .ambient-particles--global {
   z-index: 0;
   opacity: 0.64;

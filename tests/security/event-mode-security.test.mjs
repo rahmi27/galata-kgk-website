@@ -25,6 +25,16 @@ test("katılımcı panelinin tamamı imzalı oturum kontrolüyle korunur", async
   assert.match(proxy, /request\.method\s*===\s*"GET"/);
 });
 
+test("locale yerleşimi katılımcı çerezini statik üretimle devre dışı bırakmaz", async () => {
+  const [localeLayout, panelPage] = await Promise.all([
+    read("app", "[locale]", "layout.tsx"),
+    read("app", "[locale]", "etkinlik", "panel", "page.tsx"),
+  ]);
+
+  assert.doesNotMatch(localeLayout, /export\s+const\s+dynamic\s*=\s*["']force-static["']/);
+  assert.match(panelPage, /export\s+const\s+dynamic\s*=\s*["']force-dynamic["']/);
+});
+
 test("etkinlik admin işlemleri veri erişiminden önce yönetici doğrular", async () => {
   const files = [
     ["app", "admin", "(panel)", "etkinlik-modu", "actions.ts"],

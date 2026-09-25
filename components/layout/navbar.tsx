@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight, ChevronDown, Handshake, Menu, PartyPopper, X } from "lucide-react";
 
@@ -201,7 +201,9 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
               </Link>
             </Button>
           ) : null}
-          <LanguageSwitcher />
+          <Suspense fallback={<span className="inline-block h-9 w-[4.5rem]" aria-hidden="true" />}>
+            <LanguageSwitcher />
+          </Suspense>
           <ThemeToggle ariaLabel={common("themeToggle")} />
           <Button
             asChild
