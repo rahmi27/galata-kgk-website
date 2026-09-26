@@ -113,7 +113,7 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
             />
           </div>
 
-          <div className="event-poster-footer flex flex-col gap-2 border-t border-white/15 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-4">
+          <div className={`event-poster-footer flex flex-col gap-2 border-t border-white/15 px-4 py-3 sm:px-6 sm:py-4 ${widePoster ? "items-center text-center sm:gap-3" : "sm:flex-row sm:items-center sm:justify-between sm:gap-6"}`}>
             <p className="text-[13px] font-medium leading-5 text-white sm:text-base">
               {en
                 ? "Quizzes, raffles and more await."

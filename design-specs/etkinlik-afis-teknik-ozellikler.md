@@ -19,7 +19,8 @@ Afiş, modalın ana alanıdır. Genişliği; ekran genişliği, afişin **gerçe
 
 | Görünüm | Açıklama metni | “Etkinliğe Katıl” düğmesi | Bandın yaklaşık yüksekliği |
 | --- | --- | --- | --- |
-| Masaüstü / tablet (≥640 CSS px) | Alt bantta solda; bant solundan **24 px**, 16 px yazı | Aynı bantta sağda; sağdan **24 px**, **48 px** yüksek, yatay iç boşluk **28 px**, metne göre değişen genişlik (TR yaklaşık 180–190 px) | Yaklaşık **80 px** |
+| Dikey afiş — masaüstü / tablet (≥640 CSS px) | Alt bantta solda; bant solundan **24 px**, 16 px yazı | Aynı bantta sağda; sağdan **24 px**, **48 px** yüksek, yatay iç boşluk **28 px**, metne göre değişen genişlik (TR yaklaşık 180–190 px) | Yaklaşık **80 px** |
+| Yatay afiş — masaüstü / tablet (≥640 CSS px) | Afişin altındaki bantta ortalı; 16 px yazı | Açıklamanın **12 px altında**, yatayda ortalı, **48 px** yüksek; yatay iç boşluk **28 px** | Tek satırlı açıklamayla yaklaşık **117 px** |
 | Mobil (<640 CSS px) | Alt bantta üst satır; soldan/sağdan **16 px**, 13 px yazı | Metnin altında **8 px** boşlukla; soldan/sağdan **16 px**, kullanılabilir genişliğin tamamı, **48 px** yüksek | Tek satırlı metinde yaklaşık **100 px**, satır kırılırsa daha fazla |
 
 Modalın çevresindeki turuncu/lacivert 2 px çerçeve, yumuşak ışık ve koyulaştırılmış/bulanık sayfa arka planı arayüz tarafından sağlanır; bunları görsel dosyasına eklemeyin. Afiş, açık ve koyu tema üzerinde aynı şekilde sergilenir. Tasarımın **kendi içinde** okunaklı kontrastı olsun: koyu zeminde açık yazı veya açık zeminde koyu yazı kullanın; çok soluk renklerden, ince küçük yazılardan ve sıkışık yerleşimden kaçının. Web için sRGB kullanın; JPG/WebP'de yaklaşık %80–90 kalite, metinli işlerde PNG veya yüksek kaliteli WebP tercih edin.
