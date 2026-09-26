@@ -40,6 +40,13 @@ const imageTypes = {
 
 type ImageType = keyof typeof imageTypes;
 
+export type ImageUploadErrorCode =
+  | "too-large"
+  | "unsupported-type"
+  | "invalid-image"
+  | "missing-blob-config"
+  | "upload-failed";
+
 type ImageUploadResult =
   | {
       success: true;
@@ -47,20 +54,30 @@ type ImageUploadResult =
     }
   | {
       success: false;
+      code: ImageUploadErrorCode;
       error: string;
     };
 
 function getBlobAuthOptions() {
   const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 
-  if (token) {
+  if (token && token !== "[SENSITIVE]") {
     return { token };
   }
 
   const oidcToken = process.env.VERCEL_OIDC_TOKEN?.trim();
   const storeId = process.env.BLOB_STORE_ID?.trim();
 
-  return oidcToken && storeId ? { oidcToken, storeId } : null;
+  if (
+    oidcToken &&
+    storeId &&
+    oidcToken !== "[SENSITIVE]" &&
+    storeId !== "[SENSITIVE]"
+  ) {
+    return { oidcToken, storeId };
+  }
+
+  return null;
 }
 
 function sanitizeFileName(fileName: string) {
@@ -77,7 +94,7 @@ function sanitizeFileName(fileName: string) {
 
 export async function saveImageUpload(
   value: FormDataEntryValue | null,
-  directory: "events" | "team" | "sponsors" | "partners",
+  directory: "events" | "team" | "sponsors" | "partners" | "event-mode",
 ): Promise<ImageUploadResult> {
   if (!(value instanceof File) || value.size === 0) {
     return {
@@ -89,6 +106,7 @@ export async function saveImageUpload(
   if (value.size > MAX_IMAGE_SIZE) {
     return {
       success: false,
+      code: "too-large",
       error: "Görsel dosyası en fazla 5 MB olabilir.",
     };
   }
@@ -96,6 +114,7 @@ export async function saveImageUpload(
   if (!(value.type in imageTypes)) {
     return {
       success: false,
+      code: "unsupported-type",
       error: "Yalnızca JPG, PNG veya WebP görselleri yükleyebilirsiniz.",
     };
   }
@@ -106,22 +125,24 @@ export async function saveImageUpload(
   if (!imageType.matchesSignature(buffer)) {
     return {
       success: false,
+      code: "invalid-image",
       error: "Dosyanın içeriği geçerli bir görsel formatıyla eşleşmiyor.",
     };
   }
 
   const blobAuth = getBlobAuthOptions();
 
+  const safeBaseName = sanitizeFileName(value.name) || "gorsel";
+  const uniqueName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeBaseName}.${imageType.extension}`;
+
   if (!blobAuth) {
     return {
       success: false,
+      code: "missing-blob-config",
       error:
         "Görsel yükleme servisi yapılandırılmamış. Lütfen yöneticiyle iletişime geçin.",
     };
   }
-
-  const safeBaseName = sanitizeFileName(value.name) || "gorsel";
-  const uniqueName = `${Date.now()}-${randomUUID().slice(0, 8)}-${safeBaseName}.${imageType.extension}`;
 
   try {
     const blob = await put(`uploads/${directory}/${uniqueName}`, buffer, {
@@ -140,6 +161,7 @@ export async function saveImageUpload(
 
     return {
       success: false,
+      code: "upload-failed",
       error: "Görsel yüklenemedi. Lütfen tekrar deneyin.",
     };
   }

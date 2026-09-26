@@ -5,20 +5,25 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import {
+  ArrowLeft,
   BarChart3,
   CalendarDays,
+  Gift,
   Handshake,
   House,
   Inbox,
   Info,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   MapPin,
   Menu,
+  MessageSquareText,
   Network,
   PanelBottom,
   PanelTop,
   ShieldCheck,
+  Sparkles,
   UserRoundCheck,
   UsersRound,
   X,
@@ -39,6 +44,11 @@ const navigation = [
     label: "Etkinlikler",
     href: "/admin/etkinlikler",
     icon: CalendarDays,
+  },
+  {
+    label: "Etkinlik Modu",
+    href: "/admin/etkinlik-modu",
+    icon: Sparkles,
   },
   {
     label: "Üyeler",
@@ -105,6 +115,29 @@ const appearanceNavigation = [
   },
 ] as const;
 
+const eventModeNavigation = [
+  {
+    label: "Quiz",
+    href: "/admin/etkinlik-modu/quiz",
+    icon: ListChecks,
+  },
+  {
+    label: "Çekiliş",
+    href: "/admin/etkinlik-modu/cekilis",
+    icon: Gift,
+  },
+  {
+    label: "Anket",
+    href: "/admin/etkinlik-modu/anket",
+    icon: BarChart3,
+  },
+  {
+    label: "Geri Bildirim",
+    href: "/admin/etkinlik-modu/geri-bildirim",
+    icon: MessageSquareText,
+  },
+] as const;
+
 type AdminShellProps = {
   children: React.ReactNode;
   userName: string;
@@ -119,7 +152,7 @@ function AdminNavigation({
   onNavigate?: () => void;
 }) {
   function renderNavigationItem(
-    item: (typeof navigation)[number] | (typeof appearanceNavigation)[number],
+    item: (typeof navigation)[number] | (typeof appearanceNavigation)[number] | (typeof eventModeNavigation)[number],
   ) {
     const Icon = item.icon;
     const isActive =
@@ -155,8 +188,17 @@ function AdminNavigation({
   }
 
   return (
-    <nav className="mt-8 space-y-1" aria-label="Yönetim menüsü">
-      {navigation.map(renderNavigationItem)}
+    <nav className="mt-8 min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable]" aria-label="Yönetim menüsü">
+      {navigation.map((item) => (
+        <div key={item.href}>
+          {renderNavigationItem(item)}
+          {item.href === "/admin/etkinlik-modu" ? (
+            <div className="mb-2 ml-5 space-y-1 border-l border-white/15 pl-2">
+              {eventModeNavigation.map(renderNavigationItem)}
+            </div>
+          ) : null}
+        </div>
+      ))}
       <p className="px-3.5 pb-2 pt-7 font-heading text-[0.68rem] font-bold uppercase tracking-[0.18em] text-accent-200">
         Görünüm Yönetimi
       </p>
@@ -164,6 +206,19 @@ function AdminNavigation({
         {appearanceNavigation.map(renderNavigationItem)}
       </div>
     </nav>
+  );
+}
+
+function BackToSiteLink({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <Link
+      href="/"
+      onClick={onNavigate}
+      className="mt-5 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-3.5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-accent-300/60 hover:bg-white/[0.13]"
+    >
+      <ArrowLeft className="size-4 text-accent-200" aria-hidden="true" />
+      Siteye Dön
+    </Link>
   );
 }
 
@@ -194,6 +249,8 @@ export function AdminShell({
         <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary-300">
           Yönetim Paneli
         </p>
+
+        <BackToSiteLink />
 
         <AdminNavigation pathname={pathname} />
 
@@ -270,6 +327,7 @@ export function AdminShell({
                 <X aria-hidden="true" />
               </Button>
             </div>
+            <BackToSiteLink onNavigate={() => setIsMobileMenuOpen(false)} />
             <AdminNavigation
               pathname={pathname}
               onNavigate={() => setIsMobileMenuOpen(false)}

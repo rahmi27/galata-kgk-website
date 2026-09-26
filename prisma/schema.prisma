@@ -13,6 +13,11 @@ enum SiteContentType {
   image
 }
 
+enum PosterOrientation {
+  portrait
+  landscape
+}
+
 model AdminUser {
   id           Int      @id @default(autoincrement())
   username     String   @unique
@@ -31,10 +36,10 @@ model AdminLoginAttempt {
 }
 
 model Event {
-  id                Int       @id @default(autoincrement())
+  id                Int            @id @default(autoincrement())
   title             String
   titleEn           String?
-  slug              String    @unique
+  slug              String         @unique
   description       String
   descriptionEn     String?
   longDescription   String
@@ -47,9 +52,173 @@ model Event {
   imageAltEn        String?
   category          String
   categoryEn        String?
-  createdAt         DateTime  @default(now())
+  createdAt         DateTime       @default(now())
+  eventSessions     EventSession[]
 
   @@index([date])
+}
+
+model EventSession {
+  id                         Int                @id @default(autoincrement())
+  isActive                   Boolean            @default(false)
+  linkedEventId              Int?
+  title                      String
+  posterImageUrl             String?
+  posterOrientation          PosterOrientation  @default(portrait)
+  badgeTemplateUrl           String?
+  namePositionYPercent       Int                @default(60)
+  eventTitlePositionYPercent Int                @default(72)
+  showLiveCountersPublicly   Boolean            @default(false)
+  quizEnabled                Boolean            @default(false)
+  raffleEnabled              Boolean            @default(false)
+  raffleName                 String             @default("Etkinlik Çekilişi")
+  joinButtonEnabled          Boolean            @default(false)
+  feedbackEnabled            Boolean            @default(false)
+  badgeEnabled               Boolean            @default(false)
+  pollEnabled                Boolean            @default(false)
+  createdAt                  DateTime           @default(now())
+  linkedEvent                Event?             @relation(fields: [linkedEventId], references: [id], onDelete: SetNull)
+  participants               EventParticipant[]
+  quizzes                    Quiz[]
+  raffleEntries              RaffleEntry[]
+  raffleWinners              RaffleWinner[]
+  feedback                   Feedback[]
+  polls                      Poll[]
+
+  @@index([isActive])
+  @@index([linkedEventId])
+}
+
+model EventParticipant {
+  id                Int           @id @default(autoincrement())
+  eventSessionId    Int
+  fullName          String
+  email             String
+  department        String
+  consentAcceptedAt DateTime
+  createdAt         DateTime      @default(now())
+  eventSession      EventSession  @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  quizAnswers       QuizAnswer[]
+  raffleEntries     RaffleEntry[]
+  feedback          Feedback[]
+  pollVotes         PollVote[]
+
+  @@unique([eventSessionId, email])
+  @@index([eventSessionId, createdAt])
+}
+
+model Quiz {
+  id             Int            @id @default(autoincrement())
+  eventSessionId Int
+  title          String
+  isActive       Boolean        @default(false)
+  eventSession   EventSession   @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  questions      QuizQuestion[]
+
+  @@index([eventSessionId, isActive])
+}
+
+model QuizQuestion {
+  id                 Int          @id @default(autoincrement())
+  quizId             Int
+  questionText       String
+  options            Json
+  correctOptionIndex Int
+  order              Int
+  quiz               Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers            QuizAnswer[]
+
+  @@index([quizId, order])
+}
+
+model QuizAnswer {
+  id                  Int              @id @default(autoincrement())
+  participantId       Int
+  questionId          Int
+  selectedOptionIndex Int
+  isCorrect           Boolean
+  answeredAt          DateTime         @default(now())
+  participant         EventParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  question            QuizQuestion     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, questionId])
+  @@index([questionId, isCorrect])
+}
+
+model RaffleEntry {
+  id                Int              @id @default(autoincrement())
+  eventSessionId    Int
+  participantId     Int
+  consentAcceptedAt DateTime
+  createdAt         DateTime         @default(now())
+  eventSession      EventSession     @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  participant       EventParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  winner            RaffleWinner?
+
+  @@unique([eventSessionId, participantId])
+  @@index([eventSessionId, createdAt])
+}
+
+model RaffleWinner {
+  id             Int          @id @default(autoincrement())
+  eventSessionId Int
+  raffleEntryId  Int          @unique
+  drawnAt        DateTime     @default(now())
+  eventSession   EventSession @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  raffleEntry    RaffleEntry  @relation(fields: [raffleEntryId], references: [id], onDelete: Cascade)
+
+  @@index([eventSessionId, drawnAt])
+}
+
+model Feedback {
+  id             Int               @id @default(autoincrement())
+  eventSessionId Int
+  participantId  Int?
+  rating         Int
+  comment        String?           @db.Text
+  createdAt      DateTime          @default(now())
+  eventSession   EventSession      @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  participant    EventParticipant? @relation(fields: [participantId], references: [id], onDelete: SetNull)
+
+  @@index([eventSessionId, createdAt])
+  @@index([participantId])
+}
+
+model Poll {
+  id             Int          @id @default(autoincrement())
+  eventSessionId Int
+  question       String
+  isActive       Boolean      @default(false)
+  eventSession   EventSession @relation(fields: [eventSessionId], references: [id], onDelete: Cascade)
+  options        PollOption[]
+  votes          PollVote[]
+
+  @@index([eventSessionId, isActive])
+}
+
+model PollOption {
+  id     Int        @id @default(autoincrement())
+  pollId Int
+  text   String
+  order  Int
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes  PollVote[]
+
+  @@index([pollId, order])
+}
+
+model PollVote {
+  id            Int              @id @default(autoincrement())
+  pollId        Int
+  pollOptionId  Int
+  participantId Int
+  createdAt     DateTime         @default(now())
+  poll          Poll             @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollOption    PollOption       @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  participant   EventParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, participantId])
+  @@index([pollOptionId])
 }
 
 model Person {

@@ -7,6 +7,7 @@ import { AmbientParticles } from "@/components/effects/ambient-particles";
 import { PageScrollControl } from "@/components/effects/page-scroll-control";
 import { ParticlePointerRuntime } from "@/components/effects/particle-pointer-runtime";
 import { ScrollMotionRuntime } from "@/components/effects/scroll-motion-runtime";
+import { EventPosterModal } from "@/components/event-mode/event-poster-modal";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import type { SiteChromeContent } from "@/lib/site-content";
@@ -14,9 +15,10 @@ import type { SiteChromeContent } from "@/lib/site-content";
 type SiteShellProps = {
   children: React.ReactNode;
   content: SiteChromeContent;
+  activeEventSession: { id: number; title: string; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape" } | null;
 };
 
-export function SiteShell({ children, content }: SiteShellProps) {
+export function SiteShell({ children, content, activeEventSession }: SiteShellProps) {
   const pathname = usePathname();
   const contentRef = useRef<HTMLDivElement>(null);
   const previousPathname = useRef(pathname);
@@ -60,7 +62,8 @@ export function SiteShell({ children, content }: SiteShellProps) {
         variant={particleVariant}
         className="ambient-particles--global"
       />
-      <Navbar content={content} />
+      {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl, posterOrientation: activeEventSession.posterOrientation }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
+      <Navbar content={content} activeEventSession={activeEventSession} />
       <div
         id="site-content"
         ref={contentRef}

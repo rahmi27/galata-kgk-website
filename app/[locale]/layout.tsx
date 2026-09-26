@@ -7,6 +7,7 @@ import {SiteShell} from "@/components/layout/site-shell";
 import {RootDocument} from "@/components/root-document";
 import {routing} from "@/i18n/routing";
 import {getSiteChromeContent} from "@/lib/site-content";
+import {getActiveEventSession} from "@/lib/event-mode";
 import {
   createPageMetadata,
   SITE_NAME,
@@ -16,12 +17,10 @@ import {
 
 import "../globals.css";
 
-// Locale params are finite and known. Force the public tree to remain static/ISR
-// even though unknown dynamic slugs can still be generated on first request.
-export const dynamic = "force-static";
 // Public content is refreshed on demand by the related admin action. The
 // daily fallback only protects against out-of-band database changes and date
-// rollovers without continuously rewriting every localized route.
+// rollovers without continuously rewriting every localized route. Do not force
+// the entire locale tree static: Event Mode children read participant cookies.
 export const revalidate = 86400;
 
 const clientMessageNamespaces = [
@@ -96,9 +95,10 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
 
-  const [messages, chromeContent] = await Promise.all([
+  const [messages, chromeContent, activeEventSession] = await Promise.all([
     getMessages({locale}),
     getSiteChromeContent(locale),
+    getActiveEventSession(),
   ]);
   const clientMessages = Object.fromEntries(
     clientMessageNamespaces.map((namespace) => [
@@ -110,7 +110,7 @@ export default async function LocaleLayout({
   return (
     <RootDocument locale={locale}>
       <NextIntlClientProvider locale={locale} messages={clientMessages}>
-        <SiteShell content={chromeContent}>{children}</SiteShell>
+        <SiteShell content={chromeContent} activeEventSession={activeEventSession}>{children}</SiteShell>
       </NextIntlClientProvider>
     </RootDocument>
   );

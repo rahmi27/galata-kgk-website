@@ -1,0 +1,4 @@
+ALTER TABLE "EventSession"
+ADD COLUMN "badgeTemplateUrl" TEXT,
+ADD COLUMN "namePositionYPercent" INTEGER NOT NULL DEFAULT 60,
+ADD COLUMN "eventTitlePositionYPercent" INTEGER NOT NULL DEFAULT 72;

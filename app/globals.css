@@ -155,6 +155,78 @@
   }
 }
 
+@keyframes event-mode-nav-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(232, 93, 44, 0.15), 0 10px 24px -16px rgba(232, 93, 44, 0.7); }
+  50% { box-shadow: 0 0 22px rgba(232, 93, 44, 0.32), 0 14px 30px -16px rgba(232, 93, 44, 0.95); }
+}
+
+@keyframes event-poster-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes event-poster-card-in {
+  from { opacity: 0; transform: scale3d(.95, .95, 1); }
+  to { opacity: 1; transform: scale3d(1, 1, 1); }
+}
+
+.event-poster-overlay {
+  background: radial-gradient(circle at 50% 40%, rgba(232, 93, 44, .26), rgba(7, 10, 22, .82) 66%);
+}
+
+.event-poster-card {
+  background: linear-gradient(135deg, #ff925e, #334981 46%, #f36a35);
+  box-shadow: 0 36px 110px rgba(0, 0, 0, .82), 0 0 76px rgba(232, 93, 44, .32);
+}
+
+.event-poster-footer {
+  background: linear-gradient(105deg, #111a34, #1b2850 70%, #382436);
+}
+
+.event-poster-join {
+  background-image: linear-gradient(105deg, #ff8951, #f06834);
+  box-shadow: 0 12px 30px rgba(232, 93, 44, .36);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .event-poster-overlay {
+    animation: event-poster-overlay-in 260ms ease-out both;
+  }
+
+  .event-poster-card {
+    animation: event-poster-card-in 280ms cubic-bezier(.22, 1, .36, 1) both;
+    will-change: transform, opacity;
+  }
+}
+
+.event-mode-nav-button {
+  animation: event-mode-nav-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes event-winner-mix {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.025); opacity: .72; }
+}
+
+.event-winner-mixing {
+  animation: event-winner-mix 180ms ease-in-out infinite;
+}
+
+@keyframes event-answer-pop {
+  0% { transform: scale(.985); opacity: .78; }
+  55% { transform: scale(1.012); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.event-answer-correct,
+.event-answer-wrong {
+  animation: event-answer-pop 320ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-mode-nav-button { animation: none; }
+}
+
 @keyframes ambient-field-a {
   0%,
   100% {
@@ -257,6 +329,10 @@
     radial-gradient(circle at 66% 96%, rgb(245 132 91 / 0.66) 0 1px, transparent 2px),
     radial-gradient(circle at 78% 31%, rgb(232 93 44 / 0.72) 0 1.5px, transparent 2.5px),
     radial-gradient(circle at 91% 56%, rgb(245 132 91 / 0.7) 0 1px, transparent 2px);
+}
+
+.site-public-shell {
+  overflow-x: clip;
 }
 
 .ambient-particles--global {
