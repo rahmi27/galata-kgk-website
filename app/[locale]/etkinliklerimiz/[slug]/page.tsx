@@ -1,6 +1,7 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
@@ -12,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
+import { getPathname, Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
@@ -119,10 +120,10 @@ export default async function EventDetailPage({
             </p>
             {isLinkedActiveEvent ? (
               <Button asChild variant="secondary" className="mt-8">
-                <Link href="/etkinlik" locale={locale}>
+                <NextLink href={getPathname({ locale, href: "/etkinlik" })}>
                   {t("enterEvent")}
                   <ArrowUpRight aria-hidden="true" />
-                </Link>
+                </NextLink>
               </Button>
             ) : null}
           </div>

@@ -106,7 +106,7 @@ test("halka açık canlı veriler kişisel e-posta ve bölüm alanlarını seçm
   }
 });
 
-test("canlı ekran polling aralıkları ölçülü ve popup oturum başına tektir", async () => {
+test("canlı ekran polling aralıkları ölçülü ve popup taze yüklemede açılır", async () => {
   const [stage, leaderboard, adminStats, poster] = await Promise.all([
     read("components", "event-mode", "stage-dashboard.tsx"),
     read("components", "event-mode", "live-leaderboard.tsx"),
@@ -116,8 +116,8 @@ test("canlı ekran polling aralıkları ölçülü ve popup oturum başına tekt
   assert.match(stage, /setInterval\(refresh, 3000\)/);
   assert.match(leaderboard, /refreshMs = 4000/);
   assert.match(adminStats, /setInterval\(refresh, 5000\)/);
-  assert.match(poster, /sessionStorage\.getItem/);
-  assert.match(poster, /sessionStorage\.setItem/);
+  assert.doesNotMatch(poster, /sessionStorage/);
+  assert.match(poster, /useEffect\(\(\) => \{[\s\S]*?requestAnimationFrame\(\(\) => setOpen\(true\)\);[\s\S]*?\}, \[\]\)/);
 });
 
 test("etkinlik oturumu kaydı popup verisini bekletmeden yeniler ve yükleme hatasını başarı saymaz", async () => {

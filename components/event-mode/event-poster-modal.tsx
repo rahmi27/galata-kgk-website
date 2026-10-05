@@ -30,7 +30,9 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
   useEffect(() => {
     // This layout-level component survives client-side navigation. A fresh
     // document load mounts it again, so the poster reopens on every reload.
-    setOpen(true);
+    // Schedule after hydration; Strict Mode may replay this effect in dev,
+    // so do not cancel the first frame and leave the poster hidden.
+    window.requestAnimationFrame(() => setOpen(true));
   }, []);
 
   useEffect(() => {
@@ -109,7 +111,6 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
                 href={eventSession.linkedEvent
                   ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: eventSession.linkedEvent.slug } }
                   : "/etkinlik"}
-                locale={locale}
                 onClick={dismiss}
               >
                 {en ? "Join the Event" : "Etkinliğe Katıl"}
