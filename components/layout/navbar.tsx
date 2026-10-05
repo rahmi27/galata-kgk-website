@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const partnerRouteHrefs = ["/sponsorlar", "/is-birlikleri"] as const;
 
-export function Navbar({ content, activeEventSession }: { content: SiteChromeContent; activeEventSession: { id: number; title: string } | null }) {
+export function Navbar({ content, activeEventSession }: { content: SiteChromeContent; activeEventSession: { id: number; title: string; linkedEvent: { slug: string } | null } | null }) {
   const t = useTranslations("nav");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -195,7 +195,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
         <div className="flex shrink-0 items-center gap-2.5">
           {activeEventSession ? (
             <Button asChild className="event-mode-nav-button hidden lg:inline-flex" variant="secondary">
-              <Link href="/etkinlik" locale={locale}>
+              <Link href={activeEventSession.linkedEvent ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: activeEventSession.linkedEvent.slug } } : "/etkinlik"} locale={locale}>
                 <PartyPopper className="size-4" aria-hidden="true" />
                 <span className="max-w-36 truncate">{activeEventSession.title}</span>
               </Link>
@@ -249,7 +249,7 @@ export function Navbar({ content, activeEventSession }: { content: SiteChromeCon
           >
             {activeEventSession ? (
               <Button asChild className="event-mode-nav-button mb-3 w-full" variant="secondary">
-                <Link href="/etkinlik" locale={locale} onClick={() => setIsMenuOpen(false)}>
+                <Link href={activeEventSession.linkedEvent ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: activeEventSession.linkedEvent.slug } } : "/etkinlik"} locale={locale} onClick={() => setIsMenuOpen(false)}>
                   <PartyPopper className="size-4" aria-hidden="true" />
                   {activeEventSession.title}
                 </Link>

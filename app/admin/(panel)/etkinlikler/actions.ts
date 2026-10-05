@@ -11,6 +11,7 @@ import {
   saveImageUpload,
 } from "@/lib/image-upload";
 import { notifyIndexNow } from "@/lib/indexnow";
+import { EVENT_MODE_CACHE_TAG } from "@/lib/event-mode";
 import { prisma } from "@/lib/prisma";
 import { revalidatePublicPath } from "@/lib/revalidate-public";
 
@@ -224,6 +225,8 @@ export async function updateEventAction(
       revalidateSitemap: existingEvent.slug !== slug,
     });
 
+    updateTag(EVENT_MODE_CACHE_TAG);
+
     if (
       existingEvent.imageUrl &&
       existingEvent.imageUrl !== nextImageUrl
@@ -271,6 +274,8 @@ export async function deleteEventAction(
         id: eventId,
       },
     });
+
+    updateTag(EVENT_MODE_CACHE_TAG);
 
     await deleteUploadedImage(event.imageUrl);
     await refreshEventPages([event.slug], { revalidateSitemap: true });

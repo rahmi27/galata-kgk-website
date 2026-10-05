@@ -13,6 +13,7 @@ type EventPosterModalProps = {
     title: string;
     posterImageUrl: string;
     posterOrientation: "portrait" | "landscape";
+    linkedEvent: { slug: string } | null;
   };
   locale: string;
 };
@@ -104,7 +105,13 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
               variant="secondary"
               className="event-poster-join h-12 w-full shrink-0 rounded-[2px] px-7 text-sm font-bold hover:scale-[1.03] hover:brightness-110 sm:w-auto sm:text-base"
             >
-              <Link href="/etkinlik" locale={locale} onClick={dismiss}>
+              <Link
+                href={eventSession.linkedEvent
+                  ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: eventSession.linkedEvent.slug } }
+                  : "/etkinlik"}
+                locale={locale}
+                onClick={dismiss}
+              >
                 {en ? "Join the Event" : "Etkinliğe Katıl"}
                 <ArrowUpRight aria-hidden="true" />
               </Link>
