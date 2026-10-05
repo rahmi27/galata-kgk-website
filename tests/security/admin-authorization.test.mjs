@@ -36,7 +36,10 @@ test("tüm admin Server Action'ları veri erişiminden önce requireAdmin çağ�
       const body = source.slice(current.index, next?.index ?? source.length);
       const guardIndex = body.indexOf("await requireAdmin(");
       const prismaIndex = body.indexOf("prisma.");
-      const uploadIndex = body.indexOf("saveImageUpload(");
+      const uploadIndex = Math.max(
+        body.indexOf("saveImageUpload("),
+        body.indexOf("saveEventGalleryVideoUpload("),
+      );
 
       assert.notEqual(
         guardIndex,
@@ -63,7 +66,7 @@ test("tüm admin Server Action'ları veri erişiminden önce requireAdmin çağ�
     }
   }
 
-  assert.equal(actionCount, 52, "Beklenen admin action envanteri değişti");
+  assert.equal(actionCount, 53, "Beklenen admin action envanteri değişti");
 });
 
 test("admin panel layout'u doğrudan URL erişiminde de oturum ister", async () => {

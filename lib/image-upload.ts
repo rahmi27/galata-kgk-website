@@ -58,7 +58,7 @@ type ImageUploadResult =
       error: string;
     };
 
-function getBlobAuthOptions() {
+export function getBlobAuthOptions() {
   const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 
   if (token && token !== "[SENSITIVE]") {

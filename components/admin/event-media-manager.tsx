@@ -8,12 +8,14 @@ import { ArrowDown, ArrowUp, Save, Trash2, Upload } from "lucide-react";
 
 import {
   addEventGalleryImageAction,
+  addEventGalleryVideoAction,
   addEventMediaAction,
   deleteEventMediaAction,
   updateEventMediaAction,
 } from "@/app/admin/(panel)/etkinlikler/media-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MAX_SERVER_VIDEO_SIZE } from "@/lib/event-video-validation";
 
 type MediaItem = {
   id: number;
@@ -54,10 +56,6 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
     setUploadStatus("Yükleme hazırlanıyor...");
     const controller = new AbortController();
     let stallTimer: ReturnType<typeof setTimeout> | undefined;
-    const resetStallTimer = () => {
-      if (stallTimer) clearTimeout(stallTimer);
-      stallTimer = setTimeout(() => controller.abort(), 90_000);
-    };
     try {
       if (type === "image") {
         const formData = new FormData();
@@ -78,19 +76,35 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
         return;
       }
 
+      if (file.size <= MAX_SERVER_VIDEO_SIZE) {
+        const formData = new FormData();
+        formData.set("file", file);
+        formData.set("caption", caption);
+        formData.set("captionEn", captionEn);
+        formData.set("order", String(order));
+        setUploadStatus("Video güvenli şekilde yüklenip galeriye kaydediliyor...");
+        const result = await addEventGalleryVideoAction(eventId, formData);
+        setMessage(result.message);
+        if (result.success) {
+          if (fileRef.current) fileRef.current.value = "";
+          setCaption("");
+          setCaptionEn("");
+          setOrder((value) => value + 1);
+          router.refresh();
+        }
+        return;
+      }
+
       const extension = file.type.split("/")[1];
       const pathname = `uploads/events/gallery/${eventId}/${crypto.randomUUID()}.${extension}`;
-      resetStallTimer();
+      setUploadStatus("Büyük video doğrudan depoya aktarılıyor. Lütfen sekmeyi kapatmayın...");
+      stallTimer = setTimeout(() => controller.abort(), 180_000);
       const blob = await upload(pathname, file, {
         access: "public",
         handleUploadUrl: "/api/admin/events/media/upload",
         clientPayload: JSON.stringify({ eventId, type }),
-        multipart: type === "video" && file.size >= 5 * 1024 * 1024,
+        multipart: file.size > 50 * 1024 * 1024,
         abortSignal: controller.signal,
-        onUploadProgress: ({ percentage }) => {
-          resetStallTimer();
-          setUploadStatus(`Dosya yükleniyor: %${Math.min(100, Math.max(0, Math.round(percentage)))}`);
-        },
       });
       if (stallTimer) clearTimeout(stallTimer);
       setUploadStatus("Galeriye kaydediliyor...");
@@ -106,7 +120,7 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
     } catch (error) {
       console.error("Galeri yüklemesi başarısız.", error);
       setMessage(controller.signal.aborted
-        ? "Yükleme 90 saniye boyunca ilerlemedi ve durduruldu. Bağlantınızı kontrol edip tekrar deneyin."
+        ? "Video aktarımı 3 dakika içinde tamamlanmadı. Daha küçük bir MP4 deneyin veya bağlantınızı kontrol edin."
         : "Dosya yüklenemedi. Bağlantınızı, yönetici oturumunuzu ve Blob ayarlarını kontrol edin.");
     } finally {
       if (stallTimer) clearTimeout(stallTimer);

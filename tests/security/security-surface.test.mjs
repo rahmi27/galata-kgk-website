@@ -96,6 +96,8 @@ test("event gallery upload token and metadata writes require admin validation", 
   assert.match(route, /onBeforeGenerateToken:[\s\S]*?await getCurrentAdmin\(\)/);
   assert.match(route, /maximumSizeInBytes:/);
   assert.match(actions, /await requireAdmin\(\)/);
+  assert.match(actions, /export async function addEventGalleryVideoAction[\s\S]*?await requireAdmin\(\)/);
+  assert.match(actions, /saveEventGalleryVideoUpload\(file, eventId\)/);
   assert.match(actions, /await head\(url\.href\)/);
   assert.match(actions, /eventId[^\n]*mediaId|id: mediaId, eventId/);
 });

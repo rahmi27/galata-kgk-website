@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { requireAdmin } from "@/lib/admin-auth";
 import { deleteUploadedImage, saveImageUpload } from "@/lib/image-upload";
+import { saveEventGalleryVideoUpload } from "@/lib/event-video-upload";
 import { prisma } from "@/lib/prisma";
 import { revalidatePublicPath } from "@/lib/revalidate-public";
 
@@ -71,6 +72,46 @@ export async function addEventGalleryImageAction(eventId: number, formData: Form
     await deleteUploadedImage(upload.path);
     console.error("Etkinlik galerisi fotoğrafı kaydedilemedi.", error);
     return { success: false, message: "Fotoğraf kaydedilemedi. Lütfen tekrar deneyin." };
+  }
+}
+
+export async function addEventGalleryVideoAction(eventId: number, formData: FormData): Promise<Result> {
+  await requireAdmin();
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    return { success: false, message: "Etkinlik bulunamadı." };
+  }
+  const event = await prisma.event.findUnique({ where: { id: eventId }, select: { slug: true } });
+  if (!event) return { success: false, message: "Etkinlik bulunamadı." };
+
+  const rawCaption = formData.get("caption");
+  const rawCaptionEn = formData.get("captionEn");
+  const rawOrder = formData.get("order");
+  if ((rawCaption !== null && typeof rawCaption !== "string") ||
+    (rawCaptionEn !== null && typeof rawCaptionEn !== "string") ||
+    typeof rawOrder !== "string") {
+    return { success: false, message: "Başlık veya sıra numarası geçersiz." };
+  }
+  const caption = normalizedCaption(rawCaption ?? "");
+  const captionEn = normalizedCaption(rawCaptionEn ?? "");
+  const order = Number(rawOrder);
+  if (caption === undefined || captionEn === undefined || !validOrder(order)) {
+    return { success: false, message: "Başlık veya sıra numarası geçersiz." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File)) return { success: false, message: "Önce bir video seçin." };
+
+  const upload = await saveEventGalleryVideoUpload(file, eventId);
+  if (!upload.success) return { success: false, message: upload.error };
+  try {
+    await prisma.eventMedia.create({
+      data: { eventId, type: "video", url: upload.url, caption, captionEn, order },
+    });
+    refreshMediaPages(eventId, event.slug);
+    return { success: true, message: "Video galeriye eklendi." };
+  } catch (error) {
+    await deleteUploadedImage(upload.url);
+    console.error("Etkinlik galerisi videosu kaydedilemedi.", error);
+    return { success: false, message: "Video kaydedilemedi. Lütfen tekrar deneyin." };
   }
 }
 
