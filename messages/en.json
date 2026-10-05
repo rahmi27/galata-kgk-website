@@ -161,6 +161,7 @@
     "location": "Location",
     "category": "Category",
     "about": "About This Event",
+    "enterEvent": "Enter the Event 🚀",
     "previousYear": "Previous year",
     "nextYear": "Next year",
     "multipleEvents": "{count} events",

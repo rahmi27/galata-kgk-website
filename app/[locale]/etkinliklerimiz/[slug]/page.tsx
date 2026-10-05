@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ArrowLeft,
+  ArrowUpRight,
   CalendarDays,
   MapPin,
   Tag,
@@ -15,6 +16,7 @@ import { Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
+import { getActiveEventSession } from "@/lib/event-mode";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 type EventDetailPageProps = {
@@ -80,6 +82,9 @@ export default async function EventDetailPage({
     notFound();
   }
 
+  const activeEventSession = await getActiveEventSession();
+  const isLinkedActiveEvent = activeEventSession?.linkedEventId === event.id;
+
   const eventTitle = localizedValue(locale, event.title, event.titleEn);
   const eventDescription = localizedValue(locale, event.description, event.descriptionEn);
   const eventLongDescription = localizedValue(locale, event.longDescription, event.longDescriptionEn);
@@ -111,6 +116,14 @@ export default async function EventDetailPage({
             <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9">
               {eventDescription}
             </p>
+            {isLinkedActiveEvent ? (
+              <Button asChild variant="secondary" className="mt-8">
+                <Link href="/etkinlik" locale={locale}>
+                  {t("enterEvent")}
+                  <ArrowUpRight aria-hidden="true" />
+                </Link>
+              </Button>
+            ) : null}
           </div>
         </section>
 

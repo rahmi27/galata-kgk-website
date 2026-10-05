@@ -46,13 +46,25 @@ function imageUploadStatus(code: ImageUploadErrorCode) {
   return statuses[code];
 }
 
-async function refreshEventMode() {
+async function activeLinkedEventSlug() {
+  const session = await prisma.eventSession.findFirst({
+    where: { isActive: true },
+    select: { linkedEvent: { select: { slug: true } } },
+  });
+  return session?.linkedEvent?.slug ?? null;
+}
+
+async function refreshEventMode(previousLinkedSlug: string | null) {
   // This action changes chrome-level data used by every public route. `updateTag`
   // expires it immediately so the first request after saving cannot receive the
   // stale poster/session value while a background refresh is running.
   updateTag(EVENT_MODE_CACHE_TAG);
   revalidatePath("/admin/etkinlik-modu");
   revalidatePublicPath("/etkinlik");
+  const currentLinkedSlug = await activeLinkedEventSlug();
+  for (const slug of new Set([previousLinkedSlug, currentLinkedSlug].filter((value): value is string => Boolean(value)))) {
+    revalidatePublicPath(`/etkinliklerimiz/${slug}`);
+  }
 }
 
 export async function saveEventSessionAction(formData: FormData) {
@@ -62,6 +74,7 @@ export async function saveEventSessionAction(formData: FormData) {
   const linkedEventId = optionalId(formData.get("linkedEventId"));
   const title = cleanEventText(formData.get("title"), 120);
   const isActive = flag(formData, "isActive");
+  const previousLinkedSlug = await activeLinkedEventSlug();
 
   if (title.length < 3) {
     redirect("/admin/etkinlik-modu?durum=gecersiz");
@@ -137,12 +150,13 @@ export async function saveEventSessionAction(formData: FormData) {
     await deleteUploadedImage(existingSession.badgeTemplateUrl);
   }
 
-  await refreshEventMode();
+  await refreshEventMode(previousLinkedSlug);
   redirect("/admin/etkinlik-modu?durum=kaydedildi");
 }
 
 export async function setEventSessionActiveAction(formData: FormData) {
   await requireAdmin();
+  const previousLinkedSlug = await activeLinkedEventSlug();
   const id = optionalId(formData.get("id"));
   if (!id) redirect("/admin/etkinlik-modu?durum=gecersiz");
 
@@ -153,6 +167,6 @@ export async function setEventSessionActiveAction(formData: FormData) {
     }),
     prisma.eventSession.update({ where: { id }, data: { isActive: true } }),
   ]);
-  await refreshEventMode();
+  await refreshEventMode(previousLinkedSlug);
   redirect("/admin/etkinlik-modu?durum=aktif");
 }
