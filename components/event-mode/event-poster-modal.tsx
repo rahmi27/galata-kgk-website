@@ -17,41 +17,20 @@ type EventPosterModalProps = {
   locale: string;
 };
 
-const shownWithoutSessionStorage = new Set<string>();
-
 export function EventPosterModal({ eventSession, locale }: EventPosterModalProps) {
   const [open, setOpen] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState(
     eventSession.posterOrientation === "landscape" ? 1.5 : 0.8,
   );
-  // v4 clears the early "shown" marker written by the original implementation
-  // before the visitor had actually dismissed the poster.
-  const storageKey = `galata-event-poster-v4:${eventSession.id}`;
-
   const dismiss = useCallback(() => {
-    try {
-      if (!window.sessionStorage) throw new Error("Session storage is unavailable");
-      window.sessionStorage.setItem(storageKey, "shown");
-    } catch {
-      shownWithoutSessionStorage.add(storageKey);
-    }
     setOpen(false);
-  }, [storageKey]);
+  }, []);
 
   useEffect(() => {
-    try {
-      if (!window.sessionStorage) throw new Error("Session storage is unavailable");
-      if (window.sessionStorage.getItem(storageKey)) return;
-    } catch {
-      if (shownWithoutSessionStorage.has(storageKey)) return;
-    }
-    // Do not cancel this zero-delay reveal during React Strict Mode's
-    // development-only effect replay; cancelling the first timer can leave the
-    // poster permanently hidden even though the component remains mounted.
-    window.setTimeout(() => {
-      setOpen(true);
-    }, 0);
-  }, [storageKey]);
+    // This layout-level component survives client-side navigation. A fresh
+    // document load mounts it again, so the poster reopens on every reload.
+    setOpen(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
