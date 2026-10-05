@@ -89,6 +89,17 @@ test("image uploads enforce size, type, signature, and destination checks", asyn
   assert.match(source, /hostname\.endsWith\("\.blob\.vercel-storage\.com"\)/);
 });
 
+test("event gallery upload token and metadata writes require admin validation", async () => {
+  const route = await readFile(path.join(root, "app", "api", "admin", "events", "media", "upload", "route.ts"), "utf8");
+  const actions = await readFile(path.join(root, "app", "admin", "(panel)", "etkinlikler", "media-actions.ts"), "utf8");
+  assert.match(route, /body\.type === "blob\.generate-client-token" && !\(await getCurrentAdmin\(\)\)/);
+  assert.match(route, /onBeforeGenerateToken:[\s\S]*?await getCurrentAdmin\(\)/);
+  assert.match(route, /maximumSizeInBytes:/);
+  assert.match(actions, /await requireAdmin\(\)/);
+  assert.match(actions, /await head\(url\.href\)/);
+  assert.match(actions, /eventId[^\n]*mediaId|id: mediaId, eventId/);
+});
+
 test("Auth.js session cookies and password checks are hardened", async () => {
   const source = await readFile(path.join(root, "auth.ts"), "utf8");
 

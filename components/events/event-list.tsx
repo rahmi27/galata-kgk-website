@@ -8,9 +8,9 @@ import { YearCalendar } from "@/components/events/year-calendar";
 import { EventCard } from "@/components/shared/event-card";
 import { Button } from "@/components/ui/button";
 import { formatEventDate } from "@/lib/date";
+import { filterAndSortEvents, type EventFilter } from "@/lib/event-list-order";
 import { cn } from "@/lib/utils";
 
-type EventFilter = "upcoming" | "past" | "all";
 type EventView = "list" | "calendar";
 
 type EventListItem = {
@@ -61,46 +61,7 @@ export function EventList({
   }, []);
 
   const filteredEvents = useMemo(() => {
-    const now = new Date(currentDate).getTime();
-
-    return events
-      .filter((event) => {
-        if (!event.date) {
-          return activeFilter !== "past";
-        }
-
-        const eventTime = new Date(event.date).getTime();
-
-        if (activeFilter === "upcoming") {
-          return eventTime >= now;
-        }
-
-        if (activeFilter === "past") {
-          return eventTime < now;
-        }
-
-        return true;
-      })
-      .sort((firstEvent, secondEvent) => {
-        if (!firstEvent.date && !secondEvent.date) {
-          return firstEvent.title.localeCompare(secondEvent.title, locale);
-        }
-
-        if (!firstEvent.date) {
-          return -1;
-        }
-
-        if (!secondEvent.date) {
-          return 1;
-        }
-
-        const firstTime = new Date(firstEvent.date).getTime();
-        const secondTime = new Date(secondEvent.date).getTime();
-
-        return activeFilter === "upcoming"
-          ? firstTime - secondTime
-          : secondTime - firstTime;
-      });
+    return filterAndSortEvents(events, activeFilter, currentDate, locale);
   }, [activeFilter, currentDate, events, locale]);
 
   const resultLabel = t("result", { count: filteredEvents.length });

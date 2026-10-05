@@ -23,6 +23,7 @@ export const getActiveEventSession = unstable_cache(
         badgeEnabled: true,
         pollEnabled: true,
         linkedEventId: true,
+        linkedEvent: { select: { slug: true } },
       },
     }),
   // v5 retires entries left stale by the former stale-while-revalidate

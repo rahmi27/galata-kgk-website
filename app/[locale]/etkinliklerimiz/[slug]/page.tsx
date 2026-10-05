@@ -1,20 +1,23 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ArrowLeft,
+  ArrowUpRight,
   CalendarDays,
   MapPin,
   Tag,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
+import { getPathname, Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
+import { getActiveEventSession } from "@/lib/event-mode";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 type EventDetailPageProps = {
@@ -29,6 +32,7 @@ const getEventBySlug = cache((slug: string) =>
     where: {
       slug,
     },
+    include: { media: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
   }),
 );
 
@@ -80,6 +84,9 @@ export default async function EventDetailPage({
     notFound();
   }
 
+  const activeEventSession = await getActiveEventSession();
+  const isLinkedActiveEvent = activeEventSession?.linkedEventId === event.id;
+
   const eventTitle = localizedValue(locale, event.title, event.titleEn);
   const eventDescription = localizedValue(locale, event.description, event.descriptionEn);
   const eventLongDescription = localizedValue(locale, event.longDescription, event.longDescriptionEn);
@@ -111,12 +118,19 @@ export default async function EventDetailPage({
             <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9">
               {eventDescription}
             </p>
+            {isLinkedActiveEvent ? (
+              <Button asChild variant="secondary" className="mt-8">
+                <NextLink href={getPathname({ locale, href: "/etkinlik" })}>
+                  {t("enterEvent")}
+                  <ArrowUpRight aria-hidden="true" />
+                </NextLink>
+              </Button>
+            ) : null}
           </div>
         </section>
 
         <section className="py-16 sm:py-24">
-          <div className="mx-auto grid max-w-5xl gap-10 px-5 sm:px-8 lg:grid-cols-[1fr_19rem] lg:gap-14 lg:px-10">
-            <div>
+          <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
               <div className="relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-primary-900 shadow-[0_28px_80px_-44px_rgba(27,42,94,0.85)]">
                 {event.imageUrl ? (
                   <Image
@@ -125,7 +139,7 @@ export default async function EventDetailPage({
                     fill
                     priority
                     className="object-cover"
-                    sizes="(min-width: 1024px) 700px, 100vw"
+                    sizes="(min-width: 1024px) 1024px, 100vw"
                   />
                 ) : (
                   <div
@@ -142,7 +156,9 @@ export default async function EventDetailPage({
                 )}
               </div>
 
-              <article className="mt-10">
+            <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_19rem] lg:gap-14">
+              <div>
+              <article>
                 <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
                   {t("about")}
                 </p>
@@ -152,6 +168,45 @@ export default async function EventDetailPage({
                   ))}
                 </div>
               </article>
+
+              {event.media.length > 0 ? (
+                <section className="mt-14" aria-labelledby="event-gallery-title">
+                  <h2 id="event-gallery-title" className="font-heading text-2xl font-bold text-primary dark:text-white">
+                    {t("gallery")}
+                  </h2>
+                  <div className="mt-6 space-y-8">
+                    {event.media.map((media) => {
+                      const caption = localizedOptionalValue(locale, media.caption, media.captionEn);
+                      return (
+                        <figure key={media.id}>
+                          {media.type === "image" ? (
+                            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-primary-900">
+                              <Image
+                                src={media.url}
+                                alt={caption ?? eventTitle}
+                                fill
+                                sizes="(min-width: 1024px) 700px, 100vw"
+                                className="object-contain"
+                              />
+                            </div>
+                          ) : (
+                            <video
+                              src={media.url}
+                              controls
+                              preload="metadata"
+                              className="aspect-video w-full rounded-2xl bg-primary-950"
+                              aria-label={caption ?? t("galleryVideo")}
+                            >
+                              {t("videoUnsupported")}
+                            </video>
+                          )}
+                          {caption ? <figcaption className="mt-3 text-sm leading-6 text-muted-foreground">{caption}</figcaption> : null}
+                        </figure>
+                      );
+                    })}
+                  </div>
+                </section>
+              ) : null}
 
               <Button asChild variant="outline" className="mt-10">
                 <Link href="/etkinliklerimiz" locale={locale}>
@@ -192,6 +247,7 @@ export default async function EventDetailPage({
                 </div>
               </dl>
             </aside>
+            </div>
           </div>
         </section>
       </main>

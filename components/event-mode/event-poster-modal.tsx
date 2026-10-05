@@ -13,45 +13,27 @@ type EventPosterModalProps = {
     title: string;
     posterImageUrl: string;
     posterOrientation: "portrait" | "landscape";
+    linkedEvent: { slug: string } | null;
   };
   locale: string;
 };
-
-const shownWithoutSessionStorage = new Set<string>();
 
 export function EventPosterModal({ eventSession, locale }: EventPosterModalProps) {
   const [open, setOpen] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState(
     eventSession.posterOrientation === "landscape" ? 1.5 : 0.8,
   );
-  // v4 clears the early "shown" marker written by the original implementation
-  // before the visitor had actually dismissed the poster.
-  const storageKey = `galata-event-poster-v4:${eventSession.id}`;
-
   const dismiss = useCallback(() => {
-    try {
-      if (!window.sessionStorage) throw new Error("Session storage is unavailable");
-      window.sessionStorage.setItem(storageKey, "shown");
-    } catch {
-      shownWithoutSessionStorage.add(storageKey);
-    }
     setOpen(false);
-  }, [storageKey]);
+  }, []);
 
   useEffect(() => {
-    try {
-      if (!window.sessionStorage) throw new Error("Session storage is unavailable");
-      if (window.sessionStorage.getItem(storageKey)) return;
-    } catch {
-      if (shownWithoutSessionStorage.has(storageKey)) return;
-    }
-    // Do not cancel this zero-delay reveal during React Strict Mode's
-    // development-only effect replay; cancelling the first timer can leave the
-    // poster permanently hidden even though the component remains mounted.
-    window.setTimeout(() => {
-      setOpen(true);
-    }, 0);
-  }, [storageKey]);
+    // This layout-level component survives client-side navigation. A fresh
+    // document load mounts it again, so the poster reopens on every reload.
+    // Schedule after hydration; Strict Mode may replay this effect in dev,
+    // so do not cancel the first frame and leave the poster hidden.
+    window.requestAnimationFrame(() => setOpen(true));
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -125,7 +107,12 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
               variant="secondary"
               className="event-poster-join h-12 w-full shrink-0 rounded-[2px] px-7 text-sm font-bold hover:scale-[1.03] hover:brightness-110 sm:w-auto sm:text-base"
             >
-              <Link href="/etkinlik" locale={locale} onClick={dismiss}>
+              <Link
+                href={eventSession.linkedEvent
+                  ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: eventSession.linkedEvent.slug } }
+                  : "/etkinlik"}
+                onClick={dismiss}
+              >
                 {en ? "Join the Event" : "Etkinliğe Katıl"}
                 <ArrowUpRight aria-hidden="true" />
               </Link>

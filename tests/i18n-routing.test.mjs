@@ -67,7 +67,7 @@ test("dil değiştirici aynı iç rotayı hedef locale ile değiştirir", async 
   assert.match(switcher, /\{ locale: nextLocale \}/);
 });
 
-test("halka açık iç bağlantılar aktif locale'i açıkça korur", async () => {
+test("halka açık iç bağlantılar next-intl ile aktif dili korur", async () => {
   const files = [
     ...await sourceFiles(path.join(root, "app", "[locale]")),
     ...await sourceFiles(path.join(root, "components")),
@@ -79,10 +79,10 @@ test("halka açık iç bağlantılar aktif locale'i açıkça korur", async () =
 
     for (const match of source.matchAll(/<Link\b[\s\S]*?>/g)) {
       const line = source.slice(0, match.index).split("\n").length;
-      assert.match(
+      assert.doesNotMatch(
         match[0],
-        /\blocale=\{?[^\s>]+/,
-        `${path.relative(root, file)}:${line} locale prop olmadan iç bağlantı içeriyor`,
+        /href=["']\/(?:tr|en)\//,
+        `${path.relative(root, file)}:${line} sabit locale önekli iç bağlantı içeriyor`,
       );
     }
   }
