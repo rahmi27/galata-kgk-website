@@ -4,7 +4,7 @@ import { head } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
 import { requireAdmin } from "@/lib/admin-auth";
-import { deleteUploadedImage } from "@/lib/image-upload";
+import { deleteUploadedImage, saveImageUpload } from "@/lib/image-upload";
 import { prisma } from "@/lib/prisma";
 import { revalidatePublicPath } from "@/lib/revalidate-public";
 
@@ -23,6 +23,55 @@ function validOrder(value: number) {
 function refreshMediaPages(eventId: number, slug: string) {
   revalidatePublicPath(`/etkinliklerimiz/${slug}`);
   revalidatePath(`/admin/etkinlikler/${eventId}/duzenle`);
+}
+
+export async function addEventGalleryImageAction(eventId: number, formData: FormData): Promise<Result> {
+  await requireAdmin();
+  if (!Number.isInteger(eventId) || eventId <= 0) {
+    return { success: false, message: "Etkinlik bulunamadı." };
+  }
+  const event = await prisma.event.findUnique({ where: { id: eventId }, select: { slug: true } });
+  if (!event) return { success: false, message: "Etkinlik bulunamadı." };
+
+  const rawCaption = formData.get("caption");
+  const rawCaptionEn = formData.get("captionEn");
+  const rawOrder = formData.get("order");
+  if ((rawCaption !== null && typeof rawCaption !== "string") ||
+    (rawCaptionEn !== null && typeof rawCaptionEn !== "string") ||
+    typeof rawOrder !== "string") {
+    return { success: false, message: "Başlık veya sıra numarası geçersiz." };
+  }
+  const caption = normalizedCaption(rawCaption ?? "");
+  const captionEn = normalizedCaption(rawCaptionEn ?? "");
+  const order = Number(rawOrder);
+  if (caption === undefined || captionEn === undefined || !validOrder(order)) {
+    return { success: false, message: "Başlık veya sıra numarası geçersiz." };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { success: false, message: "Önce bir fotoğraf seçin." };
+  }
+  // Vercel request bodies are limited to 4.5 MB; leave room for form overhead.
+  if (file.size > 4 * 1024 * 1024) {
+    return { success: false, message: "Fotoğraf en fazla 4 MB olabilir." };
+  }
+
+  const upload = await saveImageUpload(file, `events/gallery/${eventId}`);
+  if (!upload.success) return { success: false, message: upload.error };
+  if (!upload.path) return { success: false, message: "Fotoğraf yüklenemedi." };
+
+  try {
+    await prisma.eventMedia.create({
+      data: { eventId, type: "image", url: upload.path, caption, captionEn, order },
+    });
+    refreshMediaPages(eventId, event.slug);
+    return { success: true, message: "Fotoğraf galeriye eklendi." };
+  } catch (error) {
+    await deleteUploadedImage(upload.path);
+    console.error("Etkinlik galerisi fotoğrafı kaydedilemedi.", error);
+    return { success: false, message: "Fotoğraf kaydedilemedi. Lütfen tekrar deneyin." };
+  }
 }
 
 export async function addEventMediaAction(

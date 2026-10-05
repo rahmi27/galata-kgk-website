@@ -94,7 +94,7 @@ function sanitizeFileName(fileName: string) {
 
 export async function saveImageUpload(
   value: FormDataEntryValue | null,
-  directory: "events" | "team" | "sponsors" | "partners" | "event-mode",
+  directory: "events" | `events/gallery/${number}` | "team" | "sponsors" | "partners" | "event-mode",
 ): Promise<ImageUploadResult> {
   if (!(value instanceof File) || value.size === 0) {
     return {

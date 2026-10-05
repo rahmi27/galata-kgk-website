@@ -93,6 +93,7 @@ model EventSession {
   raffleEnabled              Boolean            @default(false)
   raffleName                 String             @default("Etkinlik Çekilişi")
   joinButtonEnabled          Boolean            @default(false)
+  detailEntryButtonEnabled   Boolean            @default(true)
   feedbackEnabled            Boolean            @default(false)
   badgeEnabled               Boolean            @default(false)
   pollEnabled                Boolean            @default(false)

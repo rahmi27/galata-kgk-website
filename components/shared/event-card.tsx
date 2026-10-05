@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
@@ -32,13 +32,13 @@ export function EventCard({
   className,
 }: EventCardProps) {
   const t = useTranslations("common");
-  const locale = useLocale();
 
-  return (
+  const card = (
     <article
-      data-reveal=""
+      data-reveal={href ? undefined : ""}
       className={cn(
         "card-gradient-edge group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-primary/10 bg-card shadow-[0_24px_70px_-48px_rgba(27,42,94,0.55)] transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_30px_80px_-48px_rgba(27,42,94,0.78)] dark:border-white/10 dark:bg-white/[0.035]",
+        href && "cursor-pointer",
         className,
       )}
     >
@@ -84,9 +84,7 @@ export function EventCard({
           {description}
         </p>
         {href ? (
-          <Link
-            href={href as never}
-            locale={locale}
+          <span
             className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-accent-700 dark:text-primary-100 dark:hover:text-accent-300"
           >
             {t("details")}
@@ -94,9 +92,20 @@ export function EventCard({
               className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               aria-hidden="true"
             />
-          </Link>
+          </span>
         ) : null}
       </div>
     </article>
   );
+
+  return href ? (
+    <Link
+      href={href as never}
+      data-reveal=""
+      aria-label={`${t("details")}: ${title}`}
+      className="block h-full rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+    >
+      {card}
+    </Link>
+  ) : card;
 }

@@ -172,12 +172,14 @@ const eventModeStatus: Record<string, { message: string; className: string; erro
   },
 };
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; detailEntryButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
       <label className="block text-sm font-semibold">Oturum adı<Input name="title" defaultValue={session?.title} minLength={3} maxLength={120} required className="mt-2" /></label>
       <label className="block text-sm font-semibold">Bağlı etkinlik<select name="linkedEventId" defaultValue={session?.linkedEventId ?? ""} className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"><option value="">Bağlantı yok</option>{events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}</select></label>
+      <Toggle name="detailEntryButtonEnabled" label="Etkinlik detayında ‘Etkinliğe Gir’ butonunu göster" defaultChecked={session?.detailEntryButtonEnabled ?? true} />
+      <p className="text-xs leading-5 text-primary-500">Bu buton yalnızca oturum aktifken ve yukarıda bir etkinlik seçiliyken o etkinliğin detayında görünür.</p>
       <div className="rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`poster-${session?.id ?? "new"}`} name="posterImage" label="Giriş afişi" defaultImageUrl={session?.posterImageUrl ?? undefined} removeName="removePosterImage" />
         <fieldset className="mt-4">
@@ -193,7 +195,7 @@ function SessionForm({ events, session }: { events: { id: number; title: string 
             </label>
           </div>
         </fieldset>
-        <p className="mt-3 text-xs leading-5 text-primary-500">Etkinlik aktifken ziyaretçiye tarayıcı oturumunda bir kez gösterilir. Görsel seçilen yönde bozulmadan yerleştirilir.</p>
+        <p className="mt-3 text-xs leading-5 text-primary-500">Etkinlik aktifken afiş her yeni sayfa yüklemesinde gösterilir; site içi sayfa geçişlerinde tekrar açılmaz. Görsel seçilen yönde bozulmadan yerleştirilir.</p>
       </div>
       <div className="space-y-4 rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`badge-template-${session?.id ?? "new"}`} name="badgeTemplateImage" label="Rozet arka plan şablonu" defaultImageUrl={session?.badgeTemplateUrl ?? undefined} removeName="removeBadgeTemplateImage" />

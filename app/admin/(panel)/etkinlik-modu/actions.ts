@@ -120,6 +120,7 @@ export async function saveEventSessionAction(formData: FormData) {
     quizEnabled: flag(formData, "quizEnabled"),
     raffleEnabled: flag(formData, "raffleEnabled"),
     joinButtonEnabled: flag(formData, "joinButtonEnabled"),
+    detailEntryButtonEnabled: flag(formData, "detailEntryButtonEnabled"),
     feedbackEnabled: flag(formData, "feedbackEnabled"),
     badgeEnabled: flag(formData, "badgeEnabled"),
     pollEnabled: flag(formData, "pollEnabled"),

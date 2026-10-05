@@ -7,6 +7,7 @@ import { useRef, useState, useTransition } from "react";
 import { ArrowDown, ArrowUp, Save, Trash2, Upload } from "lucide-react";
 
 import {
+  addEventGalleryImageAction,
   addEventMediaAction,
   deleteEventMediaAction,
   updateEventMediaAction,
@@ -34,6 +35,7 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
   const [captionEn, setCaptionEn] = useState("");
   const [order, setOrder] = useState(Math.max(0, ...media.map((item) => item.order)) + 1);
   const [busy, setBusy] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [message, setMessage] = useState("");
 
   async function addMedia(event: React.FormEvent<HTMLFormElement>) {
@@ -41,22 +43,57 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
     const file = fileRef.current?.files?.[0];
     if (!file) return setMessage("Önce bir dosya seçin.");
     const allowed = type === "image" ? imageTypes : videoTypes;
-    const limit = type === "image" ? 5 * 1024 * 1024 : 100 * 1024 * 1024;
+    const limit = type === "image" ? 4 * 1024 * 1024 : 100 * 1024 * 1024;
     if (!allowed.includes(file.type) || file.size > limit) {
       return setMessage(type === "image"
-        ? "JPG/PNG/WebP seçin (en fazla 5 MB)."
+        ? "JPG/PNG/WebP seçin (en fazla 4 MB)."
         : "MP4/WebM seçin (en fazla 100 MB).");
     }
     setBusy(true);
     setMessage("");
+    setUploadStatus("Yükleme hazırlanıyor...");
+    const controller = new AbortController();
+    let stallTimer: ReturnType<typeof setTimeout> | undefined;
+    const resetStallTimer = () => {
+      if (stallTimer) clearTimeout(stallTimer);
+      stallTimer = setTimeout(() => controller.abort(), 90_000);
+    };
     try {
-      const extension = file.type === "image/jpeg" ? "jpg" : file.type.split("/")[1];
+      if (type === "image") {
+        const formData = new FormData();
+        formData.set("file", file);
+        formData.set("caption", caption);
+        formData.set("captionEn", captionEn);
+        formData.set("order", String(order));
+        setUploadStatus("Fotoğraf güvenli şekilde yüklenip galeriye kaydediliyor...");
+        const result = await addEventGalleryImageAction(eventId, formData);
+        setMessage(result.message);
+        if (result.success) {
+          if (fileRef.current) fileRef.current.value = "";
+          setCaption("");
+          setCaptionEn("");
+          setOrder((value) => value + 1);
+          router.refresh();
+        }
+        return;
+      }
+
+      const extension = file.type.split("/")[1];
       const pathname = `uploads/events/gallery/${eventId}/${crypto.randomUUID()}.${extension}`;
+      resetStallTimer();
       const blob = await upload(pathname, file, {
         access: "public",
         handleUploadUrl: "/api/admin/events/media/upload",
         clientPayload: JSON.stringify({ eventId, type }),
+        multipart: type === "video" && file.size >= 5 * 1024 * 1024,
+        abortSignal: controller.signal,
+        onUploadProgress: ({ percentage }) => {
+          resetStallTimer();
+          setUploadStatus(`Dosya yükleniyor: %${Math.min(100, Math.max(0, Math.round(percentage)))}`);
+        },
       });
+      if (stallTimer) clearTimeout(stallTimer);
+      setUploadStatus("Galeriye kaydediliyor...");
       const result = await addEventMediaAction(eventId, { type, url: blob.url, caption, captionEn, order });
       setMessage(result.message);
       if (result.success) {
@@ -68,16 +105,20 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
       }
     } catch (error) {
       console.error("Galeri yüklemesi başarısız.", error);
-      setMessage("Dosya yüklenemedi. Oturumunuzu ve Blob ayarlarını kontrol edin.");
+      setMessage(controller.signal.aborted
+        ? "Yükleme 90 saniye boyunca ilerlemedi ve durduruldu. Bağlantınızı kontrol edip tekrar deneyin."
+        : "Dosya yüklenemedi. Bağlantınızı, yönetici oturumunuzu ve Blob ayarlarını kontrol edin.");
     } finally {
+      if (stallTimer) clearTimeout(stallTimer);
       setBusy(false);
+      setUploadStatus("");
     }
   }
 
   return (
     <section className="mt-7 max-w-4xl rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-[0_18px_50px_-38px_rgba(27,42,94,0.45)] sm:p-8">
       <h2 className="font-heading text-xl font-bold text-primary-950">Fotoğraf ve video galerisi</h2>
-      <p className="mt-2 text-sm text-primary-500">Etkinlik detayının altında sırayla görünür. Görseller en fazla 5 MB; MP4/WebM videolar en fazla 100 MB olabilir.</p>
+      <p className="mt-2 text-sm text-primary-500">Etkinlik detayının altında sırayla görünür. Görseller en fazla 4 MB; MP4/WebM videolar en fazla 100 MB olabilir.</p>
 
       <div className="mt-6 space-y-5">
         {media.length === 0 ? <p className="text-sm text-primary-500">Henüz galeri medyası yok.</p> : null}
@@ -118,10 +159,11 @@ export function EventMediaManager({ eventId, media }: { eventId: number; media: 
         <div className="flex items-end">
           <Button type="submit" disabled={busy} className="w-full rounded-xl">
             <Upload className="size-4" aria-hidden="true" />
-            {busy ? "Yükleniyor..." : "Galeriye ekle"}
+            {busy ? "İşleniyor..." : "Galeriye ekle"}
           </Button>
         </div>
       </form>
+      {busy ? <p role="status" className="mt-4 text-sm font-medium text-primary-800">{uploadStatus}</p> : null}
       {message ? <p role="status" className="mt-4 text-sm font-medium text-primary-800">{message}</p> : null}
     </section>
   );

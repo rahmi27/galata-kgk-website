@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getPathname, Link } from "@/i18n/navigation";
 import { formatEventDateLong } from "@/lib/date";
+import { shouldShowEventEntryButton } from "@/lib/event-detail-entry";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { prisma } from "@/lib/prisma";
 import { getActiveEventSession } from "@/lib/event-mode";
@@ -85,7 +86,7 @@ export default async function EventDetailPage({
   }
 
   const activeEventSession = await getActiveEventSession();
-  const isLinkedActiveEvent = activeEventSession?.linkedEventId === event.id;
+  const isLinkedActiveEvent = shouldShowEventEntryButton(activeEventSession, event.id);
 
   const eventTitle = localizedValue(locale, event.title, event.titleEn);
   const eventDescription = localizedValue(locale, event.description, event.descriptionEn);

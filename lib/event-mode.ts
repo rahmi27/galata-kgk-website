@@ -19,6 +19,7 @@ export const getActiveEventSession = unstable_cache(
         quizEnabled: true,
         raffleEnabled: true,
         joinButtonEnabled: true,
+        detailEntryButtonEnabled: true,
         feedbackEnabled: true,
         badgeEnabled: true,
         pollEnabled: true,
@@ -26,10 +27,10 @@ export const getActiveEventSession = unstable_cache(
         linkedEvent: { select: { slug: true } },
       },
     }),
-  // v5 retires entries left stale by the former stale-while-revalidate
+  // v6 includes the detail-page CTA setting and retires older cached shapes.
   // invalidation, so the first deployment with immediate `updateTag` starts
   // from the current database state.
-  ["active-event-session-v5"],
+  ["active-event-session-v6"],
   // Admin mutations invalidate this tag immediately. The daily fallback only
   // covers out-of-band database edits and must not shorten every public page's
   // ISR lifetime merely because the navbar consumes this value.
