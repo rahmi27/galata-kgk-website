@@ -129,8 +129,7 @@ export default async function EventDetailPage({
         </section>
 
         <section className="py-16 sm:py-24">
-          <div className="mx-auto grid max-w-5xl gap-10 px-5 sm:px-8 lg:grid-cols-[1fr_19rem] lg:gap-14 lg:px-10">
-            <div>
+          <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
               <div className="relative aspect-[16/9] overflow-hidden rounded-[2rem] bg-primary-900 shadow-[0_28px_80px_-44px_rgba(27,42,94,0.85)]">
                 {event.imageUrl ? (
                   <Image
@@ -139,7 +138,7 @@ export default async function EventDetailPage({
                     fill
                     priority
                     className="object-cover"
-                    sizes="(min-width: 1024px) 700px, 100vw"
+                    sizes="(min-width: 1024px) 1024px, 100vw"
                   />
                 ) : (
                   <div
@@ -156,7 +155,9 @@ export default async function EventDetailPage({
                 )}
               </div>
 
-              <article className="mt-10">
+            <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_19rem] lg:gap-14">
+              <div>
+              <article>
                 <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
                   {t("about")}
                 </p>
@@ -245,6 +246,7 @@ export default async function EventDetailPage({
                 </div>
               </dl>
             </aside>
+            </div>
           </div>
         </section>
       </main>
