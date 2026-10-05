@@ -87,19 +87,27 @@ export function EventList({
         }
 
         if (!firstEvent.date) {
-          return -1;
+          return 1;
         }
 
         if (!secondEvent.date) {
-          return 1;
+          return -1;
         }
 
         const firstTime = new Date(firstEvent.date).getTime();
         const secondTime = new Date(secondEvent.date).getTime();
 
-        return activeFilter === "upcoming"
-          ? firstTime - secondTime
-          : secondTime - firstTime;
+        if (activeFilter === "all") {
+          const firstUpcoming = firstTime >= now;
+          const secondUpcoming = secondTime >= now;
+          if (firstUpcoming !== secondUpcoming) return firstUpcoming ? -1 : 1;
+        }
+
+        const dateOrder = activeFilter === "past" ||
+          (activeFilter === "all" && firstTime < now)
+          ? secondTime - firstTime
+          : firstTime - secondTime;
+        return dateOrder || firstEvent.title.localeCompare(secondEvent.title, locale);
       });
   }, [activeFilter, currentDate, events, locale]);
 
