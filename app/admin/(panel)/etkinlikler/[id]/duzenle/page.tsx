@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { updateEventAction } from "@/app/admin/(panel)/etkinlikler/actions";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { EventAdminForm } from "@/components/admin/event-admin-form";
+import { EventMediaManager } from "@/components/admin/event-media-manager";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 
@@ -35,6 +36,7 @@ export default async function EditEventPage({
     where: {
       id: eventId,
     },
+    include: { media: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
   });
 
   if (!event) {
@@ -81,6 +83,7 @@ export default async function EditEventPage({
           }}
         />
       </section>
+      <EventMediaManager eventId={event.id} media={event.media} />
     </>
   );
 }

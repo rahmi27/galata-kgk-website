@@ -258,6 +258,7 @@ export async function deleteEventAction(
     select: {
       slug: true,
       imageUrl: true,
+      media: { select: { url: true } },
     },
   });
 
@@ -278,6 +279,7 @@ export async function deleteEventAction(
     updateTag(EVENT_MODE_CACHE_TAG);
 
     await deleteUploadedImage(event.imageUrl);
+    await Promise.all(event.media.map((item) => deleteUploadedImage(item.url)));
     await refreshEventPages([event.slug], { revalidateSitemap: true });
 
     return {

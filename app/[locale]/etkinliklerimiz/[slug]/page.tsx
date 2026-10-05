@@ -31,6 +31,7 @@ const getEventBySlug = cache((slug: string) =>
     where: {
       slug,
     },
+    include: { media: { orderBy: [{ order: "asc" }, { id: "asc" }] } },
   }),
 );
 
@@ -165,6 +166,45 @@ export default async function EventDetailPage({
                   ))}
                 </div>
               </article>
+
+              {event.media.length > 0 ? (
+                <section className="mt-14" aria-labelledby="event-gallery-title">
+                  <h2 id="event-gallery-title" className="font-heading text-2xl font-bold text-primary dark:text-white">
+                    {t("gallery")}
+                  </h2>
+                  <div className="mt-6 space-y-8">
+                    {event.media.map((media) => {
+                      const caption = localizedOptionalValue(locale, media.caption, media.captionEn);
+                      return (
+                        <figure key={media.id}>
+                          {media.type === "image" ? (
+                            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-primary-900">
+                              <Image
+                                src={media.url}
+                                alt={caption ?? eventTitle}
+                                fill
+                                sizes="(min-width: 1024px) 700px, 100vw"
+                                className="object-contain"
+                              />
+                            </div>
+                          ) : (
+                            <video
+                              src={media.url}
+                              controls
+                              preload="metadata"
+                              className="aspect-video w-full rounded-2xl bg-primary-950"
+                              aria-label={caption ?? t("galleryVideo")}
+                            >
+                              {t("videoUnsupported")}
+                            </video>
+                          )}
+                          {caption ? <figcaption className="mt-3 text-sm leading-6 text-muted-foreground">{caption}</figcaption> : null}
+                        </figure>
+                      );
+                    })}
+                  </div>
+                </section>
+              ) : null}
 
               <Button asChild variant="outline" className="mt-10">
                 <Link href="/etkinliklerimiz" locale={locale}>

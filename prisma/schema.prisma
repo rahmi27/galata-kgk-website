@@ -18,6 +18,11 @@ enum PosterOrientation {
   landscape
 }
 
+enum EventMediaType {
+  image
+  video
+}
+
 model AdminUser {
   id           Int      @id @default(autoincrement())
   username     String   @unique
@@ -54,8 +59,23 @@ model Event {
   categoryEn        String?
   createdAt         DateTime       @default(now())
   eventSessions     EventSession[]
+  media             EventMedia[]
 
   @@index([date])
+}
+
+model EventMedia {
+  id        Int            @id @default(autoincrement())
+  eventId   Int
+  type      EventMediaType
+  url       String         @unique
+  caption   String?
+  captionEn String?
+  order     Int            @default(0)
+  createdAt DateTime       @default(now())
+  event     Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, order, id])
 }
 
 model EventSession {
