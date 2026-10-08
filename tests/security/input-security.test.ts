@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { linkifyHttpText } from "../../lib/linked-text";
 
 import { isHoneypotTriggered } from "../../lib/form-spam-protection";
 import {
@@ -23,6 +24,13 @@ import {
   createContactNotification,
   createMembershipNotification,
 } from "../../lib/mail-content";
+
+test("iş birliği metnindeki güvenli web bağlantıları tıklanabilir parçalara ayrılır", () => {
+  const parts = linkifyHttpText("LinkedIn: https://www.linkedin.com/in/ornek, diğer: javascript:alert(1)");
+  assert.equal(parts.find((part) => part.href)?.href, "https://www.linkedin.com/in/ornek");
+  assert.equal(parts.some((part) => part.href?.startsWith("javascript:")), false);
+  assert.equal(parts.map((part) => part.text).join(""), "LinkedIn: https://www.linkedin.com/in/ornek, diğer: javascript:alert(1)");
+});
 
 test("React, yönetici kaynaklı metinlerde HTML/XSS yükünü escape eder", () => {
   const payload = `<img src=x onerror=alert(1)><script>alert("xss")</script>`;

@@ -53,7 +53,7 @@ export default async function AdminPartnerClubPage({
   return (
     <>
       <AdminPageHeader
-        eyebrow="Partner Kulüp"
+        eyebrow={partnerClub.kind === "PERSON" ? "Bireysel İş Birliği" : partnerClub.kind === "ORGANIZATION" ? "Kurumsal İş Birliği" : "Kulüp İş Birliği"}
         title={partnerClub.name}
         description={`${partnerClub.collaborations.length} iş birliği maddesini yönetin; tarih kesin değilse alanı boş bırakın.`}
         actions={
@@ -81,7 +81,7 @@ export default async function AdminPartnerClubPage({
         >
           {durum === "madde-guncellendi"
             ? "İş birliği maddesi güncellendi."
-            : "Partner kulüp bilgileri güncellendi."}
+            : "İş birliği ortağı bilgileri güncellendi."}
         </p>
       ) : null}
 
@@ -136,7 +136,7 @@ export default async function AdminPartnerClubPage({
           ) : (
             <div className="rounded-[1.5rem] border border-dashed border-primary-200 bg-white px-5 py-14 text-center dark:border-white/15 dark:bg-primary-950">
               <p className="text-sm font-semibold text-primary-600 dark:text-primary-100">
-                Bu kulüp için henüz iş birliği maddesi yok.
+                Bu ortak için henüz iş birliği maddesi yok.
               </p>
             </div>
           )}

@@ -3,13 +3,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, CalendarDays, Handshake } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CalendarDays, Globe2, Handshake, UserRound } from "lucide-react";
+import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 
+import { LinkedText } from "@/components/collaborations/linked-text";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 import { localizedOptionalValue, localizedValue } from "@/lib/localized-content";
 import { createPageMetadata } from "@/lib/site-metadata";
+import { getSafeHttpUrl } from "@/lib/url-security";
 
 type CollaborationDetailPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -55,7 +58,7 @@ export async function generateMetadata({
     description: localizedValue(locale, partnerClub.shortDescription, partnerClub.shortDescriptionEn),
     path: `/is-birlikleri/${partnerClub.slug}`,
     locale,
-    keywords: [localizedValue(locale, partnerClub.name, partnerClub.nameEn), locale === "en" ? "student club collaboration" : "kulüp iş birliği", locale === "en" ? "Galata KGK partners" : "Galata KGK partnerleri"],
+    keywords: [localizedValue(locale, partnerClub.name, partnerClub.nameEn), locale === "en" ? "Galata KGK collaboration" : "Galata KGK iş birliği", locale === "en" ? "Galata KGK partners" : "Galata KGK ortakları"],
   });
 }
 
@@ -78,6 +81,12 @@ export default async function CollaborationDetailPage({
     partnerClub.shortDescriptionEn,
   );
   const partnerLogoAlt = localizedOptionalValue(locale, partnerClub.logoAlt, partnerClub.logoAltEn);
+  const partnerSubtitle = localizedOptionalValue(locale, partnerClub.subtitle, partnerClub.subtitleEn);
+  const socialLinks = [
+    { label: t("website"), url: partnerClub.websiteUrl, icon: Globe2 },
+    { label: "LinkedIn", url: partnerClub.linkedinUrl, icon: FaLinkedinIn },
+    { label: "Instagram", url: partnerClub.instagramUrl, icon: FaInstagram },
+  ].map((link) => ({ ...link, href: getSafeHttpUrl(link.url) })).filter((link) => link.href);
   const localizedCollaborations = partnerClub.collaborations.map((item) => ({
     ...item,
     title: localizedValue(locale, item.title, item.titleEn),
@@ -119,15 +128,26 @@ export default async function CollaborationDetailPage({
               />
             </div>
             <div>
-              <p className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-accent-700 dark:text-accent-300">
-                {t("eyebrow")}
+              <p className="inline-flex items-center gap-2 font-heading text-xs font-bold uppercase tracking-[0.16em] text-accent-700 dark:text-accent-300">
+                {partnerClub.kind === "PERSON" ? <UserRound className="size-4" aria-hidden="true" /> : <Handshake className="size-4" aria-hidden="true" />}
+                {t(partnerClub.kind === "PERSON" ? "personType" : partnerClub.kind === "ORGANIZATION" ? "organizationType" : "clubType")}
               </p>
               <h1 className="mt-3 font-heading text-4xl font-bold leading-[1.06] tracking-[-0.05em] text-primary sm:text-5xl dark:text-white">
                 {partnerName}
               </h1>
+              {partnerSubtitle ? <p className="mt-3 text-base font-medium text-primary-700 dark:text-primary-100">{partnerSubtitle}</p> : null}
               <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">
-                {partnerDescription}
+                <LinkedText text={partnerDescription} />
               </p>
+              {socialLinks.length ? (
+                <nav aria-label={t("partnerLinks")} className="mt-6 flex flex-wrap gap-2.5">
+                  {socialLinks.map(({ label, href, icon: Icon }) => (
+                    <a key={label} href={href ?? undefined} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/15 bg-white/80 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:border-accent/70 hover:text-accent-800 dark:border-white/20 dark:bg-white/[0.06] dark:text-white dark:hover:border-accent-300 dark:hover:text-accent-200">
+                      <Icon className="size-4" aria-hidden="true" />{label}<ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    </a>
+                  ))}
+                </nav>
+              ) : null}
             </div>
           </div>
         </div>
@@ -232,8 +252,8 @@ function CollaborationGroup({
             <h3 className="mt-3 font-heading text-xl font-bold tracking-[-0.025em] text-primary dark:text-white">
               {item.title}
             </h3>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
-              {item.description}
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-muted-foreground sm:text-base">
+              <LinkedText text={item.description} />
             </p>
           </li>
         ))}

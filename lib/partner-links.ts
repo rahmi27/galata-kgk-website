@@ -7,6 +7,6 @@ export const partnerLinks = [
   {
     label: "İş Birlikleri",
     href: "/is-birlikleri",
-    description: "Partner kulüpler ve ortak çalışmalar",
+    description: "İş birliği ortakları ve ortak çalışmalar",
   },
 ] as const;

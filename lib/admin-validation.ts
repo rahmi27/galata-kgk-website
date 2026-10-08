@@ -53,10 +53,16 @@ export type SponsorAdminInput = {
 };
 
 export type PartnerClubAdminInput = {
+  kind: "CLUB" | "PERSON" | "ORGANIZATION";
   name: string;
   nameEn: string | null;
   shortDescription: string;
   shortDescriptionEn: string | null;
+  subtitle: string | null;
+  subtitleEn: string | null;
+  websiteUrl: string | null;
+  linkedinUrl: string | null;
+  instagramUrl: string | null;
   logoAlt: string;
   logoAltEn: string | null;
   order: number;
@@ -318,17 +324,27 @@ export function validatePartnerClubForm(
   formData: FormData,
 ): ValidationResult<PartnerClubAdminInput> {
   const name = getFormString(formData, "name");
+  const kind = getFormString(formData, "kind");
   const nameEn = getFormString(formData, "nameEn");
   const shortDescription = getFormString(formData, "shortDescription");
   const shortDescriptionEn = getFormString(formData, "shortDescriptionEn");
+  const subtitle = getFormString(formData, "subtitle");
+  const subtitleEn = getFormString(formData, "subtitleEn");
+  const websiteUrl = getFormString(formData, "websiteUrl");
+  const linkedinUrl = getFormString(formData, "linkedinUrl");
+  const instagramUrl = getFormString(formData, "instagramUrl");
   const logoAlt = getFormString(formData, "logoAlt");
   const logoAltEn = getFormString(formData, "logoAltEn");
   const order = Number(getFormString(formData, "order"));
 
+  if (kind !== "CLUB" && kind !== "PERSON" && kind !== "ORGANIZATION") {
+    return { success: false, error: "Geçerli bir ortak türü seçin." };
+  }
+
   if (name.length < 2 || name.length > 120) {
     return {
       success: false,
-      error: "Partner kulüp adı 2–120 karakter arasında olmalıdır.",
+      error: "İş birliği ortağının adı 2–120 karakter arasında olmalıdır.",
     };
   }
 
@@ -337,6 +353,24 @@ export function validatePartnerClubForm(
       success: false,
       error: "Kısa açıklama 10–500 karakter arasında olmalıdır.",
     };
+  }
+
+  if (subtitle.length > 160 || subtitleEn.length > 160) {
+    return { success: false, error: "Unvan veya alt başlık en fazla 160 karakter olabilir." };
+  }
+
+  for (const [label, value, allowedHosts] of [
+    ["Web sitesi", websiteUrl, null],
+    ["LinkedIn", linkedinUrl, ["linkedin.com", "www.linkedin.com"]],
+    ["Instagram", instagramUrl, ["instagram.com", "www.instagram.com"]],
+  ] as const) {
+    if (!value) continue;
+    if (value.length > 2048 || !isSafeHttpUrl(value)) {
+      return { success: false, error: `${label} bağlantısı geçerli bir http(s) adresi olmalıdır.` };
+    }
+    if (allowedHosts && !allowedHosts.some((host) => host === new URL(value).hostname)) {
+      return { success: false, error: `${label} bağlantısı kendi alan adına yönlendirmelidir.` };
+    }
   }
 
   if (logoAlt.length < 3 || logoAlt.length > 180) {
@@ -358,7 +392,14 @@ export function validatePartnerClubForm(
 
   return {
     success: true,
-    data: { name, nameEn: nameEn || null, shortDescription, shortDescriptionEn: shortDescriptionEn || null, logoAlt, logoAltEn: logoAltEn || null, order },
+    data: {
+      kind, name, nameEn: nameEn || null, shortDescription,
+      shortDescriptionEn: shortDescriptionEn || null,
+      subtitle: subtitle || null, subtitleEn: subtitleEn || null,
+      websiteUrl: websiteUrl || null, linkedinUrl: linkedinUrl || null,
+      instagramUrl: instagramUrl || null,
+      logoAlt, logoAltEn: logoAltEn || null, order,
+    },
   };
 }
 

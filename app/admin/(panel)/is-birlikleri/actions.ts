@@ -58,13 +58,13 @@ export async function createPartnerClubAction(
     return { success: false, message: validation.error };
   }
 
-  const slug = createNormalizedSlug(validation.data.name, "partner-kulup");
+  const slug = createNormalizedSlug(validation.data.name, "is-birligi-ortagi");
   const existing = await prisma.partnerClub.findUnique({ where: { slug } });
 
   if (existing) {
     return {
       success: false,
-      message: "Bu ada sahip bir partner kulüp zaten bulunuyor.",
+      message: "Bu ada sahip bir iş birliği ortağı zaten bulunuyor.",
     };
   }
 
@@ -78,7 +78,7 @@ export async function createPartnerClubAction(
   }
 
   if (!imageUpload.path) {
-    return { success: false, message: "Partner kulüp logosu zorunludur." };
+    return { success: false, message: "Ortak görseli zorunludur." };
   }
 
   try {
@@ -91,13 +91,13 @@ export async function createPartnerClubAction(
     });
     await refreshPartnerClubPages([slug], { revalidateSitemap: true });
 
-    return { success: true, message: "Partner kulüp başarıyla eklendi." };
+    return { success: true, message: "İş birliği ortağı başarıyla eklendi." };
   } catch (error) {
     await deleteUploadedImage(imageUpload.path);
-    console.error("Partner kulüp eklenemedi.", error);
+    console.error("İş birliği ortağı eklenemedi.", error);
     return {
       success: false,
-      message: "Partner kulüp kaydedilemedi. Lütfen tekrar deneyin.",
+      message: "İş birliği ortağı kaydedilemedi. Lütfen tekrar deneyin.",
     };
   }
 }
@@ -119,10 +119,10 @@ export async function updatePartnerClubAction(
   });
 
   if (!partnerClub) {
-    return { success: false, message: "Düzenlenecek partner kulüp bulunamadı." };
+    return { success: false, message: "Düzenlenecek iş birliği ortağı bulunamadı." };
   }
 
-  const slug = createNormalizedSlug(validation.data.name, "partner-kulup");
+  const slug = createNormalizedSlug(validation.data.name, "is-birligi-ortagi");
   const slugOwner = await prisma.partnerClub.findFirst({
     where: { slug, id: { not: partnerClubId } },
     select: { id: true },
@@ -131,7 +131,7 @@ export async function updatePartnerClubAction(
   if (slugOwner) {
     return {
       success: false,
-      message: "Bu ada sahip başka bir partner kulüp zaten bulunuyor.",
+      message: "Bu ada sahip başka bir iş birliği ortağı zaten bulunuyor.",
     };
   }
 
@@ -165,10 +165,10 @@ export async function updatePartnerClubAction(
     });
   } catch (error) {
     await deleteUploadedImage(imageUpload.path);
-    console.error("Partner kulüp güncellenemedi.", error);
+    console.error("İş birliği ortağı güncellenemedi.", error);
     return {
       success: false,
-      message: "Partner kulüp güncellenemedi. Lütfen tekrar deneyin.",
+      message: "İş birliği ortağı güncellenemedi. Lütfen tekrar deneyin.",
     };
   }
 
@@ -185,7 +185,7 @@ export async function deletePartnerClubAction(
   });
 
   if (!partnerClub) {
-    return { success: false, message: "Silinecek partner kulüp bulunamadı." };
+    return { success: false, message: "Silinecek iş birliği ortağı bulunamadı." };
   }
 
   try {
@@ -196,13 +196,13 @@ export async function deletePartnerClubAction(
     });
     return {
       success: true,
-      message: "Partner kulüp ve bağlı iş birlikleri silindi.",
+      message: "İş birliği ortağı ve bağlı çalışmalar silindi.",
     };
   } catch (error) {
-    console.error("Partner kulüp silinemedi.", error);
+    console.error("İş birliği ortağı silinemedi.", error);
     return {
       success: false,
-      message: "Partner kulüp silinemedi. Lütfen tekrar deneyin.",
+      message: "İş birliği ortağı silinemedi. Lütfen tekrar deneyin.",
     };
   }
 }
@@ -225,7 +225,7 @@ export async function createCollaborationItemAction(
   });
 
   if (!partnerClub) {
-    return { success: false, message: "Partner kulüp bulunamadı." };
+    return { success: false, message: "İş birliği ortağı bulunamadı." };
   }
 
   try {

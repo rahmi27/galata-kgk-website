@@ -24,7 +24,7 @@ export default async function AdminCollaborationsPage() {
       <AdminPageHeader
         eyebrow="Ortaklarımız"
         title="İş Birlikleri"
-        description={`${partnerClubs.length} partner kulübü, logolarını ve birlikte yürütülen çalışmaları yönetin.`}
+        description={`${partnerClubs.length} iş birliği ortağını, görsellerini ve birlikte yürütülen çalışmaları yönetin.`}
       />
 
       <div className="mt-9 grid gap-7 xl:grid-cols-[minmax(0,1fr)_minmax(26rem,0.72fr)]">
@@ -55,6 +55,9 @@ export default async function AdminCollaborationsPage() {
                         {club.shortDescription}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="inline-flex items-center rounded-full bg-accent-50 px-2.5 py-1 text-xs font-semibold text-accent-800 dark:bg-accent/15 dark:text-accent-200">
+                          {club.kind === "PERSON" ? "Kişi" : club.kind === "ORGANIZATION" ? "Kurum" : "Kulüp / topluluk"}
+                        </span>
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary-700 dark:bg-white/10 dark:text-primary-100">
                           <Handshake className="size-3.5" aria-hidden="true" />
                           {club._count.collaborations} madde
@@ -93,7 +96,7 @@ export default async function AdminCollaborationsPage() {
             <div className="rounded-[1.5rem] border border-dashed border-primary-200 bg-white px-5 py-16 text-center dark:border-white/15 dark:bg-primary-950">
               <Handshake className="mx-auto size-8 text-primary-300" aria-hidden="true" />
               <p className="mt-3 text-sm font-semibold text-primary-600 dark:text-primary-100">
-                Henüz partner kulüp bulunmuyor.
+                Henüz iş birliği ortağı bulunmuyor.
               </p>
             </div>
           )}
@@ -101,15 +104,15 @@ export default async function AdminCollaborationsPage() {
 
         <section className="h-fit rounded-[1.5rem] border border-primary-100 bg-white p-5 shadow-[0_18px_50px_-38px_rgba(27,42,94,0.45)] dark:border-white/10 dark:bg-primary-950 sm:p-7 xl:sticky xl:top-7">
           <h2 className="font-heading text-xl font-bold text-primary-950 dark:text-white">
-            Yeni partner kulüp ekle
+            Yeni iş birliği ortağı ekle
           </h2>
           <p className="mt-2 text-sm leading-6 text-primary-500 dark:text-primary-200">
-            Logo Vercel Blob’a yüklenir; kart ve detay sayfası otomatik oluşur.
+            Kişi, kulüp veya kurum ekleyebilirsiniz. Görsel Vercel Blob’a yüklenir; kart ve detay sayfası otomatik oluşur.
           </p>
           <div className="mt-6">
             <PartnerClubAdminForm
               action={createPartnerClubAction}
-              submitLabel="Partner kulübü ekle"
+              submitLabel="Ortağı ekle"
               resetOnSuccess
             />
           </div>

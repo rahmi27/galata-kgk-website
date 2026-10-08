@@ -35,14 +35,14 @@ export default async function EditPartnerClubPage({
   return (
     <>
       <AdminPageHeader
-        eyebrow="Partner Kulüp Düzenleme"
+        eyebrow="İş Birliği Ortağını Düzenle"
         title={partnerClub.name}
-        description="Kulüp adını, logosunu, açıklamasını ve liste sırasını güncelleyin."
+        description="Ortak türünü, görselini, tanıtımını, bağlantılarını ve liste sırasını güncelleyin."
         actions={
           <Button asChild variant="outline" className="rounded-xl">
             <Link href={`/admin/is-birlikleri/${partnerClub.id}`}>
               <ArrowLeft aria-hidden="true" />
-              Kulüp detayına dön
+              Ortak detayına dön
             </Link>
           </Button>
         }
@@ -53,10 +53,16 @@ export default async function EditPartnerClubPage({
           action={updateAction}
           submitLabel="Değişiklikleri kaydet"
           defaultValues={{
+            kind: partnerClub.kind,
             name: partnerClub.name,
             nameEn: partnerClub.nameEn,
             shortDescription: partnerClub.shortDescription,
             shortDescriptionEn: partnerClub.shortDescriptionEn,
+            subtitle: partnerClub.subtitle,
+            subtitleEn: partnerClub.subtitleEn,
+            websiteUrl: partnerClub.websiteUrl,
+            linkedinUrl: partnerClub.linkedinUrl,
+            instagramUrl: partnerClub.instagramUrl,
             logoUrl: partnerClub.logoUrl,
             logoAlt: partnerClub.logoAlt ?? "",
             logoAltEn: partnerClub.logoAltEn,

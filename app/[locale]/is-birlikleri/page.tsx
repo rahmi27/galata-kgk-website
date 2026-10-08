@@ -58,6 +58,8 @@ export default async function CollaborationsPage({
                   logoUrl={club.logoUrl}
                   logoAlt={localizedOptionalValue(locale, club.logoAlt, club.logoAltEn)}
                   shortDescription={localizedValue(locale, club.shortDescription, club.shortDescriptionEn)}
+                  kind={club.kind}
+                  subtitle={localizedOptionalValue(locale, club.subtitle, club.subtitleEn)}
                 />
               ))}
             </div>

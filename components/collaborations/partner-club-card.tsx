@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight, Handshake } from "lucide-react";
+import { ArrowUpRight, Handshake, UserRound, Building2 } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 
@@ -10,6 +10,8 @@ type PartnerClubCardProps = {
   logoUrl: string;
   logoAlt: string | null;
   shortDescription: string;
+  kind: "CLUB" | "PERSON" | "ORGANIZATION";
+  subtitle: string | null;
 };
 
 export function PartnerClubCard({
@@ -18,6 +20,8 @@ export function PartnerClubCard({
   logoUrl,
   logoAlt,
   shortDescription,
+  kind,
+  subtitle,
 }: PartnerClubCardProps) {
   const t = useTranslations();
   const locale = useLocale();
@@ -45,12 +49,14 @@ export function PartnerClubCard({
       </div>
 
       <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <span className="flex size-9 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent/15 dark:text-accent-300">
-          <Handshake className="size-4" aria-hidden="true" />
+        <span className="inline-flex w-fit items-center gap-2 rounded-lg bg-accent-50 px-3 py-2 text-xs font-semibold text-accent-800 dark:bg-accent/15 dark:text-accent-200">
+          {kind === "PERSON" ? <UserRound className="size-4" aria-hidden="true" /> : kind === "ORGANIZATION" ? <Building2 className="size-4" aria-hidden="true" /> : <Handshake className="size-4" aria-hidden="true" />}
+          {t(`collaborations.${kind === "PERSON" ? "personType" : kind === "ORGANIZATION" ? "organizationType" : "clubType"}`)}
         </span>
         <h2 className="mt-5 font-heading text-2xl font-bold tracking-[-0.035em] text-primary group-hover:text-primary-700 dark:text-white dark:group-hover:text-accent-200">
           {name}
         </h2>
+        {subtitle ? <p className="mt-2 text-sm font-medium text-primary-700 dark:text-primary-100">{subtitle}</p> : null}
         <p className="mt-3 flex-1 text-sm leading-7 text-muted-foreground">
           {shortDescription}
         </p>

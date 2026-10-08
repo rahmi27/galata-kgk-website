@@ -11,10 +11,16 @@ import type { AdminActionState } from "@/lib/admin-action-state";
 import { initialAdminActionState } from "@/lib/admin-action-state";
 
 type PartnerClubFormValues = {
+  kind: "CLUB" | "PERSON" | "ORGANIZATION";
   name: string;
   nameEn?: string | null;
   shortDescription: string;
   shortDescriptionEn?: string | null;
+  subtitle?: string | null;
+  subtitleEn?: string | null;
+  websiteUrl?: string | null;
+  linkedinUrl?: string | null;
+  instagramUrl?: string | null;
   logoUrl: string;
   logoAlt: string;
   logoAltEn?: string | null;
@@ -32,6 +38,7 @@ type PartnerClubAdminFormProps = {
 };
 
 const emptyValues: PartnerClubFormValues = {
+  kind: "CLUB",
   name: "",
   nameEn: "",
   shortDescription: "",
@@ -62,22 +69,34 @@ export function PartnerClubAdminForm({
 
   return (
     <form ref={formRef} action={formAction} className="space-y-5">
-      <FormField label="Partner kulüp adı" htmlFor="partner-name">
+      <FormField label="Ortak türü" htmlFor="partner-kind" hint="Kulüp, kişi veya kurum seçin. Halka açık kartta doğru tür gösterilir.">
+        <select id="partner-kind" name="kind" defaultValue={defaultValues.kind} className="flex h-11 w-full rounded-xl border border-primary-200 bg-white px-3 text-sm text-primary-950 dark:border-white/15 dark:bg-primary-900 dark:text-white" required>
+          <option value="CLUB">Öğrenci kulübü / topluluk</option>
+          <option value="PERSON">Kişi</option>
+          <option value="ORGANIZATION">Kurum / marka</option>
+        </select>
+      </FormField>
+
+      <FormField label="Ortak adı" htmlFor="partner-name">
         <Input
           id="partner-name"
           name="name"
           defaultValue={defaultValues.name}
-          placeholder="Kulüp veya topluluk adı"
+          placeholder="Kişi, kulüp veya kurum adı"
           minLength={2}
           maxLength={120}
           required
         />
       </FormField>
 
+      <FormField label="Unvan / alt başlık (opsiyonel)" htmlFor="partner-subtitle" hint="Örn. Halkla İlişkiler ve Reklamcılık öğrencisi. Kişi profillerinde adın altında görünür.">
+        <Input id="partner-subtitle" name="subtitle" defaultValue={defaultValues.subtitle ?? ""} maxLength={160} />
+      </FormField>
+
       <FormField
         label="Kısa açıklama"
         htmlFor="partner-description"
-        hint="Halka açık kart ve detay sayfasında gösterilir."
+        hint="Kısa, doğal bir tanıtım yazın. Bağlantıları aşağıdaki ayrı alanlara girin."
       >
         <Textarea
           id="partner-description"
@@ -91,24 +110,37 @@ export function PartnerClubAdminForm({
         />
       </FormField>
 
+      <fieldset className="space-y-4 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
+        <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">Bağlantılar (opsiyonel)</legend>
+        <FormField label="Web sitesi" htmlFor="partner-website">
+          <Input id="partner-website" name="websiteUrl" type="url" defaultValue={defaultValues.websiteUrl ?? ""} placeholder="https://ornek.com" maxLength={2048} />
+        </FormField>
+        <FormField label="LinkedIn" htmlFor="partner-linkedin">
+          <Input id="partner-linkedin" name="linkedinUrl" type="url" defaultValue={defaultValues.linkedinUrl ?? ""} placeholder="https://www.linkedin.com/in/..." maxLength={2048} />
+        </FormField>
+        <FormField label="Instagram" htmlFor="partner-instagram">
+          <Input id="partner-instagram" name="instagramUrl" type="url" defaultValue={defaultValues.instagramUrl ?? ""} placeholder="https://www.instagram.com/..." maxLength={2048} />
+        </FormField>
+      </fieldset>
+
       <ImageUploadField
         id="partner-logo"
         name="partnerLogo"
-        label="Partner kulüp logosu"
+        label="Ortak görseli (fotoğraf / logo)"
         defaultImageUrl={defaultValues.logoUrl || undefined}
         required
       />
 
       <FormField
-        label="Logo alt metni"
+        label="Görsel alt metni"
         htmlFor="partner-logo-alt"
-        hint="Kulüp adını ve logoyu ekran okuyucular için tanımlayın."
+        hint="Görselin kendisini ekran okuyucu kullananlar için açıklayın."
       >
         <Input
           id="partner-logo-alt"
           name="logoAlt"
           defaultValue={defaultValues.logoAlt}
-          placeholder="Örn. Kulüp adı logosu"
+          placeholder="Örn. Gönül Özkaplan portresi veya kurum logosu"
           minLength={3}
           maxLength={180}
           required
@@ -117,8 +149,11 @@ export function PartnerClubAdminForm({
 
       <fieldset className="space-y-5 rounded-2xl border border-primary-100 bg-primary-50/50 p-5 dark:border-white/10 dark:bg-primary-950/45">
         <legend className="px-2 font-heading text-base font-bold text-primary-950 dark:text-white">İngilizce (opsiyonel)</legend>
-        <FormField label="Partner kulüp adı (EN)" htmlFor="partner-name-en">
+        <FormField label="Ortak adı (EN)" htmlFor="partner-name-en">
           <Input id="partner-name-en" name="nameEn" defaultValue={defaultValues.nameEn ?? ""} maxLength={120} />
+        </FormField>
+        <FormField label="Unvan / alt başlık (EN)" htmlFor="partner-subtitle-en">
+          <Input id="partner-subtitle-en" name="subtitleEn" defaultValue={defaultValues.subtitleEn ?? ""} maxLength={160} />
         </FormField>
         <FormField label="Kısa açıklama (EN)" htmlFor="partner-description-en">
           <Textarea id="partner-description-en" name="shortDescriptionEn" defaultValue={defaultValues.shortDescriptionEn ?? ""} maxLength={500} className="min-h-28" />

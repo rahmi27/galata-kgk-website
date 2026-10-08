@@ -338,11 +338,23 @@ model PartnerClub {
   logoAltEn          String?
   shortDescription   String
   shortDescriptionEn String?
+  kind               PartnerKind         @default(CLUB)
+  subtitle           String?
+  subtitleEn         String?
+  websiteUrl         String?
+  linkedinUrl        String?
+  instagramUrl       String?
   order              Int
   createdAt          DateTime            @default(now())
   collaborations     CollaborationItem[]
 
   @@index([order])
+}
+
+enum PartnerKind {
+  CLUB
+  PERSON
+  ORGANIZATION
 }
 
 model CollaborationItem {

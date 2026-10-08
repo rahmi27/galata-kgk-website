@@ -62,7 +62,7 @@ export function DeletePartnerClubButton({
       <DialogContent className="rounded-2xl border-primary-100 bg-white dark:border-white/15 dark:bg-primary-950">
         <DialogHeader>
           <DialogTitle className="font-heading text-xl text-primary-950 dark:text-white">
-            Partner kulüp silinsin mi?
+            İş birliği ortağı silinsin mi?
           </DialogTitle>
           <DialogDescription className="leading-6 text-primary-500 dark:text-primary-200">
             “{partnerClubName}” ve bağlı {collaborationCount} iş birliği
@@ -92,7 +92,7 @@ export function DeletePartnerClubButton({
             ) : (
               <Trash2 aria-hidden="true" />
             )}
-            Kulübü sil
+            Ortağı sil
           </Button>
         </DialogFooter>
       </DialogContent>
