@@ -7,14 +7,14 @@
     "build": "prisma generate && prisma migrate deploy && npm run db:seed-content && next build --webpack",
     "start": "next start",
     "lint": "eslint .",
-    "test:security": "tsx --test tests/security/input-security.test.ts tests/security/event-video-upload.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs tests/security/event-mode-security.test.mjs",
+    "test:security": "tsx --test tests/security/input-security.test.ts tests/security/event-video-upload.test.ts tests/security/join-system.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs tests/security/event-mode-security.test.mjs",
     "test:i18n": "tsx --test tests/localized-content.test.ts && node --test tests/i18n-routing.test.mjs",
     "test:isr": "node --test tests/isr-revalidation.test.mjs",
     "test:team": "tsx --test tests/person-priority.test.ts && node --test tests/team-membership-integrity.test.mjs",
     "db:seed": "prisma db seed",
     "db:seed-content": "tsx scripts/seed-site-content.ts",
-    "db:translate-content": "tsx scripts/backfill-english-content.ts"
-    ,"seed:uyelik": "tsx scripts/seed-membership.ts"
+    "db:translate-content": "tsx scripts/backfill-english-content.ts",
+    "seed:uyelik": "tsx scripts/seed-membership.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
@@ -40,6 +40,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
+    "react-markdown": "^10.1.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -68,7 +69,7 @@
     "find-my-way": "9.7.0",
     "mysql2": "3.24.4",
     "postcss": "8.5.25",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "nodemailer": "$nodemailer"
   },
   "browserslist": {

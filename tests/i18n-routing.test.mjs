@@ -101,12 +101,15 @@ test("form API hata kodları kullanıcıya aktif dilin mesajlarıyla gösterilir
     assert.match(form, /EMAIL_RATE_LIMITED: t\("emailRateLimitError"\)/);
     assert.match(form, /IP_RATE_LIMITED: t\("ipRateLimitError"\)/);
   }
-  for (const route of [contactRoute, membershipRoute]) {
+  for (const route of [contactRoute]) {
     assert.match(route, /code: "INVALID_SUBMISSION"/);
     assert.match(route, /code: "EMAIL_RATE_LIMITED"/);
     assert.match(route, /code: "IP_RATE_LIMITED"/);
     assert.match(route, /code: "INTERNAL_ERROR"/);
   }
+  // The former membership endpoint is intentionally closed and read-only.
+  assert.match(membershipRoute, /code: "LEGACY_CLOSED"/);
+  assert.match(membershipRoute, /status: 410/);
 });
 
 test("admin locale middleware dışında ve genel sayfalar iki dilde ISR'dır", async () => {

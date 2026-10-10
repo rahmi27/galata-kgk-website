@@ -344,6 +344,13 @@
     opacity 160ms ease-out;
 }
 
+/* The long join wizard grows after hydration; keep purely decorative dots
+   viewport-bound so they cannot register as a layout shift. */
+.ambient-particles--join {
+  position: fixed;
+  inset: 0;
+}
+
 .ambient-particles--variant-1.ambient-particles--global {
   opacity: 0.58;
   transform: translate3d(7px, -3px, 0);

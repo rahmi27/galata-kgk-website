@@ -77,7 +77,7 @@ test("production güvenlik başlıkları zorunlu direktifleri içerir", async ()
 test("image uploads enforce size, type, signature, and destination checks", async () => {
   const source = await readFile(path.join(root, "lib", "image-upload.ts"), "utf8");
 
-  assert.match(source, /MAX_IMAGE_SIZE\s*=\s*5\s*\*\s*1024\s*\*\s*1024/);
+  assert.match(source, /MAX_IMAGE_SIZE\s*=\s*4\s*\*\s*1024\s*\*\s*1024/);
   assert.match(source, /"image\/jpeg"/);
   assert.match(source, /"image\/png"/);
   assert.match(source, /"image\/webp"/);

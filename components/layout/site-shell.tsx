@@ -60,7 +60,7 @@ export function SiteShell({ children, content, activeEventSession }: SiteShellPr
     <div className="site-public-shell isolate grid min-h-screen grid-rows-[auto_1fr_auto] bg-background">
       <AmbientParticles
         variant={particleVariant}
-        className="ambient-particles--global"
+        className={pathname.startsWith("/katilim") || pathname.startsWith("/en/join") ? "ambient-particles--global ambient-particles--join" : "ambient-particles--global"}
       />
       {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl, posterOrientation: activeEventSession.posterOrientation, linkedEvent: activeEventSession.linkedEvent }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
       <Navbar content={content} activeEventSession={activeEventSession} />
