@@ -13,8 +13,9 @@ export async function POST(request: Request) {
       body, request, token: process.env.BLOB_PRIVATE_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async (pathname) => {
         if (!isApplicationPath(pathname)) throw new Error("Geçersiz dosya yolu.");
-        // Opportunistic bounded cleanup avoids an additional Hobby cron.
-        if (Math.random() < 0.02) await cleanupPendingApplicationFiles();
+        // Bounded cleanup on each new token avoids a cron and does not leave
+        // abandoned files waiting on a random chance to be selected.
+        await cleanupPendingApplicationFiles();
         await prisma.pendingUpload.create({ data: { pathname } });
         return { allowedContentTypes: [...ALLOWED_APPLICATION_FILE_TYPES], maximumSizeInBytes: MAX_APPLICATION_FILE_BYTES, validUntil: Date.now() + 5 * 60_000, addRandomSuffix: false };
       },

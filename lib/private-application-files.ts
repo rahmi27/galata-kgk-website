@@ -48,7 +48,11 @@ export async function deletePrivateApplicationFiles(pathnames: string[]) {
 export async function cleanupPendingApplicationFiles() {
   const stale = await prisma.pendingUpload.findMany({ where: { attachedAt: null, createdAt: { lt: new Date(Date.now() - 24 * 3600_000) } }, select: { pathname: true }, take: 50 });
   for (const item of stale) {
-    await del(item.pathname, { token: token() }).catch(() => undefined);
-    await prisma.pendingUpload.deleteMany({ where: { pathname: item.pathname, attachedAt: null } });
+    try {
+      await del(item.pathname, { token: token() });
+      await prisma.pendingUpload.deleteMany({ where: { pathname: item.pathname, attachedAt: null } });
+    } catch {
+      // Keep the row for a later retry if Blob deletion failed.
+    }
   }
 }
