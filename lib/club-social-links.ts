@@ -33,7 +33,7 @@ async function readClubSocialLinks(): Promise<PublicClubSocialLink[]> {
 
 const readCachedClubSocialLinks = unstable_cache(
   readClubSocialLinks,
-  ["public-club-social-links-v1"],
+  ["public-club-social-links-v2"],
   {
     revalidate: 86400,
     tags: ["club-social-links"],
