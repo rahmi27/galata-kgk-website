@@ -28,7 +28,173 @@ model AdminUser {
   username     String   @unique
   passwordHash String
   name         String
+  role         AdminRole @default(FULL)
   createdAt    DateTime @default(now())
+}
+
+enum AdminRole {
+  FULL
+}
+
+enum PositionQuestionType {
+  YES_NO
+  SHORT_TEXT
+  LONG_TEXT
+  FILE
+  LINK
+}
+
+enum PositionApplicationStatus {
+  NEW
+  REVIEWING
+  INTERVIEW
+  ACCEPTED
+  REJECTED
+}
+
+model Department {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  @@index([isActive, order])
+}
+
+model ClubMember {
+  id                Int      @id @default(autoincrement())
+  fullName          String
+  phone             String
+  email             String
+  departmentName    String
+  classYear         String
+  studentNumber     String   @unique
+  motivation        String?  @db.VarChar(500)
+  consentAcceptedAt DateTime
+  createdAt         DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([departmentName, classYear])
+}
+
+model RecruitmentPosition {
+  id               Int                        @id @default(autoincrement())
+  slug             String                     @unique
+  title            String
+  shortDescription String
+  detailMarkdown   String                     @db.Text
+  isOpen           Boolean                    @default(false)
+  deadline         DateTime?
+  quota            Int?
+  order            Int                        @default(0)
+  isArchived       Boolean                    @default(false)
+  createdAt        DateTime                   @default(now())
+  updatedAt        DateTime                   @updatedAt
+  media            RecruitmentPositionMedia[]
+  questions        PositionQuestion[]
+  applications     PositionApplication[]
+
+  @@index([isArchived, isOpen, order])
+}
+
+model RecruitmentPositionMedia {
+  id         Int                 @id @default(autoincrement())
+  positionId Int
+  url        String
+  alt        String
+  caption    String?
+  order      Int                 @default(0)
+  position   RecruitmentPosition @relation(fields: [positionId], references: [id], onDelete: Cascade)
+
+  @@index([positionId, order])
+}
+
+model PositionQuestion {
+  id         Int                  @id @default(autoincrement())
+  positionId Int
+  label      String
+  helpText   String?
+  type       PositionQuestionType
+  required   Boolean              @default(false)
+  order      Int                  @default(0)
+  isActive   Boolean              @default(true)
+  maxLength  Int?
+  minFiles   Int?
+  maxFiles   Int?
+  anyOfGroup String?
+  position   RecruitmentPosition  @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  answers    ApplicationAnswer[]
+
+  @@index([positionId, isActive, order])
+}
+
+model PositionApplication {
+  id                Int                       @id @default(autoincrement())
+  positionId        Int
+  fullName          String
+  phone             String
+  email             String
+  departmentName    String
+  classYear         String
+  studentNumber     String
+  consentAcceptedAt DateTime
+  status            PositionApplicationStatus @default(NEW)
+  adminNote         String?                   @db.Text
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  position          RecruitmentPosition       @relation(fields: [positionId], references: [id], onDelete: Restrict)
+  answers           ApplicationAnswer[]
+  files             ApplicationFile[]
+
+  @@unique([positionId, studentNumber])
+  @@index([status, createdAt])
+}
+
+model ApplicationAnswer {
+  id             Int                  @id @default(autoincrement())
+  applicationId  Int
+  questionId     Int?
+  questionLabel  String
+  questionType   PositionQuestionType
+  order          Int
+  textValue      String?              @db.Text
+  boolValue      Boolean?
+  application    PositionApplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  question       PositionQuestion?    @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  files          ApplicationFile[]
+
+  @@index([applicationId, order])
+}
+
+model ApplicationFile {
+  id              Int                 @id @default(autoincrement())
+  applicationId   Int
+  answerId        Int
+  storagePathname String              @unique
+  originalName    String
+  contentType     String
+  sizeBytes       Int
+  createdAt       DateTime            @default(now())
+  application     PositionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  answer          ApplicationAnswer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
+}
+
+model PendingUpload {
+  id         Int       @id @default(autoincrement())
+  pathname   String    @unique
+  createdAt  DateTime  @default(now())
+  attachedAt DateTime?
+
+  @@index([attachedAt, createdAt])
+}
+
+model ApplicationRateAttempt {
+  id        Int      @id @default(autoincrement())
+  scope     String
+  ipHash    String
+  createdAt DateTime @default(now())
+
+  @@index([scope, ipHash, createdAt])
 }
 
 model AdminLoginAttempt {
