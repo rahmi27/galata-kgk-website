@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeft,
   BarChart3,
+  BookOpen,
   CalendarDays,
   Gift,
   Handshake,
@@ -71,7 +72,22 @@ const navigation = [
     icon: Inbox,
   },
   {
-    label: "Katılım Başvuruları",
+    label: "Kulüp Üyeleri",
+    href: "/admin/kulup-uyeleri",
+    icon: UserRoundCheck,
+  },
+  {
+    label: "Saha Ekibi Alımı",
+    href: "/admin/alim/pozisyonlar",
+    icon: UsersRound,
+  },
+  {
+    label: "Bölüm Listesi",
+    href: "/admin/bolumler",
+    icon: BookOpen,
+  },
+  {
+    label: "Eski Başvurular (Arşiv)",
     href: "/admin/katilim-basvurulari",
     icon: UserRoundCheck,
   },
@@ -192,6 +208,7 @@ function AdminNavigation({
       {navigation.map((item) => (
         <div key={item.href}>
           {renderNavigationItem(item)}
+          {item.href === "/admin/alim/pozisyonlar" ? <div className="mb-2 ml-5 space-y-1 border-l border-white/15 pl-2"><Link href="/admin/alim/pozisyonlar" className="block px-3 py-2 text-sm text-primary-100">Pozisyonlar</Link><Link href="/admin/alim/basvurular" className="block px-3 py-2 text-sm text-primary-100">Başvurular</Link></div> : null}
           {item.href === "/admin/etkinlik-modu" ? (
             <div className="mb-2 ml-5 space-y-1 border-l border-white/15 pl-2">
               {eventModeNavigation.map(renderNavigationItem)}

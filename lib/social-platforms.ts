@@ -1,5 +1,6 @@
 export const socialPlatformOptions = [
   { value: "instagram", label: "Instagram" },
+  { value: "whatsapp", label: "WhatsApp" },
   { value: "linkedin", label: "LinkedIn" },
   { value: "tiktok", label: "TikTok" },
   { value: "youtube", label: "YouTube" },

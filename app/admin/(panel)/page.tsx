@@ -16,7 +16,8 @@ export default async function AdminDashboardPage() {
     eventCount,
     personCount,
     unreadMessageCount,
-    pendingApplicationCount,
+    newMemberCount,
+    newTeamApplicationCount,
   ] = await Promise.all([
     prisma.event.count(),
     prisma.person.count(),
@@ -25,11 +26,8 @@ export default async function AdminDashboardPage() {
         isRead: false,
       },
     }),
-    prisma.membershipApplication.count({
-      where: {
-        status: "beklemede",
-      },
-    }),
+    prisma.clubMember.count({ where: { createdAt: { gte: new Date(Date.now() - 7 * 86400_000) } } }),
+    prisma.positionApplication.count({ where: { status: "NEW" } }),
   ]);
 
   const cards = [
@@ -53,9 +51,16 @@ export default async function AdminDashboardPage() {
       tone: "accent" as const,
     },
     {
-      label: "Bekleyen başvuru",
-      value: pendingApplicationCount,
-      helper: "Henüz değerlendirilmemiş kulüp katılım talepleri",
+      label: "Son 7 günde yeni üye",
+      value: newMemberCount,
+      helper: "Doğrudan kulübe katılan öğrenciler",
+      icon: UserRoundCheck,
+      tone: "accent" as const,
+    },
+    {
+      label: "Yeni saha başvurusu",
+      value: newTeamApplicationCount,
+      helper: "Değerlendirme bekleyen saha ekibi adayları",
       icon: UserRoundCheck,
       tone: "accent" as const,
     },
@@ -70,7 +75,7 @@ export default async function AdminDashboardPage() {
       />
 
       <section
-        className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+        className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-5"
         aria-label="Yönetim özeti"
       >
         {cards.map((card) => (

@@ -1,0 +1,10 @@
+import { requireAdmin } from "@/lib/admin-auth";
+import { prisma } from "@/lib/prisma";
+import { saveDepartmentAction } from "@/app/admin/(panel)/alim/actions";
+
+export const dynamic = "force-dynamic";
+export default async function DepartmentsPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  await requireAdmin(); const { error } = await searchParams;
+  const departments = await prisma.department.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] });
+  return <main><h1 className="font-heading text-3xl font-bold">Bölüm Listesi</h1><p className="mt-2 text-muted-foreground">Üyelik ve saha başvuru formlarındaki bölümleri yönetin.</p>{error ? <p role="alert" className="mt-4 text-red-700 dark:text-red-300">{error}</p> : null}<div className="mt-7 space-y-3">{departments.map((item) => <form key={item.id} action={saveDepartmentAction} className="flex flex-wrap items-end gap-3 rounded-xl border border-primary/15 p-4 dark:border-white/15"><input type="hidden" name="id" value={item.id} /><label className="flex-1 text-sm">Bölüm adı<input name="name" defaultValue={item.name} required className="mt-1 w-full rounded-lg border p-2 text-primary-950" /></label><label className="text-sm">Sıra<input name="order" type="number" min="0" defaultValue={item.order} className="mt-1 block w-24 rounded-lg border p-2 text-primary-950" /></label><label className="mb-2 text-sm"><input type="checkbox" name="isActive" defaultChecked={item.isActive} /> Aktif</label><button className="rounded-lg bg-accent px-4 py-2 font-bold text-primary-950">Kaydet</button></form>)}</div><form action={saveDepartmentAction} className="mt-8 flex flex-wrap items-end gap-3 rounded-xl border border-dashed p-4"><label className="flex-1 text-sm">Yeni bölüm<input name="name" required className="mt-1 w-full rounded-lg border p-2 text-primary-950" /></label><label className="text-sm">Sıra<input name="order" type="number" min="0" defaultValue={departments.length} className="mt-1 block w-24 rounded-lg border p-2 text-primary-950" /></label><button className="rounded-lg bg-accent px-4 py-2 font-bold text-primary-950">Ekle</button></form></main>;
+}

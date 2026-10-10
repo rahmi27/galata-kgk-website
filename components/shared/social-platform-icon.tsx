@@ -6,12 +6,14 @@ import {
   FaTiktok,
   FaXTwitter,
   FaYoutube,
+  FaWhatsapp,
 } from "react-icons/fa6";
 
 import type { SocialPlatform } from "@/lib/social-platforms";
 
 const socialIcons = {
   instagram: FaInstagram,
+  whatsapp: FaWhatsapp,
   linkedin: FaLinkedinIn,
   tiktok: FaTiktok,
   youtube: FaYoutube,
