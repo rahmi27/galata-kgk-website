@@ -22,6 +22,8 @@ export const routing = defineRouting({
     },
     "/iletisim": {tr: "/iletisim", en: "/contact"},
     "/katilim": {tr: "/katilim", en: "/join"},
+    "/katilim/uye": {tr: "/katilim/uye", en: "/join/member"},
+    "/katilim/saha-ekibi": {tr: "/katilim/saha-ekibi", en: "/join/team"},
     "/etkinlik": {tr: "/etkinlik", en: "/event"},
     "/etkinlik/panel": {tr: "/etkinlik/panel", en: "/event/hub"},
     "/etkinlik/panel/quiz": {tr: "/etkinlik/panel/quiz", en: "/event/hub/quiz"},

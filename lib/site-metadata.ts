@@ -62,6 +62,8 @@ export function localizedPublicPath(path: string, locale: "tr" | "en") {
     "/is-birlikleri": "/en/collaborations",
     "/iletisim": "/en/contact",
     "/katilim": "/en/join",
+    "/katilim/uye": "/en/join/member",
+    "/katilim/saha-ekibi": "/en/join/team",
     "/etkinlik": "/en/event",
     "/cerez-politikasi": "/en/cookie-policy",
   };
