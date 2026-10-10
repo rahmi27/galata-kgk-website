@@ -69,5 +69,9 @@ run().finally(async () => {
   await prisma.positionApplication.deleteMany({ where: { positionId: { in: ids }, fullName: "Yerel Test Aday" } });
   await prisma.clubMember.deleteMany({ where: { studentNumber: firstStudent } });
   for (const [id, state] of original) await prisma.recruitmentPosition.update({ where: { id }, data: state });
+  const remaining = await prisma.positionApplication.count({ where: { positionId: { in: ids }, fullName: "Yerel Test Aday" } });
+  const remainingMember = await prisma.clubMember.count({ where: { studentNumber: firstStudent } });
+  if (remaining || remainingMember) throw new Error("Yerel test kayıtları tamamen temizlenmedi.");
+  console.log("Yerel test aday kayıtları temizlendi; pozisyon durumları geri alındı.");
   await prisma.$disconnect();
 });

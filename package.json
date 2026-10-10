@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "prisma generate && prisma migrate deploy && npm run db:seed-content && next build --webpack",
+    "build": "prisma generate && node scripts/prepare-deployment.mjs && next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "test:security": "tsx --test tests/security/input-security.test.ts tests/security/event-video-upload.test.ts tests/security/join-system.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs tests/security/event-mode-security.test.mjs",
