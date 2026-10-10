@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { validateApplicantBasics, normalizeTurkishMobile, safeHttpUrl } from "../../lib/join-validation";
-import { MAX_APPLICATION_FILE_BYTES, isApplicationPath, validApplicationSignature } from "../../lib/application-file-validation";
+import { MAX_APPLICATION_FILE_BYTES, asciiDownloadFilename, isApplicationPath, validApplicationSignature } from "../../lib/application-file-validation";
 import { csvFile } from "../../lib/safe-csv";
 
 const valid = { fullName: "Ayşe Yılmaz", phone: "0532 123 45 67", email: "AYSE@EXAMPLE.COM", departmentName: "Hemşirelik", classYear: "2", studentNumber: " 1234567 " };
@@ -34,6 +34,12 @@ test("private file limit, path and magic bytes", () => {
   assert.equal(validApplicationSignature(Buffer.from("<html>"), "application/pdf"), false);
   assert.ok(validApplicationSignature(Uint8Array.from([0xff, 0xd8, 0xff, 0x00]), "image/jpeg"));
   assert.equal(validApplicationSignature(Uint8Array.from([0xff, 0xd8, 0xff]), "image/png"), false);
+});
+test("download header fallback remains ASCII-safe for Turkish filenames", () => {
+  const fallback = asciiDownloadFilename('çalışma-şablonu.pdf');
+  assert.match(fallback, /^[\x20-\x7E]+$/);
+  assert.doesNotThrow(() => new Headers({ "Content-Disposition": `attachment; filename="${fallback}"; filename*=UTF-8''${encodeURIComponent('çalışma-şablonu.pdf')}` }));
+  assert.equal(asciiDownloadFilename('"\r\n.pdf'), '___.pdf');
 });
 test("CSV escapes formulas and includes Excel BOM", () => {
   const file = csvFile([["Name", "Value"], ["Alice", "=1+1"], ["Bob", "+CMD"]]);

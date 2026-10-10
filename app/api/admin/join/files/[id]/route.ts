@@ -1,6 +1,7 @@
 import { get } from "@vercel/blob";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { asciiDownloadFilename } from "@/lib/application-file-validation";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -12,6 +13,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   if (!token) return new Response("Özel dosya deposu yapılandırılmamış.", { status: 503 });
   const blob = await get(file.storagePathname, { access: "private", token, useCache: false });
   if (!blob || blob.statusCode !== 200) return new Response("Dosya bulunamadı.", { status: 404 });
-  const safeName = file.originalName.replace(/[\r\n"\\]/g, "_").slice(0, 180);
+  const safeName = asciiDownloadFilename(file.originalName);
   return new Response(blob.stream, { headers: { "Content-Type": file.contentType, "Content-Disposition": `attachment; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(file.originalName)}`, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" } });
 }

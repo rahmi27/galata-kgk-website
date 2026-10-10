@@ -1,5 +1,10 @@
 export const MAX_APPLICATION_FILE_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_APPLICATION_FILE_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"] as const;
+export function asciiDownloadFilename(name: string) {
+  // RFC 6266's filename fallback must be ASCII-safe; filename* carries the
+  // original UTF-8 name separately for browsers that support it.
+  return name.replace(/[^\x20-\x7E]|["\\]/g, "_").slice(0, 180) || "download";
+}
 export function isApplicationPath(pathname: string) {
   return /^applications\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpe?g|png|webp|pdf)$/.test(pathname);
 }
