@@ -30,7 +30,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.blob.vercel-storage.com https://*.googleapis.com https://*.gstatic.com",
   "font-src 'self' data:",
-  `connect-src 'self' https://blob.vercel-storage.com https://*.blob.vercel-storage.com${isDevelopment ? " ws: wss:" : ""}`,
+  `connect-src 'self' https://blob.vercel-storage.com https://*.blob.vercel-storage.com https://*.private.blob.vercel-storage.com${isDevelopment ? " ws: wss:" : ""}`,
   "media-src 'self' https://*.blob.vercel-storage.com",
   "manifest-src 'self'",
   "worker-src 'self' blob:",
@@ -97,6 +97,8 @@ const nextConfig = {
       }
     : {}),
   experimental: {
+    // Bound prerender database concurrency, including on small test databases.
+    ...(process.env.LOCAL_TEST_BUILD === "1" ? { cpus: 1 } : {}),
     globalNotFound: true,
     inlineCss: true,
     serverActions: {

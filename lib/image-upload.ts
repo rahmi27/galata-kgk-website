@@ -3,7 +3,8 @@ import "server-only";
 import { del, put } from "@vercel/blob";
 import { randomUUID } from "node:crypto";
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+// Keep all server-action image bodies safely below Vercel's ~4.5 MB request limit.
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
 const imageTypes = {
   "image/jpeg": {
@@ -94,7 +95,7 @@ function sanitizeFileName(fileName: string) {
 
 export async function saveImageUpload(
   value: FormDataEntryValue | null,
-  directory: "events" | `events/gallery/${number}` | "team" | "sponsors" | "partners" | "event-mode",
+  directory: "events" | `events/gallery/${number}` | "team" | "sponsors" | "partners" | "event-mode" | "positions",
 ): Promise<ImageUploadResult> {
   if (!(value instanceof File) || value.size === 0) {
     return {
@@ -107,7 +108,7 @@ export async function saveImageUpload(
     return {
       success: false,
       code: "too-large",
-      error: "Görsel dosyası en fazla 5 MB olabilir.",
+      error: "Görsel dosyası en fazla 4 MB olabilir.",
     };
   }
 
