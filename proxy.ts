@@ -6,6 +6,7 @@ import {routing} from "@/i18n/routing";
 import {EVENT_PARTICIPANT_COOKIE, verifyParticipantToken} from "@/lib/event-participant-token";
 
 const handleI18nRouting = createMiddleware(routing);
+const handleRecruitmentRouting = createMiddleware({ ...routing, alternateLinks: false });
 
 export const proxy = auth((request) => {
   if (request.nextUrl.pathname.startsWith("/admin")) {
@@ -30,6 +31,12 @@ export const proxy = auth((request) => {
     }
   }
 
+  // Conditional recruitment pages are noindex and intentionally have no
+  // hreflang alternates, including next-intl's HTTP Link header.
+  const path = request.nextUrl.pathname.replace(/\/$/, "");
+  if (["/katilim/saha-ekibi", "/tr/katilim/saha-ekibi", "/en/join/team"].includes(path)) {
+    return handleRecruitmentRouting(request);
+  }
   return handleI18nRouting(request);
 });
 

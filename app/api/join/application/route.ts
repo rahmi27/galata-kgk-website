@@ -4,6 +4,7 @@ import { validateApplicantBasics, safeHttpUrl } from "@/lib/join-validation";
 import { checkJoinRateLimit } from "@/lib/join-rate-limit";
 import { isHoneypotTriggered } from "@/lib/form-spam-protection";
 import { verifyPrivateApplicationFile, type ApplicationFileReference } from "@/lib/private-application-files";
+import { isPositionOpen } from "@/lib/recruitment-availability";
 
 type AnswerInput = { questionId: number; textValue?: string; boolValue?: boolean; files?: ApplicationFileReference[] };
 
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
   const positionId = Number(input.positionId);
   if (!Number.isSafeInteger(positionId) || positionId < 1) return NextResponse.json({ error: "Pozisyon seçin." }, { status: 400 });
   const position = await prisma.recruitmentPosition.findUnique({ where: { id: positionId }, include: { questions: { where: { isActive: true }, orderBy: { order: "asc" } } } });
-  if (!position || !position.isOpen || position.isArchived || (position.deadline && position.deadline <= new Date())) return NextResponse.json({ error: "Bu pozisyon için başvurular kapalı." }, { status: 409 });
+  if (!position || !isPositionOpen(position)) return NextResponse.json({ error: "Bu pozisyon artık başvuru almıyor.", code: "POSITION_CLOSED" }, { status: 409 });
   if (await prisma.positionApplication.findUnique({ where: { positionId_studentNumber: { positionId, studentNumber: parsed.data.studentNumber } }, select: { id: true } })) return NextResponse.json({ error: "Bu pozisyon için zaten başvurun var." }, { status: 409 });
   if (!Array.isArray(input.answers) || input.answers.length > 100) return NextResponse.json({ error: "Yanıtlar geçersiz." }, { status: 400 });
   const answers = input.answers as AnswerInput[];

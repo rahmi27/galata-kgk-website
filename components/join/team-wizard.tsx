@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { RichText } from "@/components/rich-text";
 import { ApplicantFields, ConsentField, SocialLinks, inputStyle, type Social } from "@/components/join/shared";
 import { validateApplicantBasics } from "@/lib/join-validation";
+import { isPositionOpen } from "@/lib/recruitment-availability";
 
 type Question = { id: number; label: string; helpText: string | null; type: "YES_NO" | "SHORT_TEXT" | "LONG_TEXT" | "FILE" | "LINK"; required: boolean; maxLength: number | null; minFiles: number | null; maxFiles: number | null; anyOfGroup: string | null };
 type Position = { id: number; title: string; shortDescription: string; detailMarkdown: string; isOpen: boolean; isArchived: boolean; deadline: string | null; questions: Question[]; media: { id: number; url: string; alt: string; caption: string | null }[] };
@@ -15,6 +17,7 @@ const button = "rounded-xl bg-accent px-6 py-3 font-bold text-primary-950 hover:
 function extension(type: string) { return ({ "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "application/pdf": "pdf" } as Record<string, string>)[type]; }
 
 export function TeamWizard({ positions, departments, socials }: { positions: Position[]; departments: string[]; socials: Social[] }) {
+  const router = useRouter();
   const [ready, setReady] = useState(false);
   const [step, setStep] = useState(1);
   const [basic, setBasic] = useState<Draft>({});
@@ -28,14 +31,16 @@ export function TeamWizard({ positions, departments, socials }: { positions: Pos
   const headingRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const position = positions.find((item) => item.id === selected);
+  const openPositions = positions.filter((item) => isPositionOpen(item));
 
   useEffect(() => {
-    try { const raw = sessionStorage.getItem(draftKey); if (raw) { const draft = JSON.parse(raw) as { basic?: Draft; values?: Record<number, string | boolean>; step?: number; selected?: number }; setBasic(draft.basic || {}); setValues(draft.values || {}); if (draft.selected && positions.some((item) => item.id === draft.selected && item.isOpen && !item.isArchived && (!item.deadline || new Date(item.deadline) > new Date()))) { setSelected(draft.selected); setStep(draft.step === 3 ? 3 : draft.step === 2 ? 2 : 1); } else if (draft.step === 2) setStep(2); } } catch { /* ignore corrupt draft */ }
+    try { const raw = sessionStorage.getItem(draftKey); if (raw) { const draft = JSON.parse(raw) as { basic?: Draft; values?: Record<number, string | boolean>; step?: number; selected?: number }; setBasic(draft.basic || {}); setValues(draft.values || {}); if (draft.selected && positions.some((item) => item.id === draft.selected && isPositionOpen(item))) { setSelected(draft.selected); setStep(draft.step === 3 ? 3 : draft.step === 2 ? 2 : 1); } else if (draft.step === 2) setStep(2); } } catch { /* ignore corrupt draft */ }
     setReady(true);
   }, [positions]);
   useEffect(() => { if (ready && !success) sessionStorage.setItem(draftKey, JSON.stringify({ basic, values, step, selected })); }, [basic, values, step, selected, ready, success]);
   useEffect(() => { if (ready) headingRef.current?.focus(); }, [step, ready]);
   useEffect(() => { if (error) errorRef.current?.focus(); }, [error]);
+  useEffect(() => { if (ready && step === 2 && !positions.some((item) => isPositionOpen(item))) router.refresh(); }, [positions, ready, router, step]);
 
   function nextBasics(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -80,7 +85,10 @@ export function TeamWizard({ positions, departments, socials }: { positions: Pos
     try {
       const response = await fetch("/api/join/application", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...basic, positionId: position.id, answers, consent: data.get("consent") === "on", website: data.get("website") }) });
       const result = await response.json();
-      if (!response.ok || !result.ok) throw new Error(result.error || "Başvuru kaydedilemedi.");
+      if (!response.ok || !result.ok) {
+        if (result.code === "POSITION_CLOSED") { setSelected(null); setStep(2); router.refresh(); }
+        throw new Error(result.error || "Başvuru kaydedilemedi.");
+      }
       sessionStorage.removeItem(draftKey); setSuccess(true);
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Başvuru kaydedilemedi."); }
     finally { setSending(false); }
@@ -93,7 +101,16 @@ export function TeamWizard({ positions, departments, socials }: { positions: Pos
     <h1 ref={headingRef} tabIndex={-1} className="mt-2 font-heading text-3xl font-bold outline-none">{step === 1 ? "Önce seni tanıyalım" : step === 2 ? "Pozisyonunu seç" : position?.title}</h1>
     {error ? <div ref={errorRef} role="alert" tabIndex={-1} className="mt-5 rounded-xl bg-red-100 p-4 font-medium text-red-900 outline-none dark:bg-red-950 dark:text-red-100">{error}</div> : null}
     {step === 1 ? <form onSubmit={nextBasics} onChange={(event) => setBasic(Object.fromEntries(new FormData(event.currentTarget).entries()) as Draft)} className="mt-8"><ApplicantFields key={ready ? "restored" : "initial"} departments={departments} initial={basic} /><button className={`${button} mt-8`} type="submit">Pozisyonları gör →</button></form> : null}
-    {step === 2 ? <div className="mt-8"><button type="button" onClick={() => setStep(1)} className="mb-5 font-semibold text-accent-700 underline dark:text-accent-300">← Geri</button><div className="grid gap-4 sm:grid-cols-2">{positions.map((item) => { const open = item.isOpen && !item.isArchived && (!item.deadline || new Date(item.deadline) > new Date()); return <button type="button" key={item.id} disabled={!open} onClick={() => { setSelected(item.id); setStep(3); setError(""); }} className="rounded-2xl border border-primary/15 p-6 text-left transition-colors hover:border-accent-600 disabled:cursor-not-allowed disabled:opacity-55 dark:border-white/20"><h2 className="font-heading text-xl font-bold">{item.title}</h2><p className="mt-3 text-muted-foreground">{item.shortDescription}</p><span className="mt-5 block font-bold text-accent-700 dark:text-accent-300">{open ? "Detayı gör →" : "Başvurular kapandı"}</span></button>; })}</div></div> : null}
+    {step === 2 ? <div className="mt-8">
+      <button type="button" onClick={() => setStep(1)} className="mb-5 font-semibold text-accent-700 underline dark:text-accent-300">← Geri</button>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {openPositions.map((item) => <button type="button" key={item.id} onClick={() => { setSelected(item.id); setStep(3); setError(""); }} className="rounded-2xl border border-primary/15 p-6 text-left transition-colors hover:border-accent-600 dark:border-white/20">
+          <h2 className="font-heading text-xl font-bold">{item.title}</h2>
+          <p className="mt-3 text-muted-foreground">{item.shortDescription}</p>
+          <span className="mt-5 block font-bold text-accent-700 dark:text-accent-300">Detayı gör →</span>
+        </button>)}
+      </div>
+    </div> : null}
     {step === 3 && position ? <form ref={formRef} onSubmit={submit} className="mt-8"><button type="button" onClick={() => setStep(2)} className="mb-6 font-semibold text-accent-700 underline dark:text-accent-300">← Geri</button><RichText markdown={position.detailMarkdown} />{position.media.length ? <div className="mt-8 grid gap-4 sm:grid-cols-2">{position.media.map((media) => <figure key={media.id}><img src={media.url} alt={media.alt} className="w-full rounded-xl" />{media.caption ? <figcaption className="mt-2 text-sm text-muted-foreground">{media.caption}</figcaption> : null}</figure>)}</div> : null}<div className="mt-9 space-y-6">{position.questions.map((question) => <div key={question.id}><label className="block font-semibold">{question.label}{question.required ? " *" : ""}</label>{question.helpText ? <p className="mt-1 text-sm text-muted-foreground">{question.helpText}</p> : null}{question.type === "YES_NO" ? <div className="mt-3 flex gap-5"><label><input type="radio" name={`q-${question.id}`} checked={values[question.id] === "yes"} onChange={() => setValues((old) => ({ ...old, [question.id]: "yes" }))} /> Evet</label><label><input type="radio" name={`q-${question.id}`} checked={values[question.id] === "no"} onChange={() => setValues((old) => ({ ...old, [question.id]: "no" }))} /> Hayır</label></div> : question.type === "FILE" ? <div><input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" multiple={Boolean((question.maxFiles || 2) > 1)} onChange={(event) => handleFiles(question.id, event.target.files)} className={inputStyle} /><p className="mt-2 text-xs text-muted-foreground">En fazla {question.maxFiles || 2} dosya, her biri en fazla 5 MB. Dosyalar yalnızca yöneticilere açıktır.</p>{files[question.id]?.map((file) => <p key={file.pathname} className="mt-1 text-sm">✓ {file.originalName}</p>)}</div> : question.type === "LONG_TEXT" ? <textarea value={String(values[question.id] ?? "")} onChange={(event) => setValues((old) => ({ ...old, [question.id]: event.target.value }))} rows={5} maxLength={question.maxLength ?? 5000} className={inputStyle} /> : <input type={question.type === "LINK" ? "url" : "text"} value={String(values[question.id] ?? "")} onChange={(event) => setValues((old) => ({ ...old, [question.id]: event.target.value }))} maxLength={question.maxLength ?? 2000} className={inputStyle} />}</div>)}</div><div className="absolute -left-[10000px] size-px overflow-hidden" aria-hidden="true"><input name="website" tabIndex={-1} autoComplete="off" /></div><ConsentField /><button type="submit" disabled={sending} className={`${button} mt-7`}>{sending ? "İşleniyor…" : "Başvuruyu gönder"}</button></form> : null}
   </div>;
 }

@@ -15,7 +15,6 @@ const publicPaths = [
   "/iletisim",
   "/katilim",
   "/katilim/uye",
-  "/katilim/saha-ekibi",
   "/cerez-politikasi",
 ];
 
