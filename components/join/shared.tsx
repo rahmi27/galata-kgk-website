@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { OFFICIAL_PRIVACY_NOTICE_URL } from "@/lib/privacy";
-import { classYears } from "@/lib/join-validation";
+import { classYears, isValidStudentNumber, normalizeStudentNumber, STUDENT_NUMBER_ERROR, STUDENT_NUMBER_PATTERN } from "@/lib/join-validation";
 
 export type Social = { platform: string; label: string; url: string };
 export const inputStyle = "mt-2 w-full rounded-xl border border-primary/20 bg-background px-4 py-3 text-foreground outline-none focus-visible:ring-2 focus-visible:ring-accent-600 dark:border-white/20";
@@ -14,7 +14,16 @@ export function ApplicantFields({ departments, initial = {} }: { departments: st
     <label className="text-sm font-semibold">E-posta<input name="email" defaultValue={initial.email} type="email" autoComplete="email" required maxLength={254} className={inputStyle} /></label>
     <label className="text-sm font-semibold">Bölüm{departments.length ? <select name="departmentName" required defaultValue={initial.departmentName || ""} className={inputStyle}><option value="" disabled>Seçiniz</option>{departments.map((name) => <option key={name} value={name}>{name}</option>)}</select> : <input name="departmentName" defaultValue={initial.departmentName} required minLength={2} maxLength={150} className={inputStyle} />}</label>
     <label className="text-sm font-semibold">Sınıf<select name="classYear" required defaultValue={initial.classYear || ""} className={inputStyle}><option value="" disabled>Seçiniz</option>{classYears.map((year) => <option key={year} value={year}>{year === "Hazırlık" ? year : `${year}. sınıf`}</option>)}</select></label>
-    <label className="text-sm font-semibold">Öğrenci numarası<input name="studentNumber" defaultValue={initial.studentNumber} inputMode="numeric" pattern="[0-9]{5,15}" minLength={5} maxLength={15} required className={inputStyle} /></label>
+    <label className="text-sm font-semibold">Öğrenci numarası<input name="studentNumber" defaultValue={initial.studentNumber} inputMode="numeric" pattern={STUDENT_NUMBER_PATTERN} maxLength={9} placeholder="9 haneli öğrenci numaran" required className={inputStyle} onInput={(event) => {
+      const input = event.currentTarget;
+      input.value = normalizeStudentNumber(input.value);
+      input.setCustomValidity(input.value && !isValidStudentNumber(input.value) ? STUDENT_NUMBER_ERROR : "");
+    }} onPaste={(event) => {
+      event.preventDefault();
+      const input = event.currentTarget;
+      input.value = normalizeStudentNumber(event.clipboardData.getData("text"));
+      input.setCustomValidity(isValidStudentNumber(input.value) ? "" : STUDENT_NUMBER_ERROR);
+    }} onInvalid={(event) => event.currentTarget.setCustomValidity(STUDENT_NUMBER_ERROR)} /></label>
     <div className="absolute -left-[10000px] size-px overflow-hidden" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
   </div>;
 }

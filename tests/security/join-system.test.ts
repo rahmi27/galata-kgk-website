@@ -1,16 +1,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateApplicantBasics, normalizeTurkishMobile, safeHttpUrl } from "../../lib/join-validation";
+import { validateApplicantBasics, normalizeTurkishMobile, normalizeStudentNumber, STUDENT_NUMBER_ERROR, safeHttpUrl } from "../../lib/join-validation";
 import { MAX_APPLICATION_FILE_BYTES, asciiDownloadFilename, isApplicationPath, validApplicationSignature } from "../../lib/application-file-validation";
 import { csvFile } from "../../lib/safe-csv";
 
-const valid = { fullName: "Ayşe Yılmaz", phone: "0532 123 45 67", email: "AYSE@EXAMPLE.COM", departmentName: "Hemşirelik", classYear: "2", studentNumber: " 1234567 " };
+const valid = { fullName: "Ayşe Yılmaz", phone: "0532 123 45 67", email: "AYSE@EXAMPLE.COM", departmentName: "Hemşirelik", classYear: "2", studentNumber: " 123 456 789 " };
 test("normalizes applicant identity and Turkish mobile", () => {
   const result = validateApplicantBasics(valid);
   assert.ok(result.data);
   assert.equal(result.data.email, "ayse@example.com");
   assert.equal(result.data.phone, "+905321234567");
-  assert.equal(result.data.studentNumber, "1234567");
+  assert.equal(result.data.studentNumber, "123456789");
   assert.equal(normalizeTurkishMobile("+90 532 123 45 67"), "+905321234567");
 });
 test("rejects invalid or incomplete basics", () => {
@@ -18,6 +18,14 @@ test("rejects invalid or incomplete basics", () => {
   assert.ok(validateApplicantBasics({ ...valid, phone: "0212 123 45 67" }).error);
   assert.ok(validateApplicantBasics({ ...valid, classYear: "6" }).error);
   assert.ok(validateApplicantBasics({ ...valid, email: "not-an-email" }).error);
+});
+test("requires exactly nine student-number digits after removing whitespace", () => {
+  for (const studentNumber of ["12345678", "1234567890", "12345A789"]) {
+    assert.equal(validateApplicantBasics({ ...valid, studentNumber }).error, STUDENT_NUMBER_ERROR);
+  }
+  assert.equal(normalizeStudentNumber("123 456 789"), "123456789");
+  assert.equal(validateApplicantBasics({ ...valid, studentNumber: "123 456 789" }).data?.studentNumber, "123456789");
+  assert.equal(validateApplicantBasics({ ...valid, studentNumber: "012345678" }).data?.studentNumber, "012345678");
 });
 test("accepts only credential-free HTTP(S) links", () => {
   assert.equal(safeHttpUrl("javascript:alert(1)"), null);

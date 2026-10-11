@@ -8,6 +8,16 @@ export type ApplicantBasics = {
 };
 
 export const classYears = ["Hazırlık", "1", "2", "3", "4", "5"] as const;
+export const STUDENT_NUMBER_PATTERN = "^[0-9]{9}$";
+export const STUDENT_NUMBER_ERROR = "Öğrenci numarası 9 haneli olmalı.";
+
+export function normalizeStudentNumber(value: unknown) {
+  return typeof value === "string" ? value.replace(/\s/g, "") : "";
+}
+
+export function isValidStudentNumber(value: string) {
+  return new RegExp(STUDENT_NUMBER_PATTERN).test(value);
+}
 
 function field(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -28,13 +38,13 @@ export function validateApplicantBasics(payload: unknown): { data: ApplicantBasi
   const email = field(body.email).toLowerCase();
   const departmentName = field(body.departmentName);
   const classYear = field(body.classYear);
-  const studentNumber = field(body.studentNumber);
+  const studentNumber = normalizeStudentNumber(body.studentNumber);
   if (fullName.length < 3 || fullName.length > 120 || !/\S+\s+\S+/.test(fullName)) return { error: "Ad ve soyadınızı girin (en fazla 120 karakter)." };
   if (!phone) return { error: "Geçerli bir Türkiye cep telefonu girin." };
   if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Geçerli bir e-posta girin." };
   if (departmentName.length < 2 || departmentName.length > 150) return { error: "Bölüm 2–150 karakter olmalıdır." };
   if (!classYears.includes(classYear as (typeof classYears)[number])) return { error: "Sınıfınızı seçin." };
-  if (!/^\d{5,15}$/.test(studentNumber)) return { error: "Öğrenci numarası 5–15 rakam olmalıdır." };
+  if (!isValidStudentNumber(studentNumber)) return { error: STUDENT_NUMBER_ERROR };
   return { data: { fullName, phone, email, departmentName, classYear, studentNumber } };
 }
 

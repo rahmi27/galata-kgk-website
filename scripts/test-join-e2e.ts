@@ -8,7 +8,7 @@ if (!databaseUrl || !["localhost", "127.0.0.1"].includes(new URL(databaseUrl).ho
   throw new Error("E2E testi yalnızca açıkça verilen yerel veritabanı ve yerel siteyle çalışır.");
 }
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: databaseUrl }) });
-const stamp = Date.now().toString().slice(-9);
+const stamp = Date.now().toString().slice(-8);
 const firstStudent = `8${stamp}`;
 const ids: number[] = [];
 const original = new Map<number, { isOpen: boolean; deadline: Date | null }>();
