@@ -11,6 +11,7 @@ import { EventModeLiveStats } from "@/components/admin/event-mode-live-stats";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { PosterCtaTarget } from "@/lib/event-poster-cta";
 import { prisma } from "@/lib/prisma";
 import { siteUrl } from "@/lib/site-metadata";
 
@@ -172,7 +173,7 @@ const eventModeStatus: Record<string, { message: string; className: string; erro
   },
 };
 
-function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; detailEntryButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
+function SessionForm({ events, session }: { events: { id: number; title: string }[]; session?: { id: number; title: string; linkedEventId: number | null; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; posterCtaTarget: PosterCtaTarget; posterCtaLabel: string | null; posterCtaLabelEn: string | null; badgeTemplateUrl: string | null; namePositionYPercent: number; eventTitlePositionYPercent: number; showLiveCountersPublicly: boolean; isActive: boolean; quizEnabled: boolean; raffleEnabled: boolean; joinButtonEnabled: boolean; detailEntryButtonEnabled: boolean; feedbackEnabled: boolean; badgeEnabled: boolean; pollEnabled: boolean } }) {
   return (
     <form action={saveEventSessionAction} className="space-y-4">
       {session ? <input type="hidden" name="id" value={session.id} /> : null}
@@ -196,6 +197,23 @@ function SessionForm({ events, session }: { events: { id: number; title: string 
           </div>
         </fieldset>
         <p className="mt-3 text-xs leading-5 text-primary-500">Etkinlik aktifken afiş her yeni sayfa yüklemesinde gösterilir; site içi sayfa geçişlerinde tekrar açılmaz. Görsel seçilen yönde bozulmadan yerleştirilir.</p>
+        <div className="mt-5 space-y-3 border-t border-primary-100 pt-4 dark:border-white/10">
+          <label className="block text-sm font-semibold">Afişteki katılım butonunun hedefi
+            <select name="posterCtaTarget" defaultValue={session?.posterCtaTarget ?? "linkedEvent"} className="mt-2 h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
+              <option value="linkedEvent">Bağlı etkinliğin detay sayfası (yoksa Etkinlik Modu)</option>
+              <option value="eventMode">Etkinlik Modu giriş sayfası</option>
+              <option value="join">Kulübe Katıl sayfası</option>
+              <option value="joinMember">Üyelik başvurusu</option>
+              <option value="events">Etkinliklerimiz sayfası</option>
+              <option value="contact">İletişim sayfası</option>
+            </select>
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block text-sm font-semibold">Buton yazısı (TR)<Input name="posterCtaLabel" defaultValue={session?.posterCtaLabel ?? ""} placeholder="Etkinliğe Katıl" maxLength={60} className="mt-2" /></label>
+            <label className="block text-sm font-semibold">Buton yazısı (EN)<Input name="posterCtaLabelEn" defaultValue={session?.posterCtaLabelEn ?? ""} placeholder="Join the Event" maxLength={60} className="mt-2" /></label>
+          </div>
+          <p className="text-xs leading-5 text-primary-500">Yazıları boş bırakırsanız varsayılan metinler kullanılır. Seçilen hedef İngilizce sitede de karşılık gelen İngilizce sayfaya gider.</p>
+        </div>
       </div>
       <div className="space-y-4 rounded-2xl border border-primary-100 p-4 dark:border-white/10">
         <ImageUploadField id={`badge-template-${session?.id ?? "new"}`} name="badgeTemplateImage" label="Rozet arka plan şablonu" defaultImageUrl={session?.badgeTemplateUrl ?? undefined} removeName="removeBadgeTemplateImage" />

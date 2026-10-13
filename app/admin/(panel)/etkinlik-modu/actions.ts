@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { requireAdmin } from "@/lib/admin-auth";
 import { EVENT_MODE_CACHE_TAG, cleanEventText } from "@/lib/event-mode";
+import { parsePosterCtaTarget } from "@/lib/event-poster-cta";
 import {
   deleteUploadedImage,
   type ImageUploadErrorCode,
@@ -73,10 +74,14 @@ export async function saveEventSessionAction(formData: FormData) {
   const id = optionalId(formData.get("id"));
   const linkedEventId = optionalId(formData.get("linkedEventId"));
   const title = cleanEventText(formData.get("title"), 120);
+  const posterCtaTarget = parsePosterCtaTarget(formData.get("posterCtaTarget"));
+  const posterCtaLabel = cleanEventText(formData.get("posterCtaLabel"), 61);
+  const posterCtaLabelEn = cleanEventText(formData.get("posterCtaLabelEn"), 61);
   const isActive = flag(formData, "isActive");
   const previousLinkedSlug = await activeLinkedEventSlug();
 
-  if (title.length < 3) {
+  if (title.length < 3 || !posterCtaTarget ||
+    posterCtaLabel.length > 60 || posterCtaLabelEn.length > 60) {
     redirect("/admin/etkinlik-modu?durum=gecersiz");
   }
 
@@ -112,6 +117,9 @@ export async function saveEventSessionAction(formData: FormData) {
     title,
     posterImageUrl,
     posterOrientation: posterOrientation(formData),
+    posterCtaTarget,
+    posterCtaLabel: posterCtaLabel || null,
+    posterCtaLabelEn: posterCtaLabelEn || null,
     badgeTemplateUrl,
     namePositionYPercent: percentage(formData, "namePositionYPercent", 60),
     eventTitlePositionYPercent: percentage(formData, "eventTitlePositionYPercent", 72),

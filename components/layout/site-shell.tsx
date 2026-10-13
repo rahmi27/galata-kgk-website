@@ -10,12 +10,13 @@ import { ScrollMotionRuntime } from "@/components/effects/scroll-motion-runtime"
 import { EventPosterModal } from "@/components/event-mode/event-poster-modal";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import type { PosterCtaTarget } from "@/lib/event-poster-cta";
 import type { SiteChromeContent } from "@/lib/site-content";
 
 type SiteShellProps = {
   children: React.ReactNode;
   content: SiteChromeContent;
-  activeEventSession: { id: number; title: string; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; linkedEvent: { slug: string } | null } | null;
+  activeEventSession: { id: number; title: string; posterImageUrl: string | null; posterOrientation: "portrait" | "landscape"; posterCtaTarget: PosterCtaTarget; posterCtaLabel: string | null; posterCtaLabelEn: string | null; linkedEvent: { slug: string } | null } | null;
 };
 
 export function SiteShell({ children, content, activeEventSession }: SiteShellProps) {
@@ -62,7 +63,7 @@ export function SiteShell({ children, content, activeEventSession }: SiteShellPr
         variant={particleVariant}
         className={pathname.startsWith("/katilim") || pathname.startsWith("/en/join") ? "ambient-particles--global ambient-particles--join" : "ambient-particles--global"}
       />
-      {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl, posterOrientation: activeEventSession.posterOrientation, linkedEvent: activeEventSession.linkedEvent }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
+      {activeEventSession?.posterImageUrl ? <EventPosterModal eventSession={{ id: activeEventSession.id, title: activeEventSession.title, posterImageUrl: activeEventSession.posterImageUrl, posterOrientation: activeEventSession.posterOrientation, posterCtaTarget: activeEventSession.posterCtaTarget, posterCtaLabel: activeEventSession.posterCtaLabel, posterCtaLabelEn: activeEventSession.posterCtaLabelEn, linkedEvent: activeEventSession.linkedEvent }} locale={pathname.startsWith("/en") ? "en" : "tr"} /> : null}
       <Navbar content={content} activeEventSession={activeEventSession} />
       <div
         id="site-content"

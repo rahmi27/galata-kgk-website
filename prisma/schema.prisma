@@ -18,6 +18,15 @@ enum PosterOrientation {
   landscape
 }
 
+enum PosterCtaTarget {
+  linkedEvent
+  eventMode
+  join
+  joinMember
+  events
+  contact
+}
+
 enum EventMediaType {
   image
   video
@@ -251,6 +260,9 @@ model EventSession {
   title                      String
   posterImageUrl             String?
   posterOrientation          PosterOrientation  @default(portrait)
+  posterCtaTarget            PosterCtaTarget    @default(linkedEvent)
+  posterCtaLabel             String?
+  posterCtaLabelEn           String?
   badgeTemplateUrl           String?
   namePositionYPercent       Int                @default(60)
   eventTitlePositionYPercent Int                @default(72)

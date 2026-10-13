@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test:security": "tsx --test tests/security/input-security.test.ts tests/security/event-video-upload.test.ts tests/security/join-system.test.ts tests/rich-text.test.tsx tests/recruitment-availability.test.ts && node --test tests/security/admin-authorization.test.mjs tests/security/security-surface.test.mjs tests/security/event-mode-security.test.mjs",
-    "test:i18n": "tsx --test tests/localized-content.test.ts && node --test tests/i18n-routing.test.mjs",
+    "test:i18n": "tsx --test tests/localized-content.test.ts tests/event-poster-cta.test.ts && node --test tests/i18n-routing.test.mjs",
     "test:isr": "node --test tests/isr-revalidation.test.mjs",
     "test:team": "tsx --test tests/person-priority.test.ts && node --test tests/team-membership-integrity.test.mjs",
     "db:seed": "prisma db seed",

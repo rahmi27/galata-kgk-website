@@ -16,6 +16,9 @@ export const getActiveEventSession = unstable_cache(
         title: true,
         posterImageUrl: true,
         posterOrientation: true,
+        posterCtaTarget: true,
+        posterCtaLabel: true,
+        posterCtaLabelEn: true,
         quizEnabled: true,
         raffleEnabled: true,
         joinButtonEnabled: true,
@@ -27,10 +30,9 @@ export const getActiveEventSession = unstable_cache(
         linkedEvent: { select: { slug: true } },
       },
     }),
-  // v6 includes the detail-page CTA setting and retires older cached shapes.
-  // invalidation, so the first deployment with immediate `updateTag` starts
-  // from the current database state.
-  ["active-event-session-v6"],
+  // Change the key when the cached session shape changes, so previously
+  // cached objects cannot omit the new poster CTA settings.
+  ["active-event-session-v7"],
   // Admin mutations invalidate this tag immediately. The daily fallback only
   // covers out-of-band database edits and must not shorten every public page's
   // ISR lifetime merely because the navbar consumes this value.

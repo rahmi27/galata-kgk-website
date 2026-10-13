@@ -6,6 +6,7 @@ import { ArrowUpRight, X } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { getPosterCtaHref, getPosterCtaLabel, type PosterCtaTarget } from "@/lib/event-poster-cta";
 
 type EventPosterModalProps = {
   eventSession: {
@@ -13,6 +14,9 @@ type EventPosterModalProps = {
     title: string;
     posterImageUrl: string;
     posterOrientation: "portrait" | "landscape";
+    posterCtaTarget: PosterCtaTarget;
+    posterCtaLabel: string | null;
+    posterCtaLabelEn: string | null;
     linkedEvent: { slug: string } | null;
   };
   locale: string;
@@ -108,12 +112,10 @@ export function EventPosterModal({ eventSession, locale }: EventPosterModalProps
               className="event-poster-join h-12 w-full shrink-0 rounded-[2px] px-7 text-sm font-bold hover:scale-[1.03] hover:brightness-110 sm:w-auto sm:text-base"
             >
               <Link
-                href={eventSession.linkedEvent
-                  ? { pathname: "/etkinliklerimiz/[slug]", params: { slug: eventSession.linkedEvent.slug } }
-                  : "/etkinlik"}
+                href={getPosterCtaHref(eventSession.posterCtaTarget, eventSession.linkedEvent?.slug ?? null)}
                 onClick={dismiss}
               >
-                {en ? "Join the Event" : "Etkinliğe Katıl"}
+                {getPosterCtaLabel(locale, eventSession.posterCtaLabel, eventSession.posterCtaLabelEn)}
                 <ArrowUpRight aria-hidden="true" />
               </Link>
             </Button>
